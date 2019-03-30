@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="timing.ukulele.service.system.mapper.ModuleMapper">
+
+    <resultMap id="BaseResultMap" type="timing.ukulele.api.model.ModuleModel">
+        <id column="ID_" property="id" jdbcType="BIGINT"/>
+        <result column="MODULE_NAME" property="moduleName" jdbcType="BIGINT"/>
+        <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR"/>
+        <result column="MODULE_PATH" property="modulePath" jdbcType="VARCHAR"/>
+        <result column="PARENT_ID" property="parentId" jdbcType="BIGINT"/>
+        <result column="MODULE_ICON" property="moduleIcon" jdbcType="VARCHAR"/>
+        <result column="HTTP_METHOD" property="httpMethod" jdbcType="VARCHAR"/>
+        <result column="IS_OPERATING" property="isOperating" jdbcType="INTEGER"/>
+        <result column="SORT_" property="sort" jdbcType="INTEGER"/>
+        <result column="SYSTEM_ID" property="systemId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <resultMap id="menuMap" type="timing.ukulele.api.model.ModuleModel">
+        <id column="ID_" property="id" jdbcType="BIGINT"/>
+        <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR"/>
+        <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR"/>
+        <result column="MODULE_PATH" property="modulePath" jdbcType="VARCHAR"/>
+        <result column="PARENT_ID" property="parentId" jdbcType="BIGINT"/>
+        <result column="MODULE_ICON" property="moduleIcon" jdbcType="VARCHAR"/>
+        <result column="HTTP_METHOD" property="httpMethod" jdbcType="VARCHAR"/>
+        <result column="IS_OPERATING" property="isOperating" jdbcType="INTEGER"/>
+        <result column="SORT_" property="sort" jdbcType="INTEGER"/>
+        <result column="SYSTEM_ID" property="systemId" jdbcType="BIGINT"/>
+        <collection column="{ID_=ID_,USER_ID=USER_ID}" property="subModules"
+                    select="selectMenusByParentIdWithOperating"/>
+    </resultMap>
+
+    <resultMap id="rolesMap" type="timing.ukulele.api.model.ModuleModel">
+        <id column="ID_" property="id" jdbcType="BIGINT"/>
+        <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR"/>
+        <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR"/>
+        <result column="MODULE_PATH" property="modulePath" jdbcType="VARCHAR"/>
+        <result column="PARENT_ID" property="parentId" jdbcType="BIGINT"/>
+        <result column="MODULE_ICON" property="moduleIcon" jdbcType="VARCHAR"/>
+        <result column="HTTP_METHOD" property="httpMethod" jdbcType="VARCHAR"/>
+        <result column="IS_OPERATING" property="isOperating" jdbcType="INTEGER"/>
+        <result column="SORT_" property="sort" jdbcType="INTEGER"/>
+        <result column="SYSTEM_ID" property="systemId" jdbcType="BIGINT"/>
+        <collection column="{ID_=ID_,USER_ID=USER_ID}" property="subModules" select="selectModuleByParentId"/>
+    </resultMap>
+
+    <resultMap id="moduleTree" type="timing.ukulele.api.model.ModuleModel">
+        <id column="ID_" property="id" jdbcType="BIGINT"/>
+        <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR"/>
+        <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR"/>
+        <result column="MODULE_PATH" property="modulePath" jdbcType="VARCHAR"/>
+        <result column="PARENT_ID" property="parentId" jdbcType="BIGINT"/>
+        <result column="MODULE_ICON" property="moduleIcon" jdbcType="VARCHAR"/>
+        <result column="HTTP_METHOD" property="httpMethod" jdbcType="VARCHAR"/>
+        <result column="IS_OPERATING" property="isOperating" jdbcType="INTEGER"/>
+        <result column="SORT_" property="sort" jdbcType="INTEGER"/>
+        <result column="SYSTEM_ID" property="systemId" jdbcType="BIGINT"/>
+        <result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR"/>
+        <collection column="{ID_=ID_}" property="subModules" select="selectModuleTreeByParentId"/>
+    </resultMap>
+
+    <resultMap id="ModuleAndSystemMap" type="timing.ukulele.api.model.ModuleModel">
+        <id column="ID_" property="id" jdbcType="BIGINT"/>
+        <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR"/>
+        <collection column="{ID_=ID_}" property="subModules"
+                    select="selectModuleAndSystemByParentId"/>
+    </resultMap>
+
+    <select id="getMenusByUserId" resultMap="menuMap">
+    SELECT DISTINCT bmr.*, bur.user_id as USER_ID FROM
+    user_role bur LEFT JOIN role_module brm ON bur.role_id = brm.role_id
+    LEFT JOIN module_ bmr ON brm.module_id = bmr.id_
+    LEFT JOIN system_ bs ON  bmr.SYSTEM_ID = bs.ID_
+    WHERE bur.user_id = #{userId} AND bmr.parent_id=0 AND bmr.IS_OPERATING = 0 AND bs.ENABLE_ = 1
+  </select>
+
+    <select id="selectMenusByParentIdWithOperating" resultMap="menuMap">
+    SELECT DISTINCT bmr.*, bur.user_id as USER_ID FROM
+    user_role bur LEFT JOIN role_module brm ON bur.role_id = brm.role_id
+    LEFT JOIN module_ bmr ON brm.module_id = bmr.id_
+    WHERE bur.user_id = #{USER_ID} AND bmr.parent_id = #{ID} AND bmr.IS_OPERATING = 0
+  </select>
+
+    <select id="selectModuleByRoleId" resultMap="rolesMap">
+    SELECT bmr.*, bur.user_id as USER_ID, bs.PROJECT_NAME FROM role_module brm
+    LEFT JOIN module_ bmr on brm.MODULE_ID = bmr.ID_
+    LEFT JOIN system_ bs ON  bmr.SYSTEM_ID = bs.ID_
+    LEFT JOIN user_role bur ON bur.role_id = brm.role_id
+    WHERE brm.ROLE_ID = #{ID} and bur.user_id = #{USER_ID} and bmr.parent_id is null and bs.ENABLE_ = 1
+  </select>
+
+    <select id="selectModuleByParentId" resultMap="rolesMap">
+    SELECT DISTINCT bmr.*, bur.user_id as USER_ID, bs.PROJECT_NAME FROM user_role bur
+    LEFT JOIN role_module brm ON bur.role_id = brm.role_id
+    LEFT JOIN module_ bmr ON brm.module_id = bmr.id_
+    LEFT JOIN system_ bs ON  bmr.SYSTEM_ID = bs.ID_
+    WHERE bur.user_id = #{USER_ID} AND bmr.parent_id = #{ID}
+  </select>
+
+    <select id="selectModuleTree" resultMap="moduleTree">
+        SELECT * FROM module_
+        <where>
+            <if test="id == 'root'">
+                PARENT_ID IS NULL AND SYSTEM_ID = #{systemId}
+            </if>
+            <if test="id != 'root'">
+                PARENT_ID = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectModuleTreeByParentId" resultMap="BaseResultMap">
+    SELECT * FROM module_
+    WHERE PARENT_ID = #{ID}
+  </select>
+
+    <select id="selectModuleAndSystemBySystemId" resultMap="ModuleAndSystemMap">
+    SELECT ID, MODULE_NAME FROM module_
+    WHERE SYSTEM_ID = #{ID} AND PARENT_ID=0
+  </select>
+
+    <select id="selectModuleAndSystemByParentId" resultMap="ModuleAndSystemMap">
+    SELECT ID, MODULE_NAME FROM module_
+    WHERE  PARENT_ID = #{ID}
+  </select>
+
+</mapper>

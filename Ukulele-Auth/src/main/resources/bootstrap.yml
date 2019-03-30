@@ -1,0 +1,98 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /auth
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    metadata-map:
+      management:
+        context-path: ${server.servlet.context-path}/actuator
+      health-check-url-path: ${server.servlet.context-path}/actuator/health
+      user.name: root
+      user.password: root
+  client:
+    serviceUrl:
+#      defaultZone: http://root:root@192.168.0.109:8080/eureka
+      defaultZone: http://root:root@127.0.0.1:8080/eureka
+
+encrypt:
+  key-store:
+    location: classpath:mytest.jks
+    secret: mypass
+    alias: mytest
+
+spring:
+  application:
+    name: auth-service
+  security:
+    user:
+      name: root
+      password: root
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+  freemarker:
+    request-context-attribute: request
+  rabbitmq:
+    host: localhost
+    port: 5672
+    # 数据源配置
+  datasource:
+    dynamic:
+      datasource:
+        master:
+          username: root
+          password: root
+          url: jdbc:mysql://127.0.0.1:3306/ukulele?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
+          driver-class-name: com.mysql.cj.jdbc.Driver
+        slave_1:
+          username: root
+          password: root
+          url: jdbc:mysql://127.0.0.1:3306/ukulele?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
+          driver-class-name: com.mysql.cj.jdbc.Driver
+      druid:
+        max-active: 20
+        initial-size: 1
+        max-wait: 60000
+        min-idle: 1
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        validation-query: select 'x'
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        pool-prepared-statements: true
+        max-open-prepared-statements: 20
+        filters: stat, wall
+        # 监控配置
+        web-stat-filter:
+          url-pattern: /*
+          exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+        stat-view-servlet:
+          url-pattern: /druid/*
+          reset-enable: false
+          login-username: sysadmin
+          login-password: "000000"
+
+
+management:
+  server:
+    servlet:
+      context-path: ${server.servlet.context-path}
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  #        SpringBootActuator监控暴露所有接口
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+logging:
+  level:
+    com.baomidou: debug
