@@ -115,12 +115,12 @@
   </select>
 
     <select id="selectModuleAndSystemBySystemId" resultMap="ModuleAndSystemMap">
-    SELECT ID, MODULE_NAME FROM module_
+    SELECT ID_, MODULE_NAME FROM module_
     WHERE SYSTEM_ID = #{ID} AND PARENT_ID=0
   </select>
 
     <select id="selectModuleAndSystemByParentId" resultMap="ModuleAndSystemMap">
-    SELECT ID, MODULE_NAME FROM module_
+    SELECT ID_, MODULE_NAME FROM module_
     WHERE  PARENT_ID = #{ID}
   </select>
 

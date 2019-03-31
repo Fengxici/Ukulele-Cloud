@@ -268,8 +268,7 @@ public final class SystemController implements ISystemService {
         }
         return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), list);
     }
-
-
+    
     @Override
     public ResponseData<List<ModuleModel>> getMenusByUserId(@PathVariable("userId") long userId) {
         log.debug("根据用户查询菜单");
