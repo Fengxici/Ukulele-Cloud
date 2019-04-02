@@ -7,7 +7,7 @@ spring:
       password: root
 
 server:
-  port: 7070
+  port: 10101
 
 eureka:
   instance:

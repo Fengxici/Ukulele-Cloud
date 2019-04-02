@@ -13,6 +13,7 @@
         <module>Ukulele-Auth</module>
         <module>Ukulele-System</module>
         <module>Ukulele-Gateway</module>
+        <module>Ukulele-Portal</module>
     </modules>
 
     <name>ukulele-cloud</name>
@@ -83,6 +84,16 @@
             <dependency>
                 <groupId>timing.ukulele</groupId>
                 <artifactId>ukulele-web</artifactId>
+                <version>${timing.ukulele-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>timing.ukulele</groupId>
+                <artifactId>ukulele-swagger</artifactId>
+                <version>${timing.ukulele-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>timing.ukulele</groupId>
+                <artifactId>ukulele-log</artifactId>
                 <version>${timing.ukulele-version}</version>
             </dependency>
             <dependency>
