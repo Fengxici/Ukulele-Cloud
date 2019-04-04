@@ -2,31 +2,28 @@ package timing.ukulele.gateway.config;
 
 import com.alibaba.fastjson.JSONArray;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.discovery.DiscoveryClientRouteLocator;
+import timing.ukulele.gateway.model.SysZuulRoute;
+import timing.ukulele.redisson.CacheUtil;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 动态路由实现
  */
 @Slf4j
 public class DynamicRouteLocator extends DiscoveryClientRouteLocator {
-
+    String ROUTE_KEY = "timing:ROUTE_LIST";
     private ZuulProperties properties;
 
-    private TarocoRedisRepository redisRepository;
-
     public DynamicRouteLocator(String servletPath, DiscoveryClient discovery, ZuulProperties properties,
-                               ServiceInstance localServiceInstance, TarocoRedisRepository redisRepository) {
+                               ServiceInstance localServiceInstance) {
         super(servletPath, discovery, properties, localServiceInstance);
         this.properties = properties;
-        this.redisRepository = redisRepository;
     }
 
     /**
@@ -46,7 +43,7 @@ public class DynamicRouteLocator extends DiscoveryClientRouteLocator {
             if (!path.startsWith("/")) {
                 path = "/" + path;
             }
-            if (StrUtil.isNotBlank(this.properties.getPrefix())) {
+            if (StringUtils.isNotBlank(this.properties.getPrefix())) {
                 path = this.properties.getPrefix() + path;
                 if (!path.startsWith("/")) {
                     path = "/" + path;
@@ -64,15 +61,14 @@ public class DynamicRouteLocator extends DiscoveryClientRouteLocator {
      */
     private Map<String, ZuulProperties.ZuulRoute> locateRoutesFromCache() {
         Map<String, ZuulProperties.ZuulRoute> routes = new LinkedHashMap<>();
-
-        String vals = redisRepository.get(CommonConstant.ROUTE_KEY);
+        String vals = CacheUtil.getCache().get(ROUTE_KEY).toString();
         if (vals == null) {
             return routes;
         }
 
         List<SysZuulRoute> results = JSONArray.parseArray(vals, SysZuulRoute.class);
         for (SysZuulRoute result : results) {
-            if (StrUtil.isBlank(result.getPath()) && StrUtil.isBlank(result.getUrl())) {
+            if (StringUtils.isBlank(result.getPath()) && StringUtils.isBlank(result.getUrl())) {
                 continue;
             }
 
@@ -81,16 +77,13 @@ public class DynamicRouteLocator extends DiscoveryClientRouteLocator {
                 zuulRoute.setId(result.getServiceId());
                 zuulRoute.setPath(result.getPath());
                 zuulRoute.setServiceId(result.getServiceId());
-                zuulRoute.setRetryable(StrUtil.equals(result.getRetryable(), "0") ? Boolean.FALSE : Boolean.TRUE);
-                zuulRoute.setStripPrefix(StrUtil.equals(result.getStripPrefix(), "0") ? Boolean.FALSE : Boolean.TRUE);
+                zuulRoute.setRetryable(StringUtils.equals(result.getRetryable(), "0") ? Boolean.FALSE : Boolean.TRUE);
+                zuulRoute.setStripPrefix(StringUtils.equals(result.getStripPrefix(), "0") ? Boolean.FALSE : Boolean.TRUE);
                 zuulRoute.setUrl(result.getUrl());
-                List<String> sensitiveHeadersList = StrUtil.splitTrim(result.getSensitiveheadersList(), ",");
-                if (sensitiveHeadersList != null) {
-                    Set<String> sensitiveHeaderSet = CollUtil.newHashSet();
-                    sensitiveHeaderSet.addAll(sensitiveHeadersList);
-                    zuulRoute.setSensitiveHeaders(sensitiveHeaderSet);
-                    zuulRoute.setCustomSensitiveHeaders(true);
-                }
+                List<String> sensitiveHeadersList = Arrays.asList(StringUtils.split(result.getSensitiveheadersList(), ","));
+                Set<String> sensitiveHeaderSet = new HashSet<>(sensitiveHeadersList);
+                zuulRoute.setSensitiveHeaders(sensitiveHeaderSet);
+                zuulRoute.setCustomSensitiveHeaders(true);
             } catch (Exception e) {
                 log.error("从数据库加载路由配置异常", e);
             }

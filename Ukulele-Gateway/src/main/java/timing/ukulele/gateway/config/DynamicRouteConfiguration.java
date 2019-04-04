@@ -17,24 +17,21 @@ public class DynamicRouteConfiguration {
     private DiscoveryClient discovery;
     private ZuulProperties zuulProperties;
     private ServerProperties server;
-    private TarocoRedisRepository redisRepository;
 
     public DynamicRouteConfiguration(Registration registration, DiscoveryClient discovery,
-                                     ZuulProperties zuulProperties, ServerProperties server, TarocoRedisRepository redisRepository) {
+                                     ZuulProperties zuulProperties, ServerProperties server) {
         this.registration = registration;
         this.discovery = discovery;
         this.zuulProperties = zuulProperties;
         this.server = server;
-        this.redisRepository = redisRepository;
     }
 
     @Bean
     public DiscoveryClientRouteLocator dynamicRouteLocator() {
         return new DynamicRouteLocator(
-                server.getServlet().getPath()
+                server.getServlet().getContextPath()
                 , discovery
                 , zuulProperties
-                , registration
-                , redisRepository);
+                , registration);
     }
 }
