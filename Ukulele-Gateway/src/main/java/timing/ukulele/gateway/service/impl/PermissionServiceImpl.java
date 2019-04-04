@@ -9,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
+import timing.ukulele.api.model.portal.SysMenu;
+import timing.ukulele.api.service.portal.feign.IPortalFeignService;
 import timing.ukulele.gateway.service.PermissionService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +26,7 @@ import java.util.Set;
 public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
-    private MenuService menuService;
+    private IPortalFeignService menuService;
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -45,18 +47,18 @@ public class PermissionServiceImpl implements PermissionService {
                 return hasPermission;
             }
 
-            Set<MenuVO> urls = new HashSet<>();
+            Set<SysMenu> urls = new HashSet<>();
             for (SimpleGrantedAuthority authority : grantedAuthorityList) {
-                if (!StrUtil.equals(authority.getAuthority(), "ROLE_USER")) {
+                if (!StringUtils.equals(authority.getAuthority(), "ROLE_USER")) {
                     // TODO 角色与菜单权限的关联关系需要缓存提高访问效率
-                    Set<MenuVO> menuVOSet = menuService.findMenuByRole(authority.getAuthority());
-                    if (CollUtil.isNotEmpty(menuVOSet)) {
-                        CollUtil.addAll(urls, menuVOSet);
+                    Set<SysMenu> menuVOSet = menuService.findMenuByRole(authority.getAuthority());
+                    if (!CollectionUtils.isEmpty(menuVOSet)) {
+                        CollectionUtils.addAll(urls, menuVOSet);
                     }
                 }
             }
 
-            for (MenuVO menu : urls) {
+            for (SysMenu menu : urls) {
                 if (StringUtils.isNotEmpty(menu.getUrl()) && antPathMatcher.match(menu.getUrl(), request.getRequestURI())
                         && request.getMethod().equalsIgnoreCase(menu.getMethod())) {
                     hasPermission = true;

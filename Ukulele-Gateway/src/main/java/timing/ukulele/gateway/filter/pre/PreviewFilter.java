@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
@@ -40,8 +41,8 @@ public class PreviewFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
-        if (StrUtil.equalsIgnoreCase(request.getMethod(), HttpMethod.GET.name()) ||
-                StrUtil.containsIgnoreCase(request.getRequestURI(), TOKEN)){
+        if (StringUtils.equalsIgnoreCase(request.getMethod(), HttpMethod.GET.name()) ||
+                StringUtils.containsIgnoreCase(request.getRequestURI(), TOKEN)){
             return false;
         }
         return true;

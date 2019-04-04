@@ -2,11 +2,14 @@ package timing.ukulele.gateway.filter.pre;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import timing.ukulele.api.model.portal.SysLog;
+import timing.ukulele.api.service.portal.feign.IPortalFeignService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -25,7 +28,7 @@ public class PreRequestLogFilter extends ZuulFilter {
     private static final Log log = LogFactory.getLog(PreRequestLogFilter.class);
 
     @Autowired
-    private SysLogService logService;
+    private IPortalFeignService logService;
 
     @Override
     public String filterType() {
@@ -64,7 +67,7 @@ public class PreRequestLogFilter extends ZuulFilter {
         log.setRequestUri(request.getRequestURI());
         log.setMethod(request.getMethod());
 
-        if (StrUtil.containsAnyIgnoreCase(request.getRequestURI(),
+        if (StringUtils.containsIgnoreCase(equest.getRequestURI(),
                 SecurityConstants.OAUTH_TOKEN_URL)) {
             // 记录登录日志
             log.setType(LogType.Login.name());
