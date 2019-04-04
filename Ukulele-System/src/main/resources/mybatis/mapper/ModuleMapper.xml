@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="timing.ukulele.service.system.mapper.ModuleMapper">
 
-    <resultMap id="BaseResultMap" type="timing.ukulele.api.model.ModuleModel">
+    <resultMap id="BaseResultMap" type="timing.ukulele.api.model.system.ModuleModel">
         <id column="ID_" property="id" jdbcType="BIGINT"/>
         <result column="MODULE_NAME" property="moduleName" jdbcType="BIGINT"/>
         <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR"/>
@@ -15,7 +15,7 @@
         <result column="SYSTEM_ID" property="systemId" jdbcType="BIGINT"/>
     </resultMap>
 
-    <resultMap id="menuMap" type="timing.ukulele.api.model.ModuleModel">
+    <resultMap id="menuMap" type="timing.ukulele.api.model.system.ModuleModel">
         <id column="ID_" property="id" jdbcType="BIGINT"/>
         <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR"/>
         <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR"/>
@@ -30,7 +30,7 @@
                     select="selectMenusByParentIdWithOperating"/>
     </resultMap>
 
-    <resultMap id="rolesMap" type="timing.ukulele.api.model.ModuleModel">
+    <resultMap id="rolesMap" type="timing.ukulele.api.model.system.ModuleModel">
         <id column="ID_" property="id" jdbcType="BIGINT"/>
         <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR"/>
         <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR"/>
@@ -44,7 +44,7 @@
         <collection column="{ID_=ID_,USER_ID=USER_ID}" property="subModules" select="selectModuleByParentId"/>
     </resultMap>
 
-    <resultMap id="moduleTree" type="timing.ukulele.api.model.ModuleModel">
+    <resultMap id="moduleTree" type="timing.ukulele.api.model.system.ModuleModel">
         <id column="ID_" property="id" jdbcType="BIGINT"/>
         <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR"/>
         <result column="MODULE_CODE" property="moduleCode" jdbcType="VARCHAR"/>
@@ -59,7 +59,7 @@
         <collection column="{ID_=ID_}" property="subModules" select="selectModuleTreeByParentId"/>
     </resultMap>
 
-    <resultMap id="ModuleAndSystemMap" type="timing.ukulele.api.model.ModuleModel">
+    <resultMap id="ModuleAndSystemMap" type="timing.ukulele.api.model.system.ModuleModel">
         <id column="ID_" property="id" jdbcType="BIGINT"/>
         <result column="MODULE_NAME" property="moduleName" jdbcType="VARCHAR"/>
         <collection column="{ID_=ID_}" property="subModules"

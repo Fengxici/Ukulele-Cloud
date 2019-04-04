@@ -3,7 +3,7 @@ package timing.ukulele.service.system.service;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import timing.ukulele.api.model.RoleModuleModel;
+import timing.ukulele.api.model.system.RoleModuleModel;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.system.mapper.RoleModuleMapper;
 

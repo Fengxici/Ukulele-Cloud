@@ -39,6 +39,7 @@
         <mysql-connector-java-version>8.0.15</mysql-connector-java-version>
         <mybatis-plus-annotation-version>3.1.0</mybatis-plus-annotation-version>
         <spring-cloud-starter-oauth2-version>2.1.2.RELEASE</spring-cloud-starter-oauth2-version>
+        <fastjson-version>1.2.55</fastjson-version>
     </properties>
 
     <dependencyManagement>
@@ -122,6 +123,11 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-oauth2</artifactId>
                 <version>${spring-cloud-starter-oauth2-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

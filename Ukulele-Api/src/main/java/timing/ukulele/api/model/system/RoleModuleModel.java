@@ -1,4 +1,4 @@
-package timing.ukulele.api.model;
+package timing.ukulele.api.model.system;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -7,9 +7,8 @@ import timing.ukulele.persistence.model.BaseModel;
 
 @Getter
 @Setter
-@TableName("user_role")
-public class UserRoleModel extends BaseModel {
-    private String userId;
-    private String roleId;
-
+@TableName("role_module")
+public class RoleModuleModel extends BaseModel {
+    private Long roleId;
+    private Long moduleId;
 }

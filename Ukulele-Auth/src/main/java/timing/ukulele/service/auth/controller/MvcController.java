@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.web.pojo.ResponseCode;
-import timing.ukulele.api.service.feign.ISystemFeignService;
+import timing.ukulele.api.service.system.feign.ISystemFeignService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

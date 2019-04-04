@@ -23,6 +23,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.web.client.RestTemplate;
+import timing.ukulele.gateway.UkuleleOauth2Properties;
 import timing.ukulele.gateway.handler.TarocoAccessDeniedHandler;
 
 import java.io.BufferedReader;
@@ -37,13 +38,13 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @EnableResourceServer
-@EnableConfigurationProperties(TarocoOauth2Properties.class)
+@EnableConfigurationProperties(UkuleleOauth2Properties.class)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     private static final String PUBLIC_KEY = "pubkey.txt";
 
     @Autowired
-    private TarocoOauth2Properties oauth2Properties;
+    private UkuleleOauth2Properties oauth2Properties;
 
     @Autowired
     private OAuth2WebSecurityExpressionHandler expressionHandler;
@@ -68,6 +69,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     /**
      * 获取非对称加密公钥 Key
+     *
      * @return 公钥 Key
      */
     private String getPubKey() {
@@ -81,6 +83,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     /**
      * 通过访问授权服务器获取非对称加密公钥 Key
+     *
      * @return 公钥 Key
      */
     private String getKeyFromAuthorizationServer() {
@@ -134,7 +137,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
      * 加密方式
      */
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

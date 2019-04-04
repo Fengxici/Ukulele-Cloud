@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="timing.ukulele.service.system.mapper.SystemMapper" >
 
-  <resultMap id="ModuleAndSystemMap" type="timing.ukulele.api.model.ModuleAndSystemModel" >
+  <resultMap id="ModuleAndSystemMap" type="timing.ukulele.api.model.system.ModuleAndSystemModel" >
     <id column="ID_" property="id" jdbcType="BIGINT" />
     <result column="SYSTEM_NAME" property="moduleName" jdbcType="VARCHAR" />
     <collection  column="{ID_=ID_}" property="subModules"

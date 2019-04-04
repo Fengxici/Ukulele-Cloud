@@ -1,7 +1,7 @@
 package timing.ukulele.service.system.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import timing.ukulele.api.model.RoleModuleModel;
+import timing.ukulele.api.model.system.RoleModuleModel;
 import timing.ukulele.persistence.mapper.BaseMapper;
 
 import java.util.List;

@@ -2,10 +2,10 @@ package timing.ukulele.service.auth.service;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import timing.ukulele.api.model.GlobalUserModel;
-import timing.ukulele.api.model.ModuleModel;
-import timing.ukulele.api.model.RoleModel;
-import timing.ukulele.api.service.feign.ISystemFeignService;
+import timing.ukulele.api.model.system.GlobalUserModel;
+import timing.ukulele.api.model.system.ModuleModel;
+import timing.ukulele.api.model.system.RoleModel;
+import timing.ukulele.api.service.system.feign.ISystemFeignService;
 
 @Service
 public class QrUserDetailService extends BaseUserDetailService {

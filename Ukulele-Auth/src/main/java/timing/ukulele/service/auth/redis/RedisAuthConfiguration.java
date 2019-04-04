@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import timing.ukulele.api.model.ModuleModel;
-import timing.ukulele.api.model.RoleModel;
+import timing.ukulele.api.model.system.ModuleModel;
+import timing.ukulele.api.model.system.RoleModel;
 
 /**
  * Redis配置类

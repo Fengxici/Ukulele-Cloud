@@ -17,7 +17,7 @@ import java.util.*;
  */
 @Slf4j
 public class DynamicRouteLocator extends DiscoveryClientRouteLocator {
-    String ROUTE_KEY = "timing:ROUTE_LIST";
+    private String ROUTE_KEY = "timing:ROUTE_LIST";
     private ZuulProperties properties;
 
     public DynamicRouteLocator(String servletPath, DiscoveryClient discovery, ZuulProperties properties,

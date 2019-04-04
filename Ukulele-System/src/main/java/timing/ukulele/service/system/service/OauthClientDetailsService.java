@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
-import timing.ukulele.api.model.OAuthClientDetailsModel;
+import timing.ukulele.api.model.system.OAuthClientDetailsModel;
 
 import java.util.List;
 

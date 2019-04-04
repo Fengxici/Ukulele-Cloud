@@ -1,13 +1,13 @@
-package timing.ukulele.api.service.feign;
+package timing.ukulele.api.service.system.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import timing.ukulele.api.model.GlobalUserModel;
-import timing.ukulele.api.model.ModuleModel;
-import timing.ukulele.api.model.OAuthClientDetailsModel;
-import timing.ukulele.api.model.RoleModel;
+import timing.ukulele.api.model.system.GlobalUserModel;
+import timing.ukulele.api.model.system.ModuleModel;
+import timing.ukulele.api.model.system.OAuthClientDetailsModel;
+import timing.ukulele.api.model.system.RoleModel;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.web.pojo.ResponseCode;
-import timing.ukulele.api.service.ISystemService;
+import timing.ukulele.api.service.system.ISystemService;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import timing.ukulele.api.model.UserRoleModel;
+import timing.ukulele.api.model.system.UserRoleModel;
 import timing.ukulele.persistence.service.BaseService;
 
 import java.util.List;

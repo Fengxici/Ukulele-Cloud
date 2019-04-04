@@ -18,7 +18,6 @@ import static timing.ukulele.gateway.filter.GatewayFilterConstants.PRE_TYPE;
 
 /**
  * 请求日志记录
- *
  */
 @Component
 public class PreRequestLogFilter extends ZuulFilter {
@@ -102,7 +101,7 @@ public class PreRequestLogFilter extends ZuulFilter {
             params.append("&");
         }
         if (params.length() > 0) {
-            params.delete(params.length()-1, params.length());
+            params.delete(params.length() - 1, params.length());
             return params.toString();
         }
         return null;

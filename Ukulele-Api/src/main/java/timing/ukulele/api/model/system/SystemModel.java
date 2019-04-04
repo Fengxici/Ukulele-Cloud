@@ -1,4 +1,4 @@
-package timing.ukulele.api.model;
+package timing.ukulele.api.model.system;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

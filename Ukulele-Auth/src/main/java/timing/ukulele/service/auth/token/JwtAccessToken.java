@@ -5,7 +5,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import timing.ukulele.common.util.JsonUtils;
-import timing.ukulele.api.model.GlobalUserModel;
+import timing.ukulele.api.model.system.GlobalUserModel;
 import timing.ukulele.service.auth.BaseUserDetail;
 import timing.ukulele.service.auth.Constant;
 

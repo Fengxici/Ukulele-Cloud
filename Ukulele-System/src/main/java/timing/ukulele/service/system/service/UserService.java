@@ -4,7 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import timing.ukulele.api.model.GlobalUserModel;
+import timing.ukulele.api.model.system.GlobalUserModel;
 import timing.ukulele.persistence.service.BaseService;
 
 import java.util.Date;

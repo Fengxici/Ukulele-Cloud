@@ -1,4 +1,4 @@
-package timing.ukulele.api.model;
+package timing.ukulele.api.model.system;
 
 import lombok.Getter;
 import lombok.Setter;

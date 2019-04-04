@@ -1,9 +1,9 @@
-package timing.ukulele.api.service;
+package timing.ukulele.api.service.system;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import timing.ukulele.api.model.ModuleModel;
+import timing.ukulele.api.model.system.ModuleModel;
 import timing.ukulele.common.data.ResponseData;
 
 import java.util.List;
