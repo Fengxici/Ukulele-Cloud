@@ -2,14 +2,17 @@ package timing.ukulele.gateway.filter.pre;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import timing.ukulele.api.model.portal.SysLog;
-import timing.ukulele.api.service.portal.feign.IPortalFeignService;
+import timing.ukulele.facade.portal.api.feign.IPortalFeignService;
+import timing.ukulele.facade.syslog.api.feign.ILogFeignService;
+import timing.ukulele.facade.syslog.model.LogType;
+import timing.ukulele.facade.syslog.model.persistent.SysLog;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -23,12 +26,25 @@ import static timing.ukulele.gateway.filter.GatewayFilterConstants.PRE_TYPE;
  * 请求日志记录
  */
 @Component
+@Slf4j
 public class PreRequestLogFilter extends ZuulFilter {
 
-    private static final Log log = LogFactory.getLog(PreRequestLogFilter.class);
+    /**
+     * oauth token
+     */
+    private static final String OAUTH_TOKEN_URL = "/oauth/token";
+    /**
+     * TODO 用户信息头
+     */
+    String USER_HEADER = "x-user-header";
+
+
+    private final ILogFeignService logService;
 
     @Autowired
-    private IPortalFeignService logService;
+    public PreRequestLogFilter(ILogFeignService logService) {
+        this.logService = logService;
+    }
 
     @Override
     public String filterType() {
@@ -67,20 +83,20 @@ public class PreRequestLogFilter extends ZuulFilter {
         log.setRequestUri(request.getRequestURI());
         log.setMethod(request.getMethod());
 
-        if (StringUtils.containsIgnoreCase(equest.getRequestURI(),
-                SecurityConstants.OAUTH_TOKEN_URL)) {
+        if (StringUtils.containsIgnoreCase(request.getRequestURI(),
+                OAUTH_TOKEN_URL)) {
             // 记录登录日志
             log.setType(LogType.Login.name());
             log.setTitle(LogType.Login.name());
             log.setParams(queryParam(request));
-            log.setCreateBy(request.getParameter("username"));
+//            log.setCreateBy(request.getParameter("username"));
             logService.add(log);
         } else {
             if (!HttpMethod.GET.matches(request.getMethod())) {
                 // 记录操作日志
                 log.setType(LogType.Operation.name());
                 log.setTitle(LogType.Operation.name());
-                log.setCreateBy(ctx.getZuulRequestHeaders().get(SecurityConstants.USER_HEADER));
+//                log.setCreateBy(ctx.getZuulRequestHeaders().get(USER_HEADER));
                 logService.add(log);
             }
         }

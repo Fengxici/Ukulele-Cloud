@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * taroco oauth2 配置类
+ * ukulele oauth2 配置类
  */
 @ConfigurationProperties("ukulele.oauth2")
 @Data

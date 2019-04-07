@@ -19,14 +19,13 @@
         <!--API依赖-->
         <dependency>
             <groupId>timing.ukulele</groupId>
-            <artifactId>ukulele-persistence</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>timing.ukulele</groupId>
-            <artifactId>ukulele-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>portal-cloud-facade</artifactId>
         </dependency>
         <!--ukulele依赖-->
+        <dependency>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>ukulele-persistence</artifactId>
+        </dependency>
         <dependency>
             <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-web</artifactId>

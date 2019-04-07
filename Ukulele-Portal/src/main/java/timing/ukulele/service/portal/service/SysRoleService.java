@@ -1,0 +1,82 @@
+package timing.ukulele.service.portal.service;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import timing.ukulele.facade.portal.model.data.RoleDTO;
+import timing.ukulele.facade.portal.model.persistent.SysRole;
+import timing.ukulele.facade.portal.model.persistent.SysRoleDept;
+import timing.ukulele.persistence.service.BaseService;
+import timing.ukulele.service.portal.mapper.SysRoleMapper;
+
+import java.util.List;
+
+/**
+ * <p>
+ * 服务实现类
+ * </p>
+ */
+@Service
+public class SysRoleService extends BaseService<SysRole> {
+
+    private final SysRoleMapper sysRoleMapper;
+
+    @Autowired
+    public SysRoleService(SysRoleMapper sysRoleMapper) {
+        this.sysRoleMapper = sysRoleMapper;
+    }
+
+    /**
+     * 添加角色
+     *
+     * @param roleDto 角色信息
+     * @return 成功、失败
+     */
+    public Boolean insertRole(RoleDTO roleDto) {
+        SysRole sysRole = new SysRole();
+        BeanUtils.copyProperties(roleDto, sysRole);
+        sysRoleMapper.insert(sysRole);
+        SysRoleDept roleDept = new SysRoleDept();
+        roleDept.setRoleId(sysRole.getId());
+        roleDept.setDeptId(roleDto.getRoleDeptId());
+//        sysRoleDeptMapper.insert(roleDept);
+        return true;
+    }
+
+    /**
+     * 更新角色
+     *
+     * @param roleDto 含有部门信息
+     * @return 成功、失败
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean updateRoleById(RoleDTO roleDto) {
+        //删除原有的角色部门关系
+        SysRoleDept condition = new SysRoleDept();
+        condition.setRoleId(roleDto.getId());
+//        sysRoleDeptMapper.delete(new EntityWrapper<>(condition));
+
+        //更新角色信息
+        SysRole sysRole = new SysRole();
+        BeanUtils.copyProperties(roleDto, sysRole);
+        sysRoleMapper.updateById(sysRole);
+
+        //维护角色部门关系
+        SysRoleDept roleDept = new SysRoleDept();
+        roleDept.setRoleId(sysRole.getId());
+        roleDept.setDeptId(roleDto.getRoleDeptId());
+//        sysRoleDeptMapper.insert(roleDept);
+        return true;
+    }
+
+    /**
+     * 通过部门ID查询角色列表
+     *
+     * @param deptId 部门ID
+     * @return 角色列表
+     */
+    public List<SysRole> selectListByDeptId(Integer deptId) {
+        return sysRoleMapper.selectListByDeptId(deptId);
+    }
+}

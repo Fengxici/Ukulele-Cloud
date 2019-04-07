@@ -4,7 +4,7 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import timing.ukulele.api.model.system.GlobalUserModel;
+import timing.ukulele.facade.user.model.persistent.SysUser;
 
 import java.util.Collection;
 
@@ -14,14 +14,14 @@ import java.util.Collection;
  */
 public class BaseUserDetail implements UserDetails, CredentialsContainer {
 
-    private final GlobalUserModel baseUser;
+    private final SysUser baseUser;
     private final User user;
 
-    public BaseUserDetail(GlobalUserModel baseUser, User user) {
+    public BaseUserDetail(SysUser baseUser, User user) {
         this.baseUser = baseUser;
         this.user = user;
     }
-    
+
     @Override
     public void eraseCredentials() {
         user.eraseCredentials();
@@ -62,7 +62,7 @@ public class BaseUserDetail implements UserDetails, CredentialsContainer {
         return user.isEnabled();
     }
 
-    public GlobalUserModel getBaseUser() {
+    public SysUser getBaseUser() {
         return baseUser;
     }
 }

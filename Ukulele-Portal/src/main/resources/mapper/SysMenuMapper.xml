@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="timing.ukulele.service.portal.mapper.SysMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="timing.ukulele.facade.portal.model.persistent.SysMenu">
+        <id column="id_" property="id"/>
+        <result column="name_" property="name"/>
+        <result column="permission_" property="permission"/>
+        <result column="url_" property="url"/>
+        <result column="path_" property="path"/>
+        <result column="method_" property="method"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="icon_" property="icon"/>
+        <result column="component_" property="component"/>
+        <result column="sort_" property="sort"/>
+        <result column="type_" property="type"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="enable_" property="enable"/>
+    </resultMap>
+
+    <resultMap id="MenuVoResultMap" type="timing.ukulele.facade.portal.model.view.MenuVO">
+        <id column="id_" property="id"/>
+        <result column="name_" property="name"/>
+        <result column="permission_" property="permission"/>
+        <result column="url_" property="url"/>
+        <result column="method_" property="method"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="icon_" property="icon"/>
+        <result column="path_" property="path"/>
+        <result column="component_" property="component"/>
+        <result column="sort_" property="sort"/>
+        <result column="type_" property="type"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="enable_" property="enable"/>
+    </resultMap>
+
+    <select id="findMenuByRoleName" resultMap="MenuVoResultMap">
+        SELECT
+            sys_menu.*
+        FROM
+        sys_role
+        LEFT JOIN sys_role_menu ON sys_role_menu.role_id = sys_role.id_
+        LEFT JOIN sys_menu ON sys_menu.id_ = sys_role_menu.menu_id
+        WHERE
+        sys_role.enable_ = 1
+        AND sys_menu.enable_ = 1
+        AND sys_role.role_code = #{role}
+        ORDER BY sys_menu.sort DESC
+    </select>
+</mapper>

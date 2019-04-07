@@ -4,14 +4,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
+import timing.ukulele.common.data.ResponseVO;
+import timing.ukulele.redisson.CacheUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +21,7 @@ import java.nio.charset.Charset;
 
 /**
  * 验证码验证
- *
+ * <p>
  * security.validate.code 默认 为false，开启需要设置为true
  */
 @Slf4j
@@ -29,9 +30,16 @@ import java.nio.charset.Charset;
 @ConditionalOnProperty(value = "security.validate.code", havingValue = "true")
 public class ValidateCodeFilter extends ZuulFilter {
     private static final String EXPIRED_CAPTCHA_ERROR = "验证码已过期，请重新获取";
-
-    @Autowired
-    private RedisTemplate redisTemplate;
+    /**
+     * oauth token
+     */
+    String OAUTH_TOKEN_URL = "/oauth/token";
+    /**
+     * 默认保存code的前缀
+     */
+    String DEFAULT_CODE_KEY = "DEFAULT_CODE_KEY";
+//    @Autowired
+//    private RedisTemplate redisTemplate;
 
     @Override
     public String filterType() {
@@ -60,18 +68,17 @@ public class ValidateCodeFilter extends ZuulFilter {
         }
 
         // 对指定的请求方法 进行验证码的校验
-        return StrUtil.containsAnyIgnoreCase(request.getRequestURI(), SecurityConstants.OAUTH_TOKEN_URL);
+        return StringUtils.containsIgnoreCase(request.getRequestURI(), OAUTH_TOKEN_URL);
     }
 
     @Override
     public Object run() {
         try {
             checkCode(RequestContext.getCurrentContext().getRequest());
-        } catch (ValidateCodeException e) {
+        } catch (Exception e) {
             final RequestContext ctx = RequestContext.getCurrentContext();
-            final Response result = Response.failure(e.getMessage());
+            final ResponseVO result = ResponseVO.failure(e.getMessage());
             final HttpServletResponse response = ctx.getResponse();
-
             response.setCharacterEncoding(Charset.defaultCharset().name());
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.setStatus(478);
@@ -91,41 +98,41 @@ public class ValidateCodeFilter extends ZuulFilter {
      * 检查code
      *
      * @param httpServletRequest request
-     * @throws ValidateCodeException 验证码校验异常
+     * @throws Exception 验证码校验异常
      */
-    private void checkCode(HttpServletRequest httpServletRequest) throws ValidateCodeException {
+    private void checkCode(HttpServletRequest httpServletRequest) throws Exception {
         final String code = httpServletRequest.getParameter("code");
-        if (StrUtil.isBlank(code)) {
-            throw new ValidateCodeException("请输入验证码");
+        if (StringUtils.isBlank(code)) {
+            throw new Exception("请输入验证码");
         }
 
         String randomStr = httpServletRequest.getParameter("randomStr");
-        if (StrUtil.isBlank(randomStr)) {
+        if (StringUtils.isBlank(randomStr)) {
             randomStr = httpServletRequest.getParameter("mobile");
         }
 
-        final String key = SecurityConstants.DEFAULT_CODE_KEY + randomStr;
-        if (!redisTemplate.hasKey(key)) {
-            throw new ValidateCodeException(EXPIRED_CAPTCHA_ERROR);
+        final String key = DEFAULT_CODE_KEY + randomStr;
+        if (!CacheUtil.getCache().exists(key)) {
+            throw new Exception(EXPIRED_CAPTCHA_ERROR);
         }
 
-        final Object codeObj = redisTemplate.opsForValue().get(key);
+        final Object codeObj = CacheUtil.getCache().get(key);
 
         if (codeObj == null) {
-            throw new ValidateCodeException(EXPIRED_CAPTCHA_ERROR);
+            throw new Exception(EXPIRED_CAPTCHA_ERROR);
         }
 
         final String saveCode = codeObj.toString();
-        if (StrUtil.isBlank(saveCode)) {
-            redisTemplate.delete(key);
-            throw new ValidateCodeException(EXPIRED_CAPTCHA_ERROR);
+        if (StringUtils.isBlank(saveCode)) {
+            CacheUtil.getCache().del(key);
+            throw new Exception(EXPIRED_CAPTCHA_ERROR);
         }
 
-        if (!StrUtil.equals(saveCode, code)) {
-            redisTemplate.delete(key);
-            throw new ValidateCodeException("验证码错误，请重新输入");
+        if (!StringUtils.equals(saveCode, code)) {
+            CacheUtil.getCache().del(key);
+            throw new Exception("验证码错误，请重新输入");
         }
 
-        redisTemplate.delete(key);
+        CacheUtil.getCache().del(key);
     }
 }

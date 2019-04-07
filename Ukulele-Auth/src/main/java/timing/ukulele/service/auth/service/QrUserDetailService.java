@@ -2,20 +2,21 @@ package timing.ukulele.service.auth.service;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import timing.ukulele.api.model.system.GlobalUserModel;
-import timing.ukulele.api.model.system.ModuleModel;
-import timing.ukulele.api.model.system.RoleModel;
-import timing.ukulele.api.service.system.feign.ISystemFeignService;
+import timing.ukulele.facade.portal.api.feign.IPortalFeignService;
+import timing.ukulele.facade.portal.model.persistent.SysMenu;
+import timing.ukulele.facade.portal.model.persistent.SysRole;
+import timing.ukulele.facade.user.api.feign.IUserFeignService;
+import timing.ukulele.facade.user.model.persistent.SysUser;
 
 @Service
 public class QrUserDetailService extends BaseUserDetailService {
 
-    public QrUserDetailService(ISystemFeignService systemService, RedisTemplate<String, RoleModel> redisTemplate, RedisTemplate<String, ModuleModel> resourcesTemplate) {
-        super(systemService, redisTemplate, resourcesTemplate);
+    public QrUserDetailService(IUserFeignService userService, IPortalFeignService portalService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
+        super(userService, portalService, redisTemplate, resourcesTemplate);
     }
 
     @Override
-    protected GlobalUserModel getUser(String qrCode) {
+    protected SysUser getUser(String qrCode) {
         return null;
     }
 }

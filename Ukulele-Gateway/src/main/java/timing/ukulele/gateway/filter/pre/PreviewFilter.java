@@ -11,6 +11,8 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import timing.ukulele.common.data.ResponseVO;
+import timing.ukulele.common.exception.DefaultError;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +21,6 @@ import java.nio.charset.Charset;
 
 /**
  * 演示环境控制
- *
  */
 @Slf4j
 @RefreshScope
@@ -42,7 +43,7 @@ public class PreviewFilter extends ZuulFilter {
     public boolean shouldFilter() {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
         if (StringUtils.equalsIgnoreCase(request.getMethod(), HttpMethod.GET.name()) ||
-                StringUtils.containsIgnoreCase(request.getRequestURI(), TOKEN)){
+                StringUtils.containsIgnoreCase(request.getRequestURI(), TOKEN)) {
             return false;
         }
         return true;
@@ -51,9 +52,8 @@ public class PreviewFilter extends ZuulFilter {
     @Override
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
-        final Response result = Response.failure(DefaultError.SHOW_AUTH_CONTROL);
+        final ResponseVO result = ResponseVO.failure(DefaultError.SHOW_AUTH_CONTROL);
         final HttpServletResponse response = ctx.getResponse();
-
         response.setCharacterEncoding(Charset.defaultCharset().name());
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         response.setStatus(479);

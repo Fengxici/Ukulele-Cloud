@@ -5,7 +5,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import timing.ukulele.common.util.JsonUtils;
-import timing.ukulele.api.model.system.GlobalUserModel;
+import timing.ukulele.facade.user.model.persistent.SysUser;
 import timing.ukulele.service.auth.BaseUserDetail;
 import timing.ukulele.service.auth.Constant;
 
@@ -18,6 +18,7 @@ public class JwtAccessToken extends JwtAccessTokenConverter {
 
     /**
      * 生成token
+     *
      * @param accessToken
      * @param authentication
      * @return
@@ -26,9 +27,9 @@ public class JwtAccessToken extends JwtAccessTokenConverter {
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         DefaultOAuth2AccessToken defaultOAuth2AccessToken = new DefaultOAuth2AccessToken(accessToken);
         //客户端模式不包含用户信息
-        if(authentication.getPrincipal() instanceof BaseUserDetail){
+        if (authentication.getPrincipal() instanceof BaseUserDetail) {
             // 设置额外用户信息
-            GlobalUserModel baseUser = ((BaseUserDetail) authentication.getPrincipal()).getBaseUser();
+            SysUser baseUser = ((BaseUserDetail) authentication.getPrincipal()).getBaseUser();
             baseUser.setPassword(null);
             // 将用户信息添加到token额外信息中
             defaultOAuth2AccessToken.getAdditionalInformation().put(Constant.USER_INFO, baseUser);
@@ -38,25 +39,26 @@ public class JwtAccessToken extends JwtAccessTokenConverter {
 
     /**
      * 解析token
+     *
      * @param value
      * @param map
      * @return
      */
     @Override
-    public OAuth2AccessToken extractAccessToken(String value, Map<String, ?> map){
+    public OAuth2AccessToken extractAccessToken(String value, Map<String, ?> map) {
         OAuth2AccessToken oauth2AccessToken = super.extractAccessToken(value, map);
         convertData(oauth2AccessToken, oauth2AccessToken.getAdditionalInformation());
         return oauth2AccessToken;
     }
 
     private void convertData(OAuth2AccessToken accessToken, Map<String, ?> map) {
-        accessToken.getAdditionalInformation().put(Constant.USER_INFO,convertUserData(map.get(Constant.USER_INFO)));
+        accessToken.getAdditionalInformation().put(Constant.USER_INFO, convertUserData(map.get(Constant.USER_INFO)));
 
     }
 
-    private GlobalUserModel convertUserData(Object map) {
+    private SysUser convertUserData(Object map) {
         String json = JsonUtils.deserializer(map);
-        GlobalUserModel user = JsonUtils.serializable(json, GlobalUserModel.class);
+        SysUser user = JsonUtils.serializable(json, SysUser.class);
         return user;
     }
 }

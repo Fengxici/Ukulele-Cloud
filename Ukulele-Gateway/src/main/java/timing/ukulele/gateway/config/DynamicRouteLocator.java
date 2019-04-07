@@ -7,7 +7,7 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.discovery.DiscoveryClientRouteLocator;
-import timing.ukulele.gateway.model.SysZuulRoute;
+import timing.ukulele.facade.portal.model.persistent.SysZuulRoute;
 import timing.ukulele.redisson.CacheUtil;
 
 import java.util.*;
@@ -80,7 +80,7 @@ public class DynamicRouteLocator extends DiscoveryClientRouteLocator {
                 zuulRoute.setRetryable(StringUtils.equals(result.getRetryable(), "0") ? Boolean.FALSE : Boolean.TRUE);
                 zuulRoute.setStripPrefix(StringUtils.equals(result.getStripPrefix(), "0") ? Boolean.FALSE : Boolean.TRUE);
                 zuulRoute.setUrl(result.getUrl());
-                List<String> sensitiveHeadersList = Arrays.asList(StringUtils.split(result.getSensitiveheadersList(), ","));
+                List<String> sensitiveHeadersList = Arrays.asList(StringUtils.split(result.getSensitiveHeaderList(), ","));
                 Set<String> sensitiveHeaderSet = new HashSet<>(sensitiveHeadersList);
                 zuulRoute.setSensitiveHeaders(sensitiveHeaderSet);
                 zuulRoute.setCustomSensitiveHeaders(true);

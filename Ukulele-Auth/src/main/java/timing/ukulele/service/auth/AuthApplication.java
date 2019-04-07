@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
-@EnableFeignClients("timing.ukulele.api.service")
+@EnableFeignClients(basePackages = {"timing.ukulele.facade.auth.api", "timing.ukulele.facade.user.api", "timing.ukulele.facade.portal.api"})
 @EnableCircuitBreaker
 @EnableAuthorizationServer
 public class AuthApplication {

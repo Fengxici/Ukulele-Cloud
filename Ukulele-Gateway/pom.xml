@@ -19,6 +19,14 @@
     <dependencies>
         <dependency>
             <groupId>timing.ukulele</groupId>
+            <artifactId>portal-cloud-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>syslog-cloud-facade</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-log</artifactId>
         </dependency>
         <dependency>
@@ -28,11 +36,6 @@
         <dependency>
             <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-redisson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>timing.ukulele</groupId>
-            <artifactId>ukulele-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>

@@ -24,7 +24,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.web.client.RestTemplate;
 import timing.ukulele.gateway.UkuleleOauth2Properties;
-import timing.ukulele.gateway.handler.TarocoAccessDeniedHandler;
+import timing.ukulele.gateway.handler.UkuleleAccessDeniedHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,17 +43,21 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     private static final String PUBLIC_KEY = "pubkey.txt";
 
-    @Autowired
-    private UkuleleOauth2Properties oauth2Properties;
+    private final UkuleleOauth2Properties oauth2Properties;
+
+    private final OAuth2WebSecurityExpressionHandler expressionHandler;
+
+    private final UkuleleAccessDeniedHandler accessDeniedHandler;
+
+    private final ResourceServerProperties resource;
 
     @Autowired
-    private OAuth2WebSecurityExpressionHandler expressionHandler;
-
-    @Autowired
-    private TarocoAccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private ResourceServerProperties resource;
+    public ResourceServerConfiguration(UkuleleOauth2Properties oauth2Properties, OAuth2WebSecurityExpressionHandler expressionHandler, UkuleleAccessDeniedHandler accessDeniedHandler, ResourceServerProperties resource) {
+        this.oauth2Properties = oauth2Properties;
+        this.expressionHandler = expressionHandler;
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.resource = resource;
+    }
 
     @Bean
     public TokenStore tokenStore(JwtAccessTokenConverter jwtAccessTokenConverter) {

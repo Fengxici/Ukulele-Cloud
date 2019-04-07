@@ -8,24 +8,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import timing.ukulele.common.data.ResponseData;
+import timing.ukulele.facade.auth.model.persistent.OAuthClientDetailsModel;
+import timing.ukulele.service.auth.service.OauthClientDetailsService;
 import timing.ukulele.web.pojo.ResponseCode;
-import timing.ukulele.api.service.system.feign.ISystemFeignService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 @SessionAttributes({"authorizationRequest"})
 public class MvcController {
 
-    private final ISystemFeignService clientFeignService;
+    private final OauthClientDetailsService clientService;
 
     @Autowired
-    public MvcController(ISystemFeignService clientFeignService) {
-        this.clientFeignService = clientFeignService;
+    public MvcController(OauthClientDetailsService clientService) {
+        this.clientService = clientService;
     }
 
     /**
@@ -36,7 +38,6 @@ public class MvcController {
      */
     @RequestMapping("/backReferer")
     public void sendBack(HttpServletRequest request, HttpServletResponse response) {
-
         try {
             //sending back to client app
             String referer = request.getHeader("referer");
@@ -83,9 +84,9 @@ public class MvcController {
                 .getUsername();
         model.put("userName", userName);
         // 获取全部客户端应用
-        ResponseData responseData = clientFeignService.getAllClient();
-        if (ResponseCode.SUCCESS.getCode().equals(responseData.getCode()) && responseData.getData() != null) {
-            model.put("client", responseData.getData());
+        List<OAuthClientDetailsModel> list = clientService.getAll();
+        if (list != null) {
+            model.put("client", list);
         } else {
             model.put("client", new ArrayList<>());
         }

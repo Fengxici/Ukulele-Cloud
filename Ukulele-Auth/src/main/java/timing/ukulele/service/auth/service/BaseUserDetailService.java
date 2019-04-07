@@ -5,14 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import timing.ukulele.api.model.system.GlobalUserModel;
-import timing.ukulele.api.model.system.ModuleModel;
-import timing.ukulele.api.model.system.RoleModel;
-import timing.ukulele.api.service.system.feign.ISystemFeignService;
 import timing.ukulele.common.data.ResponseData;
+import timing.ukulele.facade.portal.api.feign.IPortalFeignService;
+import timing.ukulele.facade.portal.model.persistent.SysMenu;
+import timing.ukulele.facade.portal.model.persistent.SysRole;
+import timing.ukulele.facade.user.api.feign.IUserFeignService;
+import timing.ukulele.facade.user.model.persistent.SysUser;
 import timing.ukulele.service.auth.BaseUserDetail;
 import timing.ukulele.web.pojo.ResponseCode;
 
@@ -22,13 +24,15 @@ import java.util.List;
 @Slf4j
 public abstract class BaseUserDetailService implements UserDetailsService {
 
-    protected final ISystemFeignService systemService;
-    protected final RedisTemplate<String, RoleModel> redisTemplate;
-    protected final RedisTemplate<String, ModuleModel> resourcesTemplate;
+    protected final IPortalFeignService portalService;
+    protected final IUserFeignService userService;
+    protected final RedisTemplate<String, SysRole> redisTemplate;
+    protected final RedisTemplate<String, SysMenu> resourcesTemplate;
 
     @Autowired
-    public BaseUserDetailService(ISystemFeignService systemService, RedisTemplate<String, RoleModel> redisTemplate, RedisTemplate<String, ModuleModel> resourcesTemplate) {
-        this.systemService = systemService;
+    public BaseUserDetailService(IUserFeignService userService, IPortalFeignService portalService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
+        this.userService = userService;
+        this.portalService = portalService;
         this.redisTemplate = redisTemplate;
         this.resourcesTemplate = resourcesTemplate;
     }
@@ -36,11 +40,11 @@ public abstract class BaseUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String var1) throws UsernameNotFoundException {
 
-        GlobalUserModel baseUser = getUser(var1);
+        SysUser baseUser = getUser(var1);
 
         // 调用FeignClient查询角色
-        ResponseData<List<RoleModel>> baseRoleListResponseData = systemService.getRoleByUserId(baseUser.getId());
-        List<RoleModel> roles;
+        ResponseData<List<SysRole>> baseRoleListResponseData = portalService.getRoleByUserId(baseUser.getId());
+        List<SysRole> roles;
         if (baseRoleListResponseData.getData() == null || !ResponseCode.SUCCESS.getCode().equals(baseRoleListResponseData.getCode())) {
             log.error("查询角色失败！");
             roles = new ArrayList<>();
@@ -49,7 +53,7 @@ public abstract class BaseUserDetailService implements UserDetailsService {
         }
 
         //调用FeignClient查询菜单
-        ResponseData<List<ModuleModel>> baseModuleResourceListResponseData = systemService.getMenusByUserId(baseUser.getId());
+        ResponseData<List<SysMenu>> baseModuleResourceListResponseData = portalService.getMenuByUserId(baseUser.getId());
 
         // 获取用户权限列表
         List<GrantedAuthority> authorities = convertToAuthorities(baseUser, roles);
@@ -63,15 +67,15 @@ public abstract class BaseUserDetailService implements UserDetailsService {
         }
 
         // 返回带有用户权限信息的User
-        org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(baseUser.getAccount(),
+        User user = new User(baseUser.getUsername(),
                 baseUser.getPassword(), baseUser.getEnable(), true, true, true, authorities);
         return new BaseUserDetail(baseUser, user);
     }
 
-    protected abstract GlobalUserModel getUser(String var1);
+    protected abstract SysUser getUser(String var1);
 
 
-    private List<GrantedAuthority> convertToAuthorities(GlobalUserModel baseUser, List<RoleModel> roles) {
+    private List<GrantedAuthority> convertToAuthorities(SysUser baseUser, List<SysRole> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         // 清除 Redis 中用户的角色
         redisTemplate.delete(baseUser.getId().toString());

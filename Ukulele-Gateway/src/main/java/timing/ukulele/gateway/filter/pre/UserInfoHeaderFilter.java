@@ -24,8 +24,29 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
 @Component
 public class UserInfoHeaderFilter extends ZuulFilter {
 
+    /**
+     * 用户信息头 TODO
+     */
+    String USER_HEADER = "x-user-header";
+    /**
+     * 角色信息头 TODO
+     */
+    String ROLE_HEADER = "x-role-header";
+    /**
+     * 标签 header key TODO
+     */
+    String HEADER_LABEL = "x-label";
+    /**
+     * token请求头名称 TODO
+     */
+    String TOKEN_HEADER = "Authorization";
+
+    private final TokenStore tokenStore;
+
     @Autowired
-    private TokenStore tokenStore;
+    public UserInfoHeaderFilter(TokenStore tokenStore) {
+        this.tokenStore = tokenStore;
+    }
 
     @Override
     public String filterType() {
@@ -50,14 +71,15 @@ public class UserInfoHeaderFilter extends ZuulFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             RequestContext requestContext = RequestContext.getCurrentContext();
-            requestContext.addZuulRequestHeader(SecurityConstants.USER_HEADER, authentication.getName());
-            requestContext.addZuulRequestHeader(SecurityConstants.ROLE_HEADER, CollectionUtil.join(authentication.getAuthorities(), ","));
+            requestContext.addZuulRequestHeader(USER_HEADER, authentication.getName());
+//            TODO
+//            requestContext.addZuulRequestHeader(ROLE_HEADER, CollectionUtils.join(authentication.getAuthorities(), ","));
             String tokenValue = extractToken(request);
             if (!StringUtils.isEmpty(tokenValue)) {
                 OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
                 if (accessToken != null && !CollectionUtils.isEmpty(accessToken.getAdditionalInformation())) {
-                    requestContext.addZuulRequestHeader(CommonConstant.HEADER_LABEL, accessToken.getAdditionalInformation
-                            ().get(CommonConstant.HEADER_LABEL) + "");
+                    requestContext.addZuulRequestHeader(HEADER_LABEL, accessToken.getAdditionalInformation
+                            ().get(HEADER_LABEL) + "");
                 }
             }
         }
@@ -66,6 +88,7 @@ public class UserInfoHeaderFilter extends ZuulFilter {
 
     /**
      * 获取请求Bearer Token
+     *
      * @param request request对象
      * @return tokenValue
      */
@@ -84,7 +107,7 @@ public class UserInfoHeaderFilter extends ZuulFilter {
      * @return The token, or null if no OAuth authorization header was supplied.
      */
     private String extractHeaderToken(HttpServletRequest request) {
-        Enumeration<String> headers = request.getHeaders(CommonConstant.TOKEN_HEADER);
+        Enumeration<String> headers = request.getHeaders(TOKEN_HEADER);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
             if ((value.toLowerCase().startsWith(OAuth2AccessToken.BEARER_TYPE.toLowerCase()))) {
