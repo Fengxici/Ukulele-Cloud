@@ -20,9 +20,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController implements IUserService {
-    private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
+    private final SysUserService userService;
+
     @Autowired
-    private SysUserService userService;
+    public UserController(SysUserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * 通过用户名查询用户及其角色信息
@@ -94,7 +97,7 @@ public class UserController implements IUserService {
     }
 
     @Override
-    public ResponseVO editInfo(UserDTO userDTO, UserVO userVO) {
+    public ResponseVO editInfo(UserVO userVO) {
         return null;
     }
 

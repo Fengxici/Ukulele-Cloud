@@ -11,7 +11,7 @@ import timing.ukulele.service.user.mapper.SysUserMapper;
 
 @Slf4j
 @Service
-public final class SysUserService extends BaseService<SysUser> {
+public class SysUserService extends BaseService<SysUser> {
     private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
     private final SysUserMapper sysUserMapper;

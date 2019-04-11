@@ -1,13 +1,19 @@
+server:
+  port: 7070
+
 spring:
+  redisson:
+    lock:
+      address: redis://127.0.0.1:6379
   application:
     name: gateway
   security:
     user:
       name: root
       password: root
+  main:
+    allow-bean-definition-overriding: true
 
-server:
-  port: 10101
 
 eureka:
   instance:
@@ -19,7 +25,7 @@ eureka:
       user.password: root
   client:
     serviceUrl:
-#      defaultZone: http://root:root@192.168.0.109:8080/eureka
+      #      defaultZone: http://root:root@192.168.0.109:8080/eureka
       defaultZone: http://root:root@127.0.0.1:8080/eureka
 
 zuul:
@@ -27,16 +33,27 @@ zuul:
     connect-timeout-millis: 10000
     socket-timeout-millis: 60000
   routes:
-    system-service:
-      path: /api/system-service/**
-      serviceId: system-service
+    portal-service:
+      path: /api/portal-service/**
+      serviceId: portal-service
+    syslog-service:
+      path: /api/syslog-service/**
+      serviceId: syslog-service
+    user-service:
+      path: /api/user-service/**
+      serviceId: user-service
   #添加代理头
   add-proxy-headers: true
+  # 需要聚合的swagger服务
+  swagger:
+    serviceIds: user-service,syslog-service,portal-service
 
 proxy:
   auth:
     routes:
-      system-service: oauth2
+      portal-service: oauth2
+      syslog-service: oauth2
+      user-service: oauth2
 
 #security:
 #  oauth2:
@@ -48,11 +65,11 @@ proxy:
 
 security:
   oauth2:
-#    client:
-#      access-token-uri: http://localhost:9090/auth/oauth/token #令牌端点
-#      user-authorization-uri: http://localhost:9090/auth/oauth/authorize #授权端点
-#      client-id: test #OAuth2客户端ID
-#      client-secret: test #OAuth2客户端密钥
+    #    client:
+    #      access-token-uri: http://localhost:9090/auth/oauth/token #令牌端点
+    #      user-authorization-uri: http://localhost:9090/auth/oauth/authorize #授权端点
+    #      client-id: test #OAuth2客户端ID
+    #      client-secret: test #OAuth2客户端密钥
     resource:
       jwt:
         key-uri: http://localhost:9090/auth/oauth/token_key
@@ -75,7 +92,24 @@ management:
     web:
       exposure:
         include: "*"
-#        SpringBootActuator监控暴露所有接口
+  #        SpringBootActuator监控暴露所有接口
   endpoint:
-     health:
-          show-details: ALWAYS
+    health:
+      show-details: ALWAYS
+
+# oauth2 配置
+#ukulele:
+#  oauth2:
+#    url-permit-all:
+#      - /actuator/**
+#      - /mobile/**
+#      - /auth/**
+#      - /admin/code/*
+#      - /admin/smsCode/*
+#      - /admin/user/info
+#      - /admin/menu/userMenu
+#      - /swagger-resources/**
+#      - /swagger-ui.html
+#      - /*/v2/api-docs
+#      - /swagger/api-docs
+#      - /webjars/**

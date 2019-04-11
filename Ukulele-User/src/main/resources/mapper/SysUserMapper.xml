@@ -18,11 +18,11 @@
 
     <select id="selectUserVoByUsername" resultMap="BaseResultMap">
         select * from sys_user
-        WHERE `user`.username = #{username}
+        WHERE username = #{username}
     </select>
 
     <select id="selectUserVoByMobile" resultMap="BaseResultMap">
         select * from sys_user
-        WHERE `user`.phone = #{mobile}
+        WHERE phone_ = #{mobile}
     </select>
 </mapper>

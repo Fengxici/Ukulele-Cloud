@@ -10,7 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.facade.portal.api.feign.IPortalFeignService;
+import timing.ukulele.facade.portal.api.feign.IMenuFeignService;
+import timing.ukulele.facade.portal.api.feign.IRoleFeignService;
 import timing.ukulele.facade.portal.model.persistent.SysMenu;
 import timing.ukulele.facade.portal.model.persistent.SysRole;
 import timing.ukulele.facade.user.api.feign.IUserFeignService;
@@ -24,15 +25,17 @@ import java.util.List;
 @Slf4j
 public abstract class BaseUserDetailService implements UserDetailsService {
 
-    protected final IPortalFeignService portalService;
+    protected final IRoleFeignService roleService;
     protected final IUserFeignService userService;
+    protected final IMenuFeignService menuService;
     protected final RedisTemplate<String, SysRole> redisTemplate;
     protected final RedisTemplate<String, SysMenu> resourcesTemplate;
 
     @Autowired
-    public BaseUserDetailService(IUserFeignService userService, IPortalFeignService portalService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
+    public BaseUserDetailService(IUserFeignService userService, IRoleFeignService roleService, IMenuFeignService menuService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
         this.userService = userService;
-        this.portalService = portalService;
+        this.roleService = roleService;
+        this.menuService = menuService;
         this.redisTemplate = redisTemplate;
         this.resourcesTemplate = resourcesTemplate;
     }
@@ -43,7 +46,7 @@ public abstract class BaseUserDetailService implements UserDetailsService {
         SysUser baseUser = getUser(var1);
 
         // 调用FeignClient查询角色
-        ResponseData<List<SysRole>> baseRoleListResponseData = portalService.getRoleByUserId(baseUser.getId());
+        ResponseData<List<SysRole>> baseRoleListResponseData = roleService.getRoleByUserId(baseUser.getId());
         List<SysRole> roles;
         if (baseRoleListResponseData.getData() == null || !ResponseCode.SUCCESS.getCode().equals(baseRoleListResponseData.getCode())) {
             log.error("查询角色失败！");
@@ -53,7 +56,7 @@ public abstract class BaseUserDetailService implements UserDetailsService {
         }
 
         //调用FeignClient查询菜单
-        ResponseData<List<SysMenu>> baseModuleResourceListResponseData = portalService.getMenuByUserId(baseUser.getId());
+        ResponseData<List<SysMenu>> baseModuleResourceListResponseData = menuService.getMenuByUserId(baseUser.getId());
 
         // 获取用户权限列表
         List<GrantedAuthority> authorities = convertToAuthorities(baseUser, roles);
