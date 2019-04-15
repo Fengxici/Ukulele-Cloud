@@ -4,8 +4,8 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="timing.ukulele.facade.user.model.persistent.SysUser">
         <id column="id_" property="id"/>
-        <result column="username" property="username"/>
-        <result column="password" property="password"/>
+        <result column="username_" property="username"/>
+        <result column="password_" property="password"/>
         <result column="phone_" property="phone"/>
         <result column="avatar_" property="avatar"/>
         <result column="salt_" property="salt"/>
@@ -18,7 +18,7 @@
 
     <select id="selectUserVoByUsername" resultMap="BaseResultMap">
         select * from sys_user
-        WHERE username = #{username}
+        WHERE username_ = #{username}
     </select>
 
     <select id="selectUserVoByMobile" resultMap="BaseResultMap">

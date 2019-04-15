@@ -18,7 +18,7 @@ import timing.ukulele.web.pojo.ResponseCode;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+//@RequestMapping("/user")
 public class UserController implements IUserService {
     private final SysUserService userService;
 
