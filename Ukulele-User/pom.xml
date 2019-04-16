@@ -27,6 +27,10 @@
             <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>ukulele-log</artifactId>
+        </dependency>
         <!--第三方依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

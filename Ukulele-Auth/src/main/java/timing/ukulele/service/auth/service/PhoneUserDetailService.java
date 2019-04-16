@@ -1,13 +1,12 @@
 package timing.ukulele.service.auth.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.facade.portal.api.feign.IPortalFeignService;
+import timing.ukulele.facade.portal.api.feign.IMenuFeignService;
+import timing.ukulele.facade.portal.api.feign.IRoleFeignService;
 import timing.ukulele.facade.portal.model.persistent.SysMenu;
 import timing.ukulele.facade.portal.model.persistent.SysRole;
 import timing.ukulele.facade.user.api.feign.IUserFeignService;
@@ -19,8 +18,8 @@ import timing.ukulele.web.pojo.ResponseCode;
 public class PhoneUserDetailService extends BaseUserDetailService {
 
 
-    public PhoneUserDetailService(IUserFeignService userService, IPortalFeignService systemService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
-        super(userService, systemService, redisTemplate, resourcesTemplate);
+    public PhoneUserDetailService(IUserFeignService userService, IRoleFeignService roleService, IMenuFeignService menuService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
+        super(userService, roleService, menuService,redisTemplate, resourcesTemplate);
     }
 
     @Override

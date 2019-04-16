@@ -9,7 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
-import timing.ukulele.facade.portal.api.feign.IPortalFeignService;
+import timing.ukulele.facade.portal.api.feign.IMenuFeignService;
 import timing.ukulele.facade.portal.model.view.MenuVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,12 +23,12 @@ import java.util.List;
 @Service("permissionService")
 public class PermissionService {
 
-    private final IPortalFeignService menuService;
+    private final IMenuFeignService menuService;
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @Autowired
-    public PermissionService(IPortalFeignService menuService) {
+    public PermissionService(IMenuFeignService menuService) {
         this.menuService = menuService;
     }
 

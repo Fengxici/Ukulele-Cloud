@@ -90,8 +90,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         final JwtAccessTokenConverter converter = new JwtAccessToken();
         // 导入证书
         KeyStoreKeyFactory keyStoreKeyFactory =
-                new KeyStoreKeyFactory(new ClassPathResource("keystore.jks"), "foobar".toCharArray());
-        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("test"));
+                new KeyStoreKeyFactory(new ClassPathResource("taroco.jks"), "taroco!@#$".toCharArray());
+        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("taroco"));
+//        KeyStoreKeyFactory keyStoreKeyFactory =
+//                new KeyStoreKeyFactory(new ClassPathResource("keystore.jks"), "foobar".toCharArray());
+//        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("test"));
 
         return converter;
     }

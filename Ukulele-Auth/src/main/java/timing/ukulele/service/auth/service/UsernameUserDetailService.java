@@ -5,7 +5,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.facade.portal.api.feign.IPortalFeignService;
+import timing.ukulele.facade.portal.api.feign.IMenuFeignService;
+import timing.ukulele.facade.portal.api.feign.IRoleFeignService;
 import timing.ukulele.facade.portal.model.persistent.SysMenu;
 import timing.ukulele.facade.portal.model.persistent.SysRole;
 import timing.ukulele.facade.user.api.feign.IUserFeignService;
@@ -16,8 +17,8 @@ import timing.ukulele.web.pojo.ResponseCode;
 @Slf4j
 public class UsernameUserDetailService extends BaseUserDetailService {
 
-    public UsernameUserDetailService(IUserFeignService userService, IPortalFeignService portalService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
-        super(userService, portalService, redisTemplate, resourcesTemplate);
+    public UsernameUserDetailService(IUserFeignService userService, IRoleFeignService roleService, IMenuFeignService menuService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
+        super(userService, roleService, menuService, redisTemplate, resourcesTemplate);
     }
 
     @Override
