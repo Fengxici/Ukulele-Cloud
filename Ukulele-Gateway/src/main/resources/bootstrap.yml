@@ -27,17 +27,28 @@ zuul:
     connect-timeout-millis: 10000
     socket-timeout-millis: 60000
   routes:
-    system-service:
-      path: /api/system-service/**
-      serviceId: system-service
+    portal-service:
+      path: /api/portal-service/**
+      serviceId: portal-service
+    user-service:
+      path: /api/user-service/**
+      serviceId: user-service
+    syslog-service:
+      path: /api/syslog-service/**
+      serviceId: syslog-service
+    auth-service:
+      path: /api/auth-service/**
+      serviceId: auth-service
   #添加代理头
   add-proxy-headers: true
 
 proxy:
   auth:
     routes:
-      system-service: oauth2
-
+      portal-service: oauth2
+      user-service: oauth2
+      syslog-service: oauth2
+      auth-service: oauth2
 #security:
 #  oauth2:
 #    resource:
