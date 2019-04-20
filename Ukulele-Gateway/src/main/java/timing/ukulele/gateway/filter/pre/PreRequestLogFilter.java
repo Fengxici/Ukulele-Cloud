@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import timing.ukulele.facade.syslog.api.feign.ILogFeignService;
+import timing.ukulele.facade.syslog.api.feign.ILogFeignFacade;
 import timing.ukulele.facade.syslog.model.LogType;
 import timing.ukulele.facade.syslog.model.persistent.SysLog;
 
@@ -36,10 +36,10 @@ public class PreRequestLogFilter extends ZuulFilter {
     String USER_HEADER = "x-user-header";
 
 
-    private final ILogFeignService logService;
+    private final ILogFeignFacade logService;
 
     @Autowired
-    public PreRequestLogFilter(ILogFeignService logService) {
+    public PreRequestLogFilter(ILogFeignFacade logService) {
         this.logService = logService;
     }
 

@@ -5,11 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import timing.ukulele.facade.auth.api.IClientService;
-import timing.ukulele.facade.auth.api.feign.IClientFeignService;
 
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
 @EnableFeignClients(basePackages = {"timing.ukulele.facade.user.api", "timing.ukulele.facade.portal.api"})

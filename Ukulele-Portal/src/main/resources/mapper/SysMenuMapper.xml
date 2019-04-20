@@ -20,24 +20,7 @@
         <result column="enable_" property="enable"/>
     </resultMap>
 
-    <resultMap id="MenuVoResultMap" type="timing.ukulele.facade.portal.model.view.MenuVO">
-        <id column="id_" property="id"/>
-        <result column="name_" property="name"/>
-        <result column="permission_" property="permission"/>
-        <result column="url_" property="url"/>
-        <result column="method_" property="method"/>
-        <result column="parent_id" property="parentId"/>
-        <result column="icon_" property="icon"/>
-        <result column="path_" property="path"/>
-        <result column="component_" property="component"/>
-        <result column="sort_" property="sort"/>
-        <result column="type_" property="type"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-        <result column="enable_" property="enable"/>
-    </resultMap>
-
-    <select id="findMenuByRoleName" resultMap="MenuVoResultMap">
+    <select id="findMenuByRoleName" resultMap="BaseResultMap">
         SELECT
             sys_menu.*
         FROM
@@ -49,5 +32,24 @@
         AND sys_menu.enable_ = 1
         AND sys_role.role_code = #{role}
         ORDER BY sys_menu.sort DESC
+    </select>
+
+    <delete id="deleteRoleMenu">
+        delete from sys_role_menu where role_id=#{roleId}
+        <if test="menuId != null">
+            and menu_id=#{menuId}
+        </if>
+
+    </delete>
+
+    <insert id="addRoleMenu">
+        insert into sys_role_menu(role_id,menu_id) values(#{roleId},#{menuId})
+    </insert>
+
+    <select id="getMenuByUserId" resultMap="BaseResultMap">
+        select m.* from sys_menu m
+        left join sys_role_menu rm on m.id_=rm.menu_id
+        left join sys_role r on r.id_=rm.role_id
+        left join sys_user_role ur on r.id_=ur.role_id where ur.user_id=#{userId} and m.enable_=1 and r.enable_=1;
     </select>
 </mapper>

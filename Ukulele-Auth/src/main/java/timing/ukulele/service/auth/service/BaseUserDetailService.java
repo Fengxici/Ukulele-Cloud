@@ -9,15 +9,15 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.facade.portal.api.feign.IMenuFeignService;
-import timing.ukulele.facade.portal.api.feign.IRoleFeignService;
+import timing.ukulele.facade.portal.api.feign.IMenuFeignFacade;
+import timing.ukulele.facade.portal.api.feign.IRoleFeignFacade;
 import timing.ukulele.facade.portal.model.persistent.SysMenu;
 import timing.ukulele.facade.portal.model.persistent.SysRole;
-import timing.ukulele.facade.user.api.feign.IUserFeignService;
+import timing.ukulele.facade.user.api.feign.IUserFeignFacade;
 import timing.ukulele.facade.user.model.persistent.SysUser;
 import timing.ukulele.service.auth.BaseUserDetail;
-import timing.ukulele.web.pojo.ResponseCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +25,14 @@ import java.util.List;
 @Slf4j
 public abstract class BaseUserDetailService implements UserDetailsService {
 
-    protected final IRoleFeignService roleService;
-    protected final IUserFeignService userService;
-    protected final IMenuFeignService menuService;
+    protected final IRoleFeignFacade roleService;
+    protected final IUserFeignFacade userService;
+    protected final IMenuFeignFacade menuService;
     protected final RedisTemplate<String, SysRole> redisTemplate;
     protected final RedisTemplate<String, SysMenu> resourcesTemplate;
 
     @Autowired
-    public BaseUserDetailService(IUserFeignService userService, IRoleFeignService roleService, IMenuFeignService menuService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
+    public BaseUserDetailService(IUserFeignFacade userService, IRoleFeignFacade roleService, IMenuFeignFacade menuService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
         this.userService = userService;
         this.roleService = roleService;
         this.menuService = menuService;

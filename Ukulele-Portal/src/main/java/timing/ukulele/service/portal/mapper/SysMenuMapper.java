@@ -20,5 +20,11 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
      * @param role 角色名称
      * @return 菜单列表
      */
-    List<MenuVO> findMenuByRoleName(@Param("role") String role);
+    List<SysMenu> findMenuByRoleName(@Param("role") String role);
+
+    int deleteRoleMenu(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
+
+    int addRoleMenu(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
+
+    List<SysMenu> getMenuByUserId(@Param("userId") Long userId);
 }

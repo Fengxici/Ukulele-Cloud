@@ -9,7 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
-import timing.ukulele.facade.portal.api.feign.IMenuFeignService;
+import timing.ukulele.common.data.ResponseData;
+import timing.ukulele.facade.portal.api.feign.IMenuFeignFacade;
 import timing.ukulele.facade.portal.model.view.MenuVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,12 +24,12 @@ import java.util.List;
 @Service("permissionService")
 public class PermissionService {
 
-    private final IMenuFeignService menuService;
+    private final IMenuFeignFacade menuService;
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @Autowired
-    public PermissionService(IMenuFeignService menuService) {
+    public PermissionService(IMenuFeignFacade menuService) {
         this.menuService = menuService;
     }
 
@@ -48,22 +49,23 @@ public class PermissionService {
                 return hasPermission;
             }
 
-            List<MenuVO> urls = new ArrayList<>();
+            ResponseData<List<MenuVO>> urls = new ResponseData<>();
             for (SimpleGrantedAuthority authority : grantedAuthorityList) {
                 if (!StringUtils.equals(authority.getAuthority(), "ROLE_USER")) {
                     // TODO 角色与菜单权限的关联关系需要缓存提高访问效率
                     urls = menuService.findMenuByRole(authority.getAuthority());
                     if (urls == null)
-                        urls = new ArrayList<>();
+                        urls = new ResponseData<>();
                 }
             }
-            for (MenuVO menu : urls) {
-                if (StringUtils.isNotEmpty(menu.getUrl()) && antPathMatcher.match(menu.getUrl(), request.getRequestURI())
-                        && request.getMethod().equalsIgnoreCase(menu.getMethod())) {
-                    hasPermission = true;
-                    break;
+            if (urls.getData() != null)
+                for (MenuVO menu : urls.getData()) {
+                    if (StringUtils.isNotEmpty(menu.getUrl()) && antPathMatcher.match(menu.getUrl(), request.getRequestURI())
+                            && request.getMethod().equalsIgnoreCase(menu.getMethod())) {
+                        hasPermission = true;
+                        break;
+                    }
                 }
-            }
         }
         return hasPermission;
     }

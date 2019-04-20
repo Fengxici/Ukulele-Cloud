@@ -1,32 +1,17 @@
 package timing.ukulele.service.portal.service;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import timing.ukulele.facade.portal.model.persistent.SysMenu;
-import timing.ukulele.facade.portal.model.view.MenuVO;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.portal.mapper.SysMenuMapper;
 
 import java.util.List;
 
-/**
- * <p>
- * 菜单权限表 服务实现类
- * </p>
- */
 @Service
 public class SysMenuService extends BaseService<SysMenu> {
 
-    private final SysMenuMapper sysMenuMapper;
-
-    @Autowired
-    public SysMenuService(SysMenuMapper sysMenuMapper) {
-        this.sysMenuMapper = sysMenuMapper;
-    }
-
-    public List<MenuVO> findMenuByRoleName(String role) {
-        return sysMenuMapper.findMenuByRoleName(role);
+    public List<SysMenu> findMenuByRoleName(String role) {
+        return ((SysMenuMapper) this.baseMapper).findMenuByRoleName(role);
     }
 
     public Boolean deleteMenu(Long id) {
@@ -46,5 +31,17 @@ public class SysMenuService extends BaseService<SysMenu> {
 
     public Boolean updateMenuById(SysMenu sysMenu) {
         return this.updateById(sysMenu);
+    }
+
+    public Boolean deleteRoleMenu(Long roleId, Long menuId) {
+        return ((SysMenuMapper) this.baseMapper).deleteRoleMenu(roleId, menuId) >= 0;
+    }
+
+    public Boolean addRoleMenu(Long roleId, Long menuId) {
+        return ((SysMenuMapper) this.baseMapper).addRoleMenu(roleId, menuId) > 0;
+    }
+
+    public List<SysMenu> getMenuByUserId(Long userId) {
+        return ((SysMenuMapper) this.baseMapper).getMenuByUserId(userId);
     }
 }

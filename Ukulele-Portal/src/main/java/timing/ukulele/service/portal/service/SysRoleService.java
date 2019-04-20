@@ -1,7 +1,6 @@
 package timing.ukulele.service.portal.service;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import timing.ukulele.facade.portal.model.data.RoleDTO;
@@ -12,20 +11,8 @@ import timing.ukulele.service.portal.mapper.SysRoleMapper;
 
 import java.util.List;
 
-/**
- * <p>
- * 服务实现类
- * </p>
- */
 @Service
 public class SysRoleService extends BaseService<SysRole> {
-
-    private final SysRoleMapper sysRoleMapper;
-
-    @Autowired
-    public SysRoleService(SysRoleMapper sysRoleMapper) {
-        this.sysRoleMapper = sysRoleMapper;
-    }
 
     /**
      * 添加角色
@@ -36,7 +23,7 @@ public class SysRoleService extends BaseService<SysRole> {
     public Boolean insertRole(RoleDTO roleDto) {
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
-        sysRoleMapper.insert(sysRole);
+        this.baseMapper.insert(sysRole);
         SysRoleDept roleDept = new SysRoleDept();
         roleDept.setRoleId(sysRole.getId());
         roleDept.setDeptId(roleDto.getRoleDeptId());
@@ -60,13 +47,8 @@ public class SysRoleService extends BaseService<SysRole> {
         //更新角色信息
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
-        sysRoleMapper.updateById(sysRole);
+        this.baseMapper.updateById(sysRole);
 
-        //维护角色部门关系
-        SysRoleDept roleDept = new SysRoleDept();
-        roleDept.setRoleId(sysRole.getId());
-        roleDept.setDeptId(roleDto.getRoleDeptId());
-//        sysRoleDeptMapper.insert(roleDept);
         return true;
     }
 
@@ -76,7 +58,20 @@ public class SysRoleService extends BaseService<SysRole> {
      * @param deptId 部门ID
      * @return 角色列表
      */
-    public List<SysRole> selectListByDeptId(Integer deptId) {
-        return sysRoleMapper.selectListByDeptId(deptId);
+    public List<SysRole> selectListByDeptId(Long deptId) {
+        return ((SysRoleMapper) this.baseMapper).selectListByDeptId(deptId);
+    }
+
+    public List<SysRole> getRoleByUserId(Long id) {
+        return ((SysRoleMapper) this.baseMapper).getRoleByUserId(id);
+    }
+
+
+    public Boolean deleteUserRole(Long userId, Long roleId) {
+        return ((SysRoleMapper) this.baseMapper).deleteUserRole(userId, roleId) >= 0;
+    }
+
+    public Boolean addUserRole(Long userId, Long roleId) {
+        return ((SysRoleMapper) this.baseMapper).addUserRole(userId, roleId) > 0;
     }
 }

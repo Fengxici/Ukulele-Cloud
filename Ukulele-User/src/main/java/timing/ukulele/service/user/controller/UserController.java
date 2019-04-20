@@ -1,25 +1,22 @@
 package timing.ukulele.service.user.controller;
 
-import com.github.pagehelper.Page;
-import org.springframework.beans.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.common.data.ResponseVO;
-import timing.ukulele.facade.user.api.IUserService;
+import timing.ukulele.facade.user.api.IUserFacade;
 import timing.ukulele.facade.user.model.data.UserDTO;
 import timing.ukulele.facade.user.model.persistent.SysUser;
 import timing.ukulele.facade.user.model.view.UserVO;
 import timing.ukulele.service.user.service.SysUserService;
-import timing.ukulele.web.pojo.ResponseCode;
+import timing.ukulele.web.controller.BaseController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
-//@RequestMapping("/user")
-public class UserController implements IUserService {
+public class UserController extends BaseController implements IUserFacade {
     private final SysUserService userService;
 
     @Autowired
@@ -35,8 +32,10 @@ public class UserController implements IUserService {
      */
     @Override
     public ResponseData<SysUser> getUserByUserName(String username) {
+        if (StringUtils.isEmpty(username))
+            return paraErrorResponse();
         SysUser user = userService.findUserByUsername(username);
-        return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), user);
+        return successResponse(user);
     }
 
     /**
@@ -47,58 +46,41 @@ public class UserController implements IUserService {
      */
     @Override
     public ResponseData<SysUser> getUserByPhone(String mobile) {
+        if (StringUtils.isEmpty(mobile))
+            return paraErrorResponse();
         SysUser user = userService.findUserByMobile(mobile);
-        return new ResponseData<>(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(), user);
+        return successResponse(user);
     }
 
     @Override
-    public ResponseVO user(UserVO userVO) {
+    public ResponseData<List<SysUser>> getUserByParam(Map<String, Object> map) {
         return null;
     }
 
     @Override
-    public UserVO user(Integer integer) {
+    public ResponseData<UserVO> user(UserVO userVO) {
         return null;
     }
 
     @Override
-    public ResponseVO userDel(Integer integer) {
+    public ResponseData<UserVO> user(Integer integer) {
         return null;
     }
 
     @Override
-    public ResponseVO user(UserDTO userDTO) {
+    public ResponseData<Boolean> userDel(Integer integer) {
         return null;
     }
 
     @Override
-    public ResponseVO userUpdate(UserDTO userDTO) {
+    public ResponseData<Boolean> user(UserDTO userDTO) {
         return null;
     }
 
     @Override
-    public UserVO findUserByUsername(String s) {
+    public ResponseData<Boolean> userUpdate(UserDTO userDTO) {
         return null;
     }
 
-    @Override
-    public UserVO findUserByMobile(String s) {
-        return null;
-    }
-
-    @Override
-    public UserVO findUserByOpenId(String s) {
-        return null;
-    }
-
-    @Override
-    public Page userPage(Map<String, Object> map, UserVO userVO) {
-        return null;
-    }
-
-    @Override
-    public ResponseVO editInfo(UserVO userVO) {
-        return null;
-    }
 
 }

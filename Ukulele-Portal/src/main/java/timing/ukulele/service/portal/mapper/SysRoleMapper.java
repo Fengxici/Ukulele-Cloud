@@ -1,5 +1,6 @@
 package timing.ukulele.service.portal.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import timing.ukulele.facade.portal.model.persistent.SysRole;
 import timing.ukulele.persistence.mapper.BaseMapper;
 
@@ -27,5 +28,11 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      * @param deptId 部门ID
      * @return 角色列表
      */
-    List<SysRole> selectListByDeptId(Integer deptId);
+    List<SysRole> selectListByDeptId(Long deptId);
+
+    List<SysRole> getRoleByUserId(@Param("userId") Long userId);
+
+    int deleteUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
+
+    int addUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
 }
