@@ -31,7 +31,7 @@
         sys_role.enable_ = 1
         AND sys_menu.enable_ = 1
         AND sys_role.role_code = #{role}
-        ORDER BY sys_menu.sort DESC
+        ORDER BY sys_menu.sort_ DESC
     </select>
 
     <delete id="deleteRoleMenu">

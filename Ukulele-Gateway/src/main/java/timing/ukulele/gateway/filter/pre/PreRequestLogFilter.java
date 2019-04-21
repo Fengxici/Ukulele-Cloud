@@ -30,10 +30,6 @@ public class PreRequestLogFilter extends ZuulFilter {
      * oauth token
      */
     private static final String OAUTH_TOKEN_URL = "/oauth/token";
-    /**
-     * TODO 用户信息头
-     */
-    String USER_HEADER = "x-user-header";
 
 
     private final ILogFeignFacade logService;

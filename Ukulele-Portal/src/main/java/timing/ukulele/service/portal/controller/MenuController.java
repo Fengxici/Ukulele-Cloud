@@ -1,7 +1,9 @@
 package timing.ukulele.service.portal.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.api.IMenuFacade;
@@ -11,9 +13,7 @@ import timing.ukulele.facade.portal.model.view.MenuVO;
 import timing.ukulele.service.portal.service.SysMenuService;
 import timing.ukulele.web.controller.BaseController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public final class MenuController extends BaseController implements IMenuFacade {
@@ -96,5 +96,23 @@ public final class MenuController extends BaseController implements IMenuFacade 
         if (userId == null || userId <= 0)
             return paraErrorResponse();
         return successResponse(this.sysMenuService.getMenuByUserId(userId));
+    }
+
+    @Override
+    public ResponseData<List<MenuTree>> getUserMenu(@RequestHeader("x-role-header") String roles) {
+        if(StringUtils.isEmpty(roles))
+            return paraErrorResponse();
+        Set<SysMenu> all = new HashSet<>();
+        Arrays.stream(roles.split(",")).forEach(role->all.addAll(this.sysMenuService.findMenuByRoleName(role)));
+        List<MenuTree> menuTreeList = new ArrayList<>();
+        all.forEach(menu->{
+            if("0".equals(menu.getType())){
+                MenuVO vo  = new MenuVO();
+                BeanUtils.copyProperties(menu,vo);
+                menuTreeList.add(new MenuTree(vo));
+            }
+        });
+        menuTreeList.sort(Comparator.comparing(MenuTree::getSort));
+        return successResponse(menuTreeList);
     }
 }

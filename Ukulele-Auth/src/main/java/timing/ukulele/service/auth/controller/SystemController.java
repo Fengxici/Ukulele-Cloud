@@ -1,14 +1,12 @@
 package timing.ukulele.service.auth.controller;
 
-import com.github.pagehelper.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.common.data.ResponseVO;
-import timing.ukulele.common.exception.DefaultError;
 import timing.ukulele.facade.auth.api.IClientFacade;
 import timing.ukulele.facade.auth.model.persistent.OAuthClientDetailsModel;
 import timing.ukulele.service.auth.service.OauthClientDetailsService;
@@ -95,7 +93,7 @@ public final class SystemController implements IClientFacade {
 
 
     @GetMapping("/page")
-    public Page page(Map<String, Object> map) {
+    public IPage page(Map<String, Object> map) {
         return null;
     }
 

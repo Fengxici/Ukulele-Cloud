@@ -2,11 +2,11 @@ package timing.ukulele.gateway.filter;
 
 import com.netflix.zuul.ZuulFilter;
 import timing.ukulele.gateway.filter.pre.PreRequestLogFilter;
+import timing.ukulele.gateway.filter.pre.XlabelRequestPreFilter;
 
 public interface GatewayFilterConstants {
 
     // ORDER constant -----------------------------------
-
     /**
      * Filter Order for {@link XlabelRequestPreFilter#filterOrder()}
      */

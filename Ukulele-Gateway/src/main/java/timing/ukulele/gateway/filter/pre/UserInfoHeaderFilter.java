@@ -2,6 +2,7 @@ package timing.ukulele.gateway.filter.pre;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.security.core.Authentication;
@@ -13,9 +14,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Enumeration;
 
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.FORM_BODY_WRAPPER_FILTER_ORDER;
+import static timing.ukulele.gateway.filter.GatewayHeaderConstants.*;
 
 /**
  * 将认证用户的相关信息 放入header中, 后端服务可以直接读取使用
@@ -24,22 +27,6 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
 @Component
 public class UserInfoHeaderFilter extends ZuulFilter {
 
-    /**
-     * 用户信息头 TODO
-     */
-    String USER_HEADER = "x-user-header";
-    /**
-     * 角色信息头 TODO
-     */
-    String ROLE_HEADER = "x-role-header";
-    /**
-     * 标签 header key TODO
-     */
-    String HEADER_LABEL = "x-label";
-    /**
-     * token请求头名称 TODO
-     */
-    String TOKEN_HEADER = "Authorization";
 
     private final TokenStore tokenStore;
 
@@ -72,8 +59,10 @@ public class UserInfoHeaderFilter extends ZuulFilter {
         if (authentication != null) {
             RequestContext requestContext = RequestContext.getCurrentContext();
             requestContext.addZuulRequestHeader(USER_HEADER, authentication.getName());
-//            TODO
-//            requestContext.addZuulRequestHeader(ROLE_HEADER, CollectionUtils.join(authentication.getAuthorities(), ","));
+            String authorities = Arrays.toString(authentication.getAuthorities().toArray());
+            authorities = authorities.replace("[","");
+            authorities = authorities.replace("]","");
+            requestContext.addZuulRequestHeader(ROLE_HEADER, authorities);
             String tokenValue = extractToken(request);
             if (!StringUtils.isEmpty(tokenValue)) {
                 OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
