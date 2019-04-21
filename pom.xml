@@ -47,7 +47,6 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <!--<version>Finchley.SR1</version>-->
                 <version>Greenwich.SR1</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -120,6 +119,12 @@
                 <version>${timing.ukulele-version}</version>
             </dependency>
             <dependency>
+                <groupId>timing.ukulele</groupId>
+                <artifactId>ukulele-ribbon</artifactId>
+                <version>${timing.ukulele-version}</version>
+            </dependency>
+            <!--第三方框架-->
+            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-openfeign-core</artifactId>
                 <version>${spring-cloud-openfeign-core-version}</version>
@@ -161,7 +166,6 @@
             </plugin>
         </plugins>
     </build>
-
     <profiles>
         <profile>
             <id>spring</id>
