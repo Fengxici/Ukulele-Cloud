@@ -75,6 +75,7 @@ CREATE TABLE `oauth_client_details` (
 
 LOCK TABLES `oauth_client_details` WRITE;
 /*!40000 ALTER TABLE `oauth_client_details` DISABLE KEYS */;
+INSERT INTO `oauth_client_details` VALUES ('angular',NULL,'$2a$10$VJ0UI4k2Rxr99k6i06.tf.USJZijvTGvpV/P4zq1jcsDGNSSpxsVy','user','authorization_code,refresh_token,password,implicit,client_credentials','http://127.0.0.1:5000',NULL,43200,NULL,NULL,'false','angular应用'),('test',NULL,'$2a$10$VJ0UI4k2Rxr99k6i06.tf.USJZijvTGvpV/P4zq1jcsDGNSSpxsVy','user','authorization_code,refresh_token,password,implicit,client_credentials','http://localhost:10000',NULL,43200,NULL,NULL,'false','基础应用'),('test2',NULL,'tes','user','authorization_code',NULL,NULL,43205,NULL,NULL,'true','测试应用');
 /*!40000 ALTER TABLE `oauth_client_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,4 +119,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-07 22:07:38
+-- Dump completed on 2019-04-21 15:46:15
