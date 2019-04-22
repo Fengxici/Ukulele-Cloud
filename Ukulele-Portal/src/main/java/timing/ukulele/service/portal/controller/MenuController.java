@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
+import timing.ukulele.common.util.TreeUtil;
 import timing.ukulele.facade.portal.api.IMenuFacade;
 import timing.ukulele.facade.portal.model.data.MenuTree;
 import timing.ukulele.facade.portal.model.persistent.SysMenu;
@@ -100,19 +101,20 @@ public final class MenuController extends BaseController implements IMenuFacade 
 
     @Override
     public ResponseData<List<MenuTree>> getUserMenu(@RequestHeader("x-role-header") String roles) {
-        if(StringUtils.isEmpty(roles))
+        if (StringUtils.isEmpty(roles))
             return paraErrorResponse();
         Set<SysMenu> all = new HashSet<>();
-        Arrays.stream(roles.split(",")).forEach(role->all.addAll(this.sysMenuService.findMenuByRoleName(role)));
+        Arrays.stream(roles.split(",")).forEach(role -> all.addAll(this.sysMenuService.findMenuByRoleName(role)));
         List<MenuTree> menuTreeList = new ArrayList<>();
-        all.forEach(menu->{
-            if("0".equals(menu.getType())){
-                MenuVO vo  = new MenuVO();
-                BeanUtils.copyProperties(menu,vo);
-                menuTreeList.add(new MenuTree(vo));
+        all.forEach(menu -> {
+            if ("0".equals(menu.getType())) {
+                MenuTree node = new MenuTree();
+                BeanUtils.copyProperties(menu, node);
+                menuTreeList.add(node);
             }
         });
         menuTreeList.sort(Comparator.comparing(MenuTree::getSort));
-        return successResponse(menuTreeList);
+        //组织成tree
+        return successResponse(TreeUtil.bulid(menuTreeList, -1L));
     }
 }
