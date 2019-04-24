@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-
 public final class DeptController extends BaseController implements IDeptFacade {
     private final SysDeptService deptService;
 

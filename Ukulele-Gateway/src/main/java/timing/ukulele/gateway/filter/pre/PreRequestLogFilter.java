@@ -85,13 +85,13 @@ public class PreRequestLogFilter extends ZuulFilter {
 //            log.setCreateBy(request.getParameter("username"));
             logService.add(log);
         } else {
-            if (!HttpMethod.GET.matches(request.getMethod())) {
+//            if (!HttpMethod.GET.matches(request.getMethod())) {
                 // 记录操作日志
                 log.setType(LogType.Operation.name());
                 log.setTitle(LogType.Operation.name());
 //                log.setCreateBy(ctx.getZuulRequestHeaders().get(USER_HEADER));
                 logService.add(log);
-            }
+//            }
         }
     }
 

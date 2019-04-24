@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import timing.ukulele.facade.portal.model.data.RoleDTO;
 import timing.ukulele.facade.portal.model.persistent.SysRole;
-import timing.ukulele.facade.portal.model.persistent.SysRoleDept;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.portal.mapper.SysRoleMapper;
 
@@ -24,10 +23,6 @@ public class SysRoleService extends BaseService<SysRole> {
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
         this.baseMapper.insert(sysRole);
-        SysRoleDept roleDept = new SysRoleDept();
-        roleDept.setRoleId(sysRole.getId());
-        roleDept.setDeptId(roleDto.getRoleDeptId());
-//        sysRoleDeptMapper.insert(roleDept);
         return true;
     }
 
@@ -39,11 +34,6 @@ public class SysRoleService extends BaseService<SysRole> {
      */
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateRoleById(RoleDTO roleDto) {
-        //删除原有的角色部门关系
-        SysRoleDept condition = new SysRoleDept();
-        condition.setRoleId(roleDto.getId());
-//        sysRoleDeptMapper.delete(new EntityWrapper<>(condition));
-
         //更新角色信息
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
