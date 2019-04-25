@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `ukulele_user` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `ukulele_user`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
 --
--- Host: localhost    Database: ukulele_user
+-- Host: 192.168.1.180    Database: ukulele_user
 -- ------------------------------------------------------
--- Server version	5.7.21-log
+-- Server version	8.0.12
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -18,6 +16,14 @@ USE `ukulele_user`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Current Database: `ukulele_user`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `ukulele_user` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `ukulele_user`;
+
+--
 -- Table structure for table `sys_user`
 --
 
@@ -26,12 +32,12 @@ DROP TABLE IF EXISTS `sys_user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sys_user` (
   `id_` bigint(64) NOT NULL COMMENT '主键ID',
-  `username_` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '用户名',
-  `password_` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
-  `salt_` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '随机盐',
-  `phone_` varchar(20) CHARACTER SET utf8mb4 NOT NULL COMMENT '简介',
-  `avatar_` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '头像',
-  `label_` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `username_` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
+  `password_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `salt_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '随机盐',
+  `phone_` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '简介',
+  `avatar_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '头像',
+  `label_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `dept_id` int(11) DEFAULT NULL COMMENT '部门ID',
   `enable_` tinyint(1) DEFAULT '1' COMMENT '0-正常，1-删除',
   `create_by` bigint(64) DEFAULT NULL,
@@ -55,41 +61,16 @@ INSERT INTO `sys_user` VALUES (1,'admin','$2a$10$vg5QNHhCknAqevx9vM2s5esllJEzF/p
 UNLOCK TABLES;
 
 --
--- Dumping events for database 'ukulele_user'
---
-
---
 -- Dumping routines for database 'ukulele_user'
 --
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2019-04-23 22:14:49
-CREATE DATABASE  IF NOT EXISTS `ukulele_portal` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `ukulele_portal`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: ukulele_portal
--- ------------------------------------------------------
--- Server version	5.7.21-log
+-- Current Database: `ukulele_portal`
+--
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `ukulele_portal` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `ukulele_portal`;
 
 --
 -- Table structure for table `ant_icon`
@@ -121,6 +102,7 @@ CREATE TABLE `ant_icon` (
 
 LOCK TABLES `ant_icon` WRITE;
 /*!40000 ALTER TABLE `ant_icon` DISABLE KEYS */;
+INSERT INTO `ant_icon` VALUES (1,'icon','setting','outline',0,NULL,NULL,1,NULL,NULL,NULL,NULL),(2,'icon','bulb','outline',0,NULL,NULL,1,NULL,NULL,NULL,NULL),(3,'icon','eye','outline',0,NULL,NULL,1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `ant_icon` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +124,7 @@ CREATE TABLE `ant_menu` (
   `link_exact` tinyint(1) NOT NULL DEFAULT '0' COMMENT '路由是否精准匹配，默认：`false`',
   `external_link` varchar(45) DEFAULT NULL COMMENT '外部链接',
   `target_` enum('_blank','_self','_parent','_top') DEFAULT NULL COMMENT '链接 target',
-  `icon_` bigint(64) DEFAULT NULL COMMENT '图标',
+  `icon_id` bigint(64) DEFAULT NULL COMMENT '图标',
   `disabled_` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用',
   `hide_` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏菜单',
   `hide_in_breadcrumb` tinyint(1) NOT NULL DEFAULT '0' COMMENT '隐藏面包屑，指 `page-header` 组件的自动生成面包屑时有效',
@@ -166,7 +148,7 @@ CREATE TABLE `ant_menu` (
 
 LOCK TABLES `ant_menu` WRITE;
 /*!40000 ALTER TABLE `ant_menu` DISABLE KEYS */;
-INSERT INTO `ant_menu` VALUES (1,0,'SYS_CONF','系统配置',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(2,0,'OPS_MONI','运维管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(3,1,'SYS_MANA','系统管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(4,2,'SYS_MONI','系统监控',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(5,3,'DEP_MANA','部门管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(6,3,'MNU_MANA','菜单管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(7,3,'RLE_MANA','角色管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(8,3,'DIC_MANA','字典管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(9,3,'USR_MANA','用户管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(10,4,'RCD_MANA','日志管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(11,4,'SVR_MONI','服务监控',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(12,4,'REG_CNT','注册中心',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(13,4,'CHA_MONI','链路监控',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(14,1,'BAS_CONF','基础配置',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(15,14,'ICO_MANA','图标管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL);
+INSERT INTO `ant_menu` VALUES (1,0,'SYS_CONF','系统配置',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(2,0,'OPS_MONI','运维管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(3,1,'SYS_MANA','系统管理',NULL,1,NULL,0,NULL,NULL,1,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(4,2,'SYS_MONI','系统监控',NULL,1,NULL,0,NULL,NULL,3,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(5,3,'DEP_MANA','部门管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(6,3,'MNU_MANA','菜单管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(7,3,'RLE_MANA','角色管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(8,3,'DIC_MANA','字典管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(9,3,'USR_MANA','用户管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(10,4,'RCD_MANA','日志管理',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(11,4,'SVR_MONI','服务监控',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(12,4,'REG_CNT','注册中心',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(13,4,'CHA_MONI','链路监控',NULL,1,NULL,0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(14,1,'BAS_CONF','基础配置',NULL,1,NULL,0,NULL,NULL,2,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL),(15,14,'ICO_MANA','图标管理',NULL,1,'/config/icon',0,NULL,NULL,NULL,0,0,0,NULL,0,0,0,0,1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `ant_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -223,6 +205,32 @@ LOCK TABLES `sys_dept` WRITE;
 /*!40000 ALTER TABLE `sys_dept` DISABLE KEYS */;
 INSERT INTO `sys_dept` VALUES (10,'顶级部门',0,0,1,NULL,'2018-08-20 03:46:57',NULL,'2019-04-20 13:59:55'),(11,'一级部门',10,0,1,NULL,'2018-08-20 03:47:10',NULL,'2019-04-20 13:59:55'),(12,'二级部门',11,1,1,NULL,'2018-08-20 03:47:19',NULL,'2019-04-20 13:59:55');
 /*!40000 ALTER TABLE `sys_dept` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_dept_relation`
+--
+
+DROP TABLE IF EXISTS `sys_dept_relation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sys_dept_relation` (
+  `ancestor_` bigint(64) NOT NULL COMMENT '祖先节点',
+  `descendant_` bigint(64) NOT NULL COMMENT '后代节点',
+  PRIMARY KEY (`ancestor_`,`descendant_`),
+  KEY `idx1` (`ancestor_`) USING BTREE,
+  KEY `idx2` (`descendant_`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sys_dept_relation`
+--
+
+LOCK TABLES `sys_dept_relation` WRITE;
+/*!40000 ALTER TABLE `sys_dept_relation` DISABLE KEYS */;
+INSERT INTO `sys_dept_relation` VALUES (10,10),(10,11),(10,12),(11,11),(11,12),(12,12);
+/*!40000 ALTER TABLE `sys_dept_relation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -332,6 +340,31 @@ INSERT INTO `sys_role` VALUES (1,'admin','ROLE_ADMIN','超级管理员',1,NULL,'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `sys_role_dept`
+--
+
+DROP TABLE IF EXISTS `sys_role_dept`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sys_role_dept` (
+  `id_` bigint(64) NOT NULL,
+  `role_id` bigint(64) DEFAULT NULL COMMENT '角色ID',
+  `dept_id` bigint(64) DEFAULT NULL COMMENT '部门ID',
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色与部门对应关系';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sys_role_dept`
+--
+
+LOCK TABLES `sys_role_dept` WRITE;
+/*!40000 ALTER TABLE `sys_role_dept` DISABLE KEYS */;
+INSERT INTO `sys_role_dept` VALUES (14,14,1),(16,1,10);
+/*!40000 ALTER TABLE `sys_role_dept` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `sys_role_menu`
 --
 
@@ -380,41 +413,50 @@ INSERT INTO `sys_user_role` VALUES (1,1);
 UNLOCK TABLES;
 
 --
--- Dumping events for database 'ukulele_portal'
+-- Table structure for table `sys_zuul_route`
 --
+
+DROP TABLE IF EXISTS `sys_zuul_route`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sys_zuul_route` (
+  `id_` bigint(64) NOT NULL COMMENT 'router Id',
+  `path_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '路由路径',
+  `service_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '服务名称',
+  `url_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'url代理',
+  `strip_prefix` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '1' COMMENT '转发去掉前缀',
+  `retryable_` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '1' COMMENT '是否重试',
+  `sensitive_header_list` varchar(255) DEFAULT NULL COMMENT '敏感请求头',
+  `enable_` tinyint(1) DEFAULT '1' COMMENT '是否启用',
+  `create_by` bigint(64) DEFAULT NULL COMMENT '删除标识（0-正常,1-删除）',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` bigint(64) DEFAULT NULL,
+  `update_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='动态路由配置表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sys_zuul_route`
+--
+
+LOCK TABLES `sys_zuul_route` WRITE;
+/*!40000 ALTER TABLE `sys_zuul_route` DISABLE KEYS */;
+INSERT INTO `sys_zuul_route` VALUES (3,'/taroco-admin/**','taroco-admin','','1','1','',1,0,'2018-05-17 06:09:06',NULL,'2018-08-02 00:31:06'),(4,'/admin/**','taroco-rbac-service','','1','1','',1,0,'2018-05-21 03:40:38',NULL,'2018-08-20 09:36:08'),(5,'/auth/**','taroco-authentication-server','','1','1','',1,0,'2018-05-21 03:41:08',NULL,'2018-08-02 00:31:34'),(6,'/taroco-registry/**','taroco-registry','','1','1','',1,0,'2018-05-21 03:41:08',NULL,'2018-08-02 00:32:09'),(7,'/taroco-monitor/**','taroco-monitor','','1','1','',1,0,'2018-05-21 03:41:08',NULL,'2018-08-02 00:32:09'),(8,'/taroco-config/**','taroco-config',NULL,'1','1',NULL,1,0,'2018-08-05 19:36:21',NULL,'2018-08-06 03:36:16'),(9,'/taroco-demo1/**','taroco-demo1','','1','1','',1,1,'2018-08-09 18:29:13',NULL,'2018-08-10 06:24:44');
+/*!40000 ALTER TABLE `sys_zuul_route` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'ukulele_portal'
 --
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2019-04-23 22:14:49
-CREATE DATABASE  IF NOT EXISTS `ukulele_syslog` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `ukulele_syslog`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: ukulele_syslog
--- ------------------------------------------------------
--- Server version	5.7.21-log
+-- Current Database: `ukulele_syslog`
+--
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `ukulele_syslog` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `ukulele_syslog`;
 
 --
 -- Table structure for table `sys_log`
@@ -434,12 +476,9 @@ CREATE TABLE `sys_log` (
   `method_` varchar(10) DEFAULT NULL COMMENT '操作方式',
   `params_` text COMMENT '操作提交的数据',
   `time_` mediumtext COMMENT '执行时间',
-  `exception` text COMMENT '异常信息',
-  `enable_` tinyint(1) DEFAULT '1' COMMENT '删除标记',
-  `create_by` bigint(64) DEFAULT NULL COMMENT '创建者',
+  `exception_` text COMMENT '异常信息',
+  `create_by` varchar(64) DEFAULT NULL COMMENT '创建者',
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_by` bigint(64) DEFAULT NULL,
-  `update_time` timestamp NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id_`),
   KEY `sys_log_create_by` (`create_by`) USING BTREE,
   KEY `sys_log_request_uri` (`request_uri`) USING BTREE,
@@ -454,45 +493,21 @@ CREATE TABLE `sys_log` (
 
 LOCK TABLES `sys_log` WRITE;
 /*!40000 ALTER TABLE `sys_log` DISABLE KEYS */;
+INSERT INTO `sys_log` VALUES (1121241683549933570,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 02:36:57'),(1121241838424608770,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 02:37:41'),(1121242926116687874,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 02:42:00'),(1121244349386641409,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 02:47:39'),(1121244414071197698,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 02:47:55'),(1121284272030404609,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:26:18'),(1121284396135665665,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:26:47'),(1121284529556475906,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:27:19'),(1121287310673629186,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:38:22'),(1121287754082865154,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:40:08'),(1121288073420394498,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:41:24'),(1121288283026542594,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:42:14'),(1121288338483630081,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:42:27'),(1121288958351429633,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:44:55'),(1121289035715366914,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 05:45:13'),(1121294039725559810,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:05:06'),(1121294902741356545,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:08:32'),(1121294945712001026,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:08:42'),(1121295110040637442,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:09:22'),(1121295443240341506,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:10:41'),(1121295761382494210,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:11:57'),(1121295802956435458,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:12:07'),(1121295992178266114,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:12:52'),(1121296028228308994,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:13:00'),(1121296236219650049,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:13:50'),(1121296278997356546,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:14:00'),(1121297021301084161,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:16:57'),(1121299433936048130,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 06:26:32'),(1121316879384367105,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 07:35:52'),(1121316914637492226,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 07:36:00'),(1121320565263224834,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 07:50:31'),(1121321566045130754,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 07:54:29'),(1121321628875804673,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 07:54:44'),(1121321670252613633,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 07:54:54'),(1121322764789796865,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 07:59:15'),(1121323193669963777,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:00:57'),(1121323233507463169,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:01:07'),(1121324072758333441,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:04:27'),(1121324602603786241,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:06:33'),(1121324714306490370,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:07:00'),(1121324821361905665,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:07:25'),(1121324899162050562,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:07:44'),(1121325817106452481,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:11:23'),(1121325947020824578,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:11:54'),(1121326187568353282,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:12:51'),(1121326305805783042,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:13:19'),(1121326320049639426,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:13:23'),(1121326487318482945,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:14:02'),(1121326526614917121,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:14:12'),(1121326589302984706,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:14:27'),(1121326667711303681,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:14:45'),(1121326815258529793,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:15:21'),(1121327119865663490,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:16:33'),(1121327119886635010,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:16:33'),(1121327158985936897,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:16:43'),(1121327231597727745,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:17:00'),(1121328633929715713,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:22:34'),(1121328672706056194,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:22:44'),(1121328696030580737,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:22:49'),(1121328833431785473,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:23:22'),(1121328859532939266,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:23:28'),(1121329090479706113,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:24:23'),(1121329160725909505,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:24:40'),(1121330020797304833,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:28:05'),(1121331155813715969,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:32:36'),(1121331193134632961,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:32:44'),(1121331239691407362,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:32:56'),(1121331384126459905,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:33:30'),(1121335026292281346,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:47:58'),(1121335835398688769,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:51:11'),(1121335844437413889,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:51:13'),(1121336005272195074,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:51:52'),(1121336144128823297,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:52:25'),(1121336615799279618,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:54:17'),(1121336696359276545,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:54:36'),(1121336778060124161,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:54:56'),(1121337101071863809,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:56:13'),(1121337130088058881,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:56:20'),(1121337633471647746,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:58:20'),(1121337762559741953,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:58:51'),(1121337814019657729,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:59:03'),(1121337863248203777,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 08:59:15'),(1121337933821562882,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:59:32'),(1121337954931494914,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 08:59:37'),(1121338352903835650,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:01:11'),(1121338363242795009,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:01:14'),(1121338387406180353,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:01:20'),(1121339000617619457,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:03:46'),(1121339021350064129,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:03:51'),(1121339292230799362,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:04:55'),(1121339425341231105,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:05:27'),(1121339446853816322,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:05:32'),(1121340622278152193,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:10:13'),(1121340631199436801,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:10:15'),(1121340664275718145,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:10:23'),(1121340791207940098,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:10:53'),(1121340812288512001,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:10:58'),(1121340838611963905,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:11:04'),(1121342516526501889,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:17:44'),(1121342528274747393,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:17:47'),(1121342575838154754,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:17:58'),(1121342619920289793,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:18:09'),(1121342656167464961,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:18:17'),(1121342892701044737,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:19:14'),(1121342894043222018,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:19:14'),(1121344269271617538,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:24:42'),(1121344269280006146,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:24:42'),(1121344329568931841,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:24:56'),(1121344371084152833,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:25:06'),(1121344533441466369,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:25:45'),(1121345122229473282,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:28:05'),(1121345156719235073,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:28:14'),(1121345180270252034,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:28:19'),(1121345263338442753,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:28:39'),(1121346039238545409,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:31:44'),(1121346108486504449,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:32:01'),(1121346160667840513,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-icon/getByParam','GET',NULL,NULL,NULL,'admin','2019-04-25 09:32:13'),(1121346326057635842,'Operation','Operation',NULL,'192.168.6.79',NULL,'/api/portal-service/ant-menu/user','GET',NULL,NULL,NULL,'admin','2019-04-25 09:32:52');
 /*!40000 ALTER TABLE `sys_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Dumping events for database 'ukulele_syslog'
---
-
---
 -- Dumping routines for database 'ukulele_syslog'
 --
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2019-04-23 22:14:49
-CREATE DATABASE  IF NOT EXISTS `ukulele_auth` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `ukulele_auth`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: ukulele_auth
--- ------------------------------------------------------
--- Server version	5.7.21-log
+-- Current Database: `ukulele_auth`
+--
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `ukulele_auth` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `ukulele_auth`;
 
 --
 -- Table structure for table `oauth_access_token`
@@ -580,10 +595,6 @@ LOCK TABLES `oauth_refresh_token` WRITE;
 UNLOCK TABLES;
 
 --
--- Dumping events for database 'ukulele_auth'
---
-
---
 -- Dumping routines for database 'ukulele_auth'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -596,4 +607,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-23 22:14:49
+-- Dump completed on 2019-04-25 17:38:32
