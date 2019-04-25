@@ -32,12 +32,12 @@ DROP TABLE IF EXISTS `sys_user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sys_user` (
   `id_` bigint(64) NOT NULL COMMENT '主键ID',
-  `username_` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
-  `password_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `salt_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '随机盐',
-  `phone_` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '简介',
-  `avatar_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '头像',
-  `label_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `username_` varchar(64)   NOT NULL COMMENT '用户名',
+  `password_` varchar(255)   NOT NULL,
+  `salt_` varchar(255) DEFAULT NULL COMMENT '随机盐',
+  `phone_` varchar(20) NOT NULL COMMENT '简介',
+  `avatar_` varchar(255)  DEFAULT NULL COMMENT '头像',
+  `label_` varchar(255) DEFAULT NULL,
   `dept_id` int(11) DEFAULT NULL COMMENT '部门ID',
   `enable_` tinyint(1) DEFAULT '1' COMMENT '0-正常，1-删除',
   `create_by` bigint(64) DEFAULT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE `sys_user` (
   PRIMARY KEY (`id_`),
   UNIQUE KEY `user_idx1_username` (`username_`) USING BTREE,
   UNIQUE KEY `user_idx2_phone` (`phone_`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -421,11 +421,11 @@ DROP TABLE IF EXISTS `sys_zuul_route`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sys_zuul_route` (
   `id_` bigint(64) NOT NULL COMMENT 'router Id',
-  `path_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '路由路径',
-  `service_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '服务名称',
-  `url_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'url代理',
-  `strip_prefix` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '1' COMMENT '转发去掉前缀',
-  `retryable_` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '1' COMMENT '是否重试',
+  `path_` varchar(255) NOT NULL COMMENT '路由路径',
+  `service_id` varchar(255)  NOT NULL COMMENT '服务名称',
+  `url_` varchar(255)  DEFAULT NULL COMMENT 'url代理',
+  `strip_prefix` char(1)  DEFAULT '1' COMMENT '转发去掉前缀',
+  `retryable_` char(1) DEFAULT '1' COMMENT '是否重试',
   `sensitive_header_list` varchar(255) DEFAULT NULL COMMENT '敏感请求头',
   `enable_` tinyint(1) DEFAULT '1' COMMENT '是否启用',
   `create_by` bigint(64) DEFAULT NULL COMMENT '删除标识（0-正常,1-删除）',
