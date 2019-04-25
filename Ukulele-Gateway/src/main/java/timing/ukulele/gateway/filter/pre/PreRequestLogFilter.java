@@ -5,7 +5,6 @@ import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import timing.ukulele.facade.syslog.api.feign.ILogFeignFacade;
 import timing.ukulele.facade.syslog.model.LogType;
@@ -17,6 +16,7 @@ import java.util.Enumeration;
 
 import static timing.ukulele.gateway.filter.GatewayFilterConstants.PRE_REQUEST_LOG_ORDER;
 import static timing.ukulele.gateway.filter.GatewayFilterConstants.PRE_TYPE;
+import static timing.ukulele.gateway.filter.GatewayHeaderConstants.USER_HEADER;
 
 
 /**
@@ -82,16 +82,14 @@ public class PreRequestLogFilter extends ZuulFilter {
             log.setType(LogType.Login.name());
             log.setTitle(LogType.Login.name());
             log.setParams(queryParam(request));
-//            log.setCreateBy(request.getParameter("username"));
+            log.setCreateBy(request.getParameter("username"));
             logService.add(log);
         } else {
-//            if (!HttpMethod.GET.matches(request.getMethod())) {
                 // 记录操作日志
                 log.setType(LogType.Operation.name());
                 log.setTitle(LogType.Operation.name());
-//                log.setCreateBy(ctx.getZuulRequestHeaders().get(USER_HEADER));
+                log.setCreateBy(ctx.getZuulRequestHeaders().get(USER_HEADER));
                 logService.add(log);
-//            }
         }
     }
 
