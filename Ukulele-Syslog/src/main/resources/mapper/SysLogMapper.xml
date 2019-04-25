@@ -10,20 +10,18 @@
         <result column="service_id" property="serviceId"/>
         <result column="create_by" property="createBy"/>
         <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
         <result column="remote_addr" property="remoteAddr"/>
         <result column="user_agent" property="userAgent"/>
         <result column="request_uri" property="requestUri"/>
         <result column="method_" property="method"/>
         <result column="params_" property="params"/>
         <result column="time_" property="time"/>
-        <result column="enable_" property="enable"/>
-        <result column="exception" property="exception"/>
+        <result column="exception_" property="exception"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id_, type_, title_, create_by AS createBy, create_time AS createTime, update_time AS updateTime, remote_addr AS remoteAddr, user_agent AS userAgent, request_uri AS requestUri, method_, params+, time_, enable_
+        id_, type_, title_, create_by AS createBy, create_time AS createTime, remote_addr AS remoteAddr, user_agent AS userAgent, request_uri AS requestUri, method_, params_, time_, exception_,service_id as serviceId
     </sql>
 
 </mapper>

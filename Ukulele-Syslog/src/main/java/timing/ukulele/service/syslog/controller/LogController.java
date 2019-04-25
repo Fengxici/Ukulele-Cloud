@@ -1,7 +1,6 @@
 package timing.ukulele.service.syslog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.syslog.api.ILogFacade;
@@ -18,7 +17,6 @@ import java.util.Map;
  * </p>
  */
 @RestController
-@RequestMapping("/log")
 public final class LogController extends BaseController implements ILogFacade {
 
     private final SysLogService sysLogService;
@@ -29,7 +27,7 @@ public final class LogController extends BaseController implements ILogFacade {
     }
 
     @Override
-    public ResponseData<Boolean> add(SysLog sysLog) {
+    public ResponseData<Boolean> add( SysLog sysLog) {
         if (sysLog == null || sysLog.getId() != null)
             return paraErrorResponse();
         if (sysLogService.save(sysLog))
@@ -39,11 +37,14 @@ public final class LogController extends BaseController implements ILogFacade {
 
     @Override
     public ResponseData<Boolean> delete(Long id) {
-        return null;
+        if (id == null || id <= 0)
+            return paraErrorResponse();
+        return successResponse(sysLogService.removeById(id));
     }
 
     @Override
     public ResponseData<List<SysLog>> getByParam(Map<String, Object> map) {
-        return null;
+        List<SysLog> list = (List) sysLogService.listByMap(map);
+        return successResponse(list);
     }
 }

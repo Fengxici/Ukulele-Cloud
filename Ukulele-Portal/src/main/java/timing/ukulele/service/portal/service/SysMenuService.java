@@ -29,10 +29,6 @@ public class SysMenuService extends BaseService<SysMenu> {
         return this.save(sysMenu);
     }
 
-    public Boolean updateMenuById(SysMenu sysMenu) {
-        return this.updateById(sysMenu);
-    }
-
     public Boolean deleteRoleMenu(Long roleId, Long menuId) {
         return ((SysMenuMapper) this.baseMapper).deleteRoleMenu(roleId, menuId) >= 0;
     }

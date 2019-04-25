@@ -1,10 +1,9 @@
 package timing.ukulele.service.syslog.service;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import timing.ukulele.facade.syslog.model.persistent.SysLog;
-import timing.ukulele.persistence.service.BaseService;
-
-import java.util.Date;
 
 /**
  * <p>
@@ -12,13 +11,6 @@ import java.util.Date;
  * </p>
  */
 @Service
-public class SysLogService extends BaseService<SysLog> {
+public class SysLogService extends ServiceImpl<BaseMapper<SysLog>, SysLog> {
 
-    public Boolean updateByLogId(Long id) {
-        SysLog sysLog = new SysLog();
-        sysLog.setId(id);
-        sysLog.setEnable(Boolean.FALSE);
-        sysLog.setUpdateTime(new Date());
-        return updateById(sysLog);
-    }
 }

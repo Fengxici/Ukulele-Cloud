@@ -1,8 +1,8 @@
 package timing.ukulele.service.syslog.mapper;
 
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import timing.ukulele.facade.syslog.model.persistent.SysLog;
-import timing.ukulele.persistence.mapper.BaseMapper;
 
 /**
  * <p>
