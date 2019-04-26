@@ -93,6 +93,7 @@ spring:
     host: localhost
     port: 5672
 
+
 management:
   endpoints:
     web:

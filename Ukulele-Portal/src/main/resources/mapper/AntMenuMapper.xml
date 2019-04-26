@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="timing.ukulele.service.portal.mapper.AntMenuMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="timing.ukulele.facade.portal.model.persistent.AntMenu">
+        <id column="id_" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="key_" property="key"/>
+        <result column="text_" property="text"/>
+        <result column="i18n_" property="i18n"/>
+        <result column="group_" property="group"/>
+        <result column="link_" property="link"/>
+        <result column="link_exact" property="linkExact"/>
+        <result column="external_link" property="externalLink"/>
+        <result column="target_" property="target"/>
+        <result column="icon_id" property="iconId"/>
+        <result column="disable_" property="disable"/>
+        <result column="hide_" property="hide"/>
+        <result column="hide_in_breadcrumb" property="hideInBreadcrumb"/>
+        <result column="acl_" property="acl"/>
+        <result column="shortcut_" property="shortcut"/>
+        <result column="shortcut_root" property="shortcutRoot"/>
+        <result column="reuse_" property="reuse"/>
+        <result column="open_" property="open"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="enable_" property="enable"/>
+    </resultMap>
+
+    <select id="findMenuByRoleName" resultMap="BaseResultMap">
+        SELECT
+            ant_menu.*
+        FROM
+        sys_role
+        LEFT JOIN ant_role_menu ON ant_role_menu.role_id = sys_role.id_
+        LEFT JOIN ant_menu ON ant_menu.id_ = ant_role_menu.menu_id
+        WHERE
+        sys_role.enable_ = 1
+        AND ant_menu.enable_ = 1
+        AND sys_role.role_code = #{role}
+    </select>
+
+    <delete id="deleteRoleMenu">
+        delete from ant_role_menu where role_id=#{roleId}
+        <if test="menuId != null">
+            and menu_id=#{menuId}
+        </if>
+
+    </delete>
+
+    <insert id="addRoleMenu">
+        insert into ant_role_menu(role_id,menu_id) values(#{roleId},#{menuId})
+    </insert>
+
+    <select id="getMenuByUserId" resultMap="BaseResultMap">
+        select m.* from ant_menu m
+        left join ant_role_menu rm on m.id_=rm.menu_id
+        left join sys_role r on r.id_=rm.role_id
+        left join sys_user_role ur on r.id_=ur.role_id where ur.user_id=#{userId} and m.enable_=1 and r.enable_=1;
+    </select>
+
+</mapper>

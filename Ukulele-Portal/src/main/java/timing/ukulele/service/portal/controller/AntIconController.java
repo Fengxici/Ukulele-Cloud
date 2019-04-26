@@ -1,6 +1,8 @@
 package timing.ukulele.service.portal.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.WebUtils;
 import timing.ukulele.common.data.ResponseData;
@@ -53,6 +55,13 @@ public class AntIconController extends BaseController implements IAntIconFacade 
     public ResponseData<Boolean> edit(AntIcon sysAntIcon) {
         if (sysAntIcon == null || sysAntIcon.getId() == null)
             return paraErrorResponse();
+
         return successResponse(this.antIconService.saveOrUpdate(sysAntIcon));
+    }
+
+    @GetMapping("/page")
+    public ResponseData<IPage<AntIcon>> getPage(HttpServletRequest request) {
+        Map<String, Object> map = WebUtils.getParametersStartingWith(request, null);
+        return successResponse(this.antIconService.getPage(map));
     }
 }

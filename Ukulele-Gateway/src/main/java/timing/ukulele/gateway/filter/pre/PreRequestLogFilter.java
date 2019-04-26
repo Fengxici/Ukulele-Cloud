@@ -59,7 +59,7 @@ public class PreRequestLogFilter extends ZuulFilter {
         final RequestContext ctx = RequestContext.getCurrentContext();
         final HttpServletRequest request = ctx.getRequest();
         log.info(String.format("send %s request to %s", request.getMethod(), request.getRequestURL().toString()));
-        addLog(request, ctx);
+//        addLog(request, ctx);
         return null;
     }
 
