@@ -6,7 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
-@MapperScan("timing.ukulele.service.syslog.mapper")
 public class SyslogApplication {
     public static void main(String[] args) {
         SpringApplication.run(SyslogApplication.class, args);

@@ -5,6 +5,7 @@ import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import timing.ukulele.facade.syslog.api.feign.ILogFeignFacade;
 import timing.ukulele.facade.syslog.model.LogType;
@@ -59,7 +60,7 @@ public class PreRequestLogFilter extends ZuulFilter {
         final RequestContext ctx = RequestContext.getCurrentContext();
         final HttpServletRequest request = ctx.getRequest();
         log.info(String.format("send %s request to %s", request.getMethod(), request.getRequestURL().toString()));
-//        addLog(request, ctx);
+        addLog(request, ctx);
         return null;
     }
 
@@ -85,11 +86,13 @@ public class PreRequestLogFilter extends ZuulFilter {
             log.setCreateBy(request.getParameter("username"));
             logService.add(log);
         } else {
-                // 记录操作日志
-                log.setType(LogType.Operation.name());
-                log.setTitle(LogType.Operation.name());
-                log.setCreateBy(ctx.getZuulRequestHeaders().get(USER_HEADER));
-                logService.add(log);
+            // 记录操作日志
+            log.setType(LogType.Operation.name());
+            log.setTitle(LogType.Operation.name());
+            if(HttpMethod.GET.matches(request.getMethod()))
+                log.setParams(queryParam(request));
+            log.setCreateBy(ctx.getZuulRequestHeaders().get(USER_HEADER));
+            logService.add(log);
         }
     }
 
