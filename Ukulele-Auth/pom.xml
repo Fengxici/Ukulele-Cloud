@@ -40,6 +40,10 @@
             <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-log</artifactId>
         </dependency>
+        <dependency>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>ukulele-ribbon</artifactId>
+        </dependency>
         <!--第三方依赖-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
