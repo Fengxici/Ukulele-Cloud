@@ -1,5 +1,8 @@
 package timing.ukulele.service.portal.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,5 +66,11 @@ public class SysRoleService extends BaseService<SysRole> {
 
     public Boolean addUserRole(Long userId, Long roleId) {
         return ((SysRoleMapper) this.baseMapper).addUserRole(userId, roleId) > 0;
+    }
+
+    public IPage<SysRole> getPage(SysRole role, int current, int size) {
+        Page<SysRole> page = new Page<>(current, size);
+        IPage<SysRole> iPage = this.baseMapper.selectPage(page, new QueryWrapper<>(role));
+        return page.setRecords(iPage.getRecords());
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.WebUtils;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.api.IAntIconFacade;
 import timing.ukulele.facade.portal.model.persistent.AntIcon;
@@ -16,7 +15,6 @@ import timing.ukulele.web.util.Request2ModelUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class AntIconController extends BaseController implements IAntIconFacade {

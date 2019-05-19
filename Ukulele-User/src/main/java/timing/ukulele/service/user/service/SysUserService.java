@@ -1,5 +1,8 @@
 package timing.ukulele.service.user.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,5 +36,11 @@ public class SysUserService extends BaseService<SysUser> {
      */
     public SysUser findUserByMobile(String mobile) {
         return sysUserMapper.selectUserVoByMobile(mobile);
+    }
+
+    public IPage<SysUser> getPage(SysUser user, int current, int size) {
+        Page<SysUser> page = new Page<>(current, size);
+        IPage<SysUser> iPage=this.baseMapper.selectPage(page, new QueryWrapper<>(user));
+        return page.setRecords(iPage.getRecords());
     }
 }

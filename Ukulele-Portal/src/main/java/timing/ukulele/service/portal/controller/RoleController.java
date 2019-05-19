@@ -1,15 +1,21 @@
 package timing.ukulele.service.portal.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.api.IRoleFacade;
+import timing.ukulele.facade.portal.model.data.RoleDTO;
 import timing.ukulele.facade.portal.model.persistent.SysRole;
 import timing.ukulele.facade.portal.model.view.RoleVO;
 import timing.ukulele.service.portal.service.SysRoleService;
 import timing.ukulele.web.controller.BaseController;
+import timing.ukulele.web.util.Request2ModelUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -79,5 +85,16 @@ public final class RoleController extends BaseController implements IRoleFacade 
         if (userId == null || userId <= 0 || roleId == null || roleId <= 0)
             return paraErrorResponse();
         return successResponse(this.sysRoleService.addUserRole(userId, roleId));
+    }
+
+    @GetMapping("/page/{current}/{size}")
+    public ResponseData<IPage<SysRole>> getPage(@PathVariable(name="current")int current,
+                                                @PathVariable(name="size") int size, HttpServletRequest request) {
+        RoleVO roleVO = Request2ModelUtil.covert(RoleVO.class, request);
+        if(size==0)size=10;
+        if(current==0)current=1;
+        SysRole role = new SysRole();
+        BeanUtils.copyProperties(roleVO,role);
+        return successResponse(this.sysRoleService.getPage(role,current,size));
     }
 }

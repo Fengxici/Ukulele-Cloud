@@ -17,7 +17,7 @@ import timing.ukulele.facade.syslog.model.persistent.SysLog;
 public class SysLogService extends ServiceImpl<BaseMapper<SysLog>, SysLog> {
     public IPage<SysLog> getPage(SysLog log,int current,int pageSize) {
         Page<SysLog> page = new Page<>(current, pageSize);
-        IPage<SysLog> iPage=this.baseMapper.selectPage(page, new QueryWrapper<>(log));
+        IPage<SysLog> iPage=this.baseMapper.selectPage(page, new QueryWrapper<>(log).orderByDesc("create_time"));
         return page.setRecords(iPage.getRecords());
     }
 }
