@@ -9,9 +9,11 @@ import timing.ukulele.persistence.service.BaseService;
 
 @Service
 public class AntIconService extends BaseService<AntIcon> {
-    public IPage<AntIcon> getPage(AntIcon icon,int current,int size) {
+    public IPage<AntIcon> getPage(AntIcon icon, int current, int size) {
         Page<AntIcon> page = new Page<>(current, size);
-        IPage<AntIcon> iPage=this.baseMapper.selectPage(page, new QueryWrapper<>(icon));
+        if (icon == null)
+            icon = new AntIcon();
+        IPage<AntIcon> iPage = this.baseMapper.selectPage(page, new QueryWrapper<>(icon));
         return page.setRecords(iPage.getRecords());
     }
 }

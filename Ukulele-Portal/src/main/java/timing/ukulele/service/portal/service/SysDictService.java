@@ -6,4 +6,5 @@ import timing.ukulele.persistence.service.BaseService;
 
 @Service
 public class SysDictService extends BaseService<SysDict> {
+
 }

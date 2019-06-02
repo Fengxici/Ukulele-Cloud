@@ -1,17 +1,28 @@
 package timing.ukulele.service.portal.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.api.IDictFacade;
 import timing.ukulele.facade.portal.model.persistent.SysDict;
 import timing.ukulele.facade.portal.model.persistent.SysDictIndex;
+import timing.ukulele.facade.portal.model.view.DictIndexVO;
+import timing.ukulele.facade.portal.model.view.DictVO;
 import timing.ukulele.service.portal.service.SysDictIndexService;
 import timing.ukulele.service.portal.service.SysDictService;
 import timing.ukulele.web.controller.BaseController;
+import timing.ukulele.web.util.Request2ModelUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
@@ -99,5 +110,42 @@ public final class DictController extends BaseController implements IDictFacade 
         if (id == null || id < 0)
             return paraErrorResponse();
         return successResponse(this.dictIndexService.removeById(id));
+    }
+
+    @GetMapping("/page/{current}/{size}")
+    public ResponseData<IPage<DictIndexVO>> page(
+            @PathVariable("current") int current,
+            @PathVariable("size") int size,
+            HttpServletRequest request) {
+        if (current <= 0) current = 1;
+        if (size <= 0) size = 10;
+        DictIndexVO dictIndexVO = Request2ModelUtil.covert(DictIndexVO.class, request);
+        if (dictIndexVO == null)
+            return paraErrorResponse();
+        IPage<DictIndexVO> resultPage = new Page<>(current, size);
+        SysDictIndex dictIndex = new SysDictIndex();
+        BeanUtils.copyProperties(dictIndexVO, dictIndex);
+        IPage<SysDictIndex> page = this.dictIndexService.getPage(dictIndex, current, size);
+        if (page != null && !CollectionUtils.isEmpty(page.getRecords())) {
+            resultPage.setTotal(page.getTotal());
+            resultPage.setPages(page.getPages());
+            resultPage.setRecords(new ArrayList<>());
+            for (SysDictIndex index : page.getRecords()) {
+                DictIndexVO indexVO = new DictIndexVO();
+                BeanUtils.copyProperties(index, indexVO);
+                resultPage.getRecords().add(indexVO);
+                List<DictVO> voList = new ArrayList<>();
+                indexVO.setDictList(voList);
+                List<SysDict> list = this.dictService.list(new QueryWrapper<SysDict>().eq("index_id", index.getId()).orderByAsc("sort_"));
+                if (!CollectionUtils.isEmpty(list)) {
+                    for (SysDict dict : list) {
+                        DictVO vo = new DictVO();
+                        BeanUtils.copyProperties(dict, vo);
+                        voList.add(vo);
+                    }
+                }
+            }
+        }
+        return successResponse(resultPage);
     }
 }
