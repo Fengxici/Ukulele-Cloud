@@ -24,4 +24,10 @@ public class AntMenuService extends BaseService<AntMenu> {
     public List<AntMenu> getMenuByUserId(Long userId) {
         return ((AntMenuMapper) this.baseMapper).getMenuByUserId(userId);
     }
+    
+    public IPage<AntMenu> getPage(AntMenu antMenu, int current, int size) {
+        Page<AntMenu> page = new Page<>(current, size);
+        IPage<AntMenu> iPage = this.baseMapper.selectPage(page, new QueryWrapper<>(antMenu));
+        return page.setRecords(iPage.getRecords());
+    }
 }
