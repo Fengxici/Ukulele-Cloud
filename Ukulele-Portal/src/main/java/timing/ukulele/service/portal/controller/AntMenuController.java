@@ -28,13 +28,13 @@ import java.util.*;
 
 @RestController
 public final class AntMenuController extends BaseController implements IAntMenuFacade {
-    private final AntMenuService menuAntService;
+    private final AntMenuService antMenuService;
 
     private final AntIconService antIconService;
 
     @Autowired
     public AntMenuController(AntMenuService menuAntService, AntIconService antIconService) {
-        this.menuAntService = menuAntService;
+        this.antMenuService = menuAntService;
         this.antIconService = antIconService;
     }
 
@@ -42,12 +42,12 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     public ResponseData<AntMenu> get(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        return successResponse(this.menuAntService.getById(id));
+        return successResponse(this.antMenuService.getById(id));
     }
 
     @Override
     public ResponseData<List<AntMenu>> getByParam(Map<String, Object> map) {
-        return successResponse((List<AntMenu>) this.menuAntService.listByMap(map));
+        return successResponse((List<AntMenu>) this.antMenuService.listByMap(map));
     }
 
     @Override
@@ -59,28 +59,28 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     public ResponseData<Boolean> add(AntMenu sysMenuAnt) {
         if (sysMenuAnt == null || sysMenuAnt.getId() != null)
             return paraErrorResponse();
-        return successResponse(this.menuAntService.save(sysMenuAnt));
+        return successResponse(this.antMenuService.save(sysMenuAnt));
     }
 
     @Override
     public ResponseData<Boolean> delete(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        return successResponse(this.menuAntService.removeById(id));
+        return successResponse(this.antMenuService.removeById(id));
     }
 
     @Override
     public ResponseData<Boolean> edit(AntMenu sysMenuAnt) {
         if (sysMenuAnt == null || sysMenuAnt.getId() == null)
             return paraErrorResponse();
-        return successResponse(this.menuAntService.saveOrUpdate(sysMenuAnt));
+        return successResponse(this.antMenuService.saveOrUpdate(sysMenuAnt));
     }
 
     @Override
     public ResponseData<List<AntMenuVO>> findMenuByRole(String role) {
         if (StringUtils.isEmpty(role))
             return paraErrorResponse();
-        List<AntMenu> list = this.menuAntService.findMenuByRoleName(role);
+        List<AntMenu> list = this.antMenuService.findMenuByRoleName(role);
         List<AntMenuVO> menus = new ArrayList<>();
         if (list != null)
             list.forEach(menu -> {
@@ -95,21 +95,21 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     public ResponseData<Boolean> deleteRoleMenu(Long roleId, Long menuId) {
         if (roleId == null || roleId <= 0)
             return paraErrorResponse();
-        return successResponse(this.menuAntService.deleteRoleMenu(roleId, menuId));
+        return successResponse(this.antMenuService.deleteRoleMenu(roleId, menuId));
     }
 
     @Override
     public ResponseData<Boolean> addRoleMenu(Long roleId, Long menuId) {
         if (roleId == null || roleId <= 0 || menuId == null || menuId <= 0)
             return paraErrorResponse();
-        return successResponse(this.menuAntService.addRoleMenu(roleId, menuId));
+        return successResponse(this.antMenuService.addRoleMenu(roleId, menuId));
     }
 
     @Override
     public ResponseData<List<AntMenu>> getMenuByUserId(Long userId) {
         if (userId == null || userId <= 0)
             return paraErrorResponse();
-        return successResponse(this.menuAntService.getMenuByUserId(userId));
+        return successResponse(this.antMenuService.getMenuByUserId(userId));
     }
 
     @Override
@@ -117,7 +117,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
         if (StringUtils.isEmpty(roles))
             return paraErrorResponse();
         Set<AntMenu> all = new HashSet<>();
-        Arrays.stream(roles.split(",")).forEach(role -> all.addAll(this.menuAntService.findMenuByRoleName(role)));
+        Arrays.stream(roles.split(",")).forEach(role -> all.addAll(this.antMenuService.findMenuByRoleName(role)));
         List<AntMenuTree> menuTreeList = new ArrayList<>();
         all.forEach(menu -> {
             AntMenuTree node = new AntMenuTree();
