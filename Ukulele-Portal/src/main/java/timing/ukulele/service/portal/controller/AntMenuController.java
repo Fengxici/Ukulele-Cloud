@@ -126,4 +126,32 @@ public final class AntMenuController extends BaseController implements IAntMenuF
         //组织成tree
         return successResponse(TreeUtil.buildByRecursive(menuTreeList, 0L));
     }
+    
+     @GetMapping("/page/{current}/{size}")
+    public ResponseData<IPage<AntMenuVO>> page(
+            @PathVariable("current") int current,
+            @PathVariable("size") int size,
+            HttpServletRequest request) {
+        if (current < 0) current = 1;
+        if (size < 10) size = 10;
+        AntMenuVO menuVO = Request2ModelUtil.covert(AntMenuVO.class, request);
+        AntMenu menu = new AntMenu();
+        if (menuVO != null)
+            BeanUtils.copyProperties(menuVO, menu);
+        IPage<AntMenu> page = antMenuService.getPage(menu, current, size);
+        IPage<AntMenuVO> pageVO = new Page<>();
+        if (page != null && !CollectionUtils.isEmpty(page.getRecords())) {
+            pageVO.setCurrent(page.getCurrent());
+            pageVO.setPages(page.getPages());
+            pageVO.setSize(page.getSize());
+            pageVO.setTotal(page.getTotal());
+            pageVO.setRecords(new ArrayList<>(page.getRecords().size()));
+            page.getRecords().forEach(record -> {
+                AntMenuVO vo = new AntMenuVO();
+                BeanUtils.copyProperties(record, vo);
+                pageVO.getRecords().add(vo);
+            });
+        }
+        return successResponse(pageVO);
+    }
 }
