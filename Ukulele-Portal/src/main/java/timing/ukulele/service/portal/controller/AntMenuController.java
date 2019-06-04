@@ -51,8 +51,9 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
-    public ResponseData<List<AntMenuTree>> getDeptTree() {
-        return null;
+    public ResponseData<List<AntMenuTree>> getMenuTree() {
+        List<AntMenu> list = antMenuService.list();
+        return successResponse(createMenuTree(list));
     }
 
     @Override
@@ -118,47 +119,23 @@ public final class AntMenuController extends BaseController implements IAntMenuF
             return paraErrorResponse();
         Set<AntMenu> all = new HashSet<>();
         Arrays.stream(roles.split(",")).forEach(role -> all.addAll(this.antMenuService.findMenuByRoleName(role)));
-        List<AntMenuTree> menuTreeList = new ArrayList<>();
-        all.forEach(menu -> {
-            AntMenuTree node = new AntMenuTree();
-            BeanUtils.copyProperties(menu, node);
-            if (menu.getIconId() != 0) {
-                AntIcon icon = this.antIconService.getById(menu.getIconId());
-                AntIconVO antIconVO = new AntIconVO();
-                BeanUtils.copyProperties(icon, antIconVO);
-                node.setIcon(antIconVO);
-            }
-            menuTreeList.add(node);
-        });
-        //组织成tree
-        return successResponse(TreeUtil.buildByRecursive(menuTreeList, 0L));
+        return successResponse(createMenuTree(all));
     }
-    
-     @GetMapping("/page/{current}/{size}")
-    public ResponseData<IPage<AntMenuVO>> page(
-            @PathVariable("current") int current,
-            @PathVariable("size") int size,
-            HttpServletRequest request) {
-        if (current < 0) current = 1;
-        if (size < 10) size = 10;
-        AntMenuVO menuVO = Request2ModelUtil.covert(AntMenuVO.class, request);
-        AntMenu menu = new AntMenu();
-        if (menuVO != null)
-            BeanUtils.copyProperties(menuVO, menu);
-        IPage<AntMenu> page = antMenuService.getPage(menu, current, size);
-        IPage<AntMenuVO> pageVO = new Page<>();
-        if (page != null && !CollectionUtils.isEmpty(page.getRecords())) {
-            pageVO.setCurrent(page.getCurrent());
-            pageVO.setPages(page.getPages());
-            pageVO.setSize(page.getSize());
-            pageVO.setTotal(page.getTotal());
-            pageVO.setRecords(new ArrayList<>(page.getRecords().size()));
-            page.getRecords().forEach(record -> {
-                AntMenuVO vo = new AntMenuVO();
-                BeanUtils.copyProperties(record, vo);
-                pageVO.getRecords().add(vo);
+
+    private List<AntMenuTree> createMenuTree(Collection<AntMenu> menuList) {
+        List<AntMenuTree> menuTreeList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(menuList))
+            menuList.forEach(menu -> {
+                AntMenuTree node = new AntMenuTree();
+                BeanUtils.copyProperties(menu, node);
+                if (menu.getIconId() != null) {
+                    AntIcon icon = this.antIconService.getById(menu.getIconId());
+                    AntIconVO antIconVO = new AntIconVO();
+                    BeanUtils.copyProperties(icon, antIconVO);
+                    node.setIcon(antIconVO);
+                }
+                menuTreeList.add(node);
             });
-        }
-        return successResponse(pageVO);
+        return TreeUtil.buildByRecursive(menuTreeList, 0L);
     }
 }
