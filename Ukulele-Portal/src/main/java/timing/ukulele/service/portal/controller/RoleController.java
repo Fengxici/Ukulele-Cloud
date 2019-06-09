@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.api.IRoleFacade;
-import timing.ukulele.facade.portal.model.data.RoleDTO;
 import timing.ukulele.facade.portal.model.persistent.SysRole;
 import timing.ukulele.facade.portal.model.view.RoleVO;
 import timing.ukulele.service.portal.service.SysRoleService;
@@ -38,7 +37,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
 
     @Override
     public ResponseData<List<SysRole>> getRoleByParam(Map<String, Object> map) {
-        return successResponse((ArrayList) this.sysRoleService.listByMap(map));
+        return successResponse(new ArrayList<>(this.sysRoleService.listByMap(map)));
     }
 
     @Override
