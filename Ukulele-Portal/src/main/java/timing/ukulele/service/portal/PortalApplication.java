@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
-@MapperScan("timing.ukulele.service.portal.mapper")
+//@MapperScan("timing.ukulele.service.portal.mapper")
 public class PortalApplication {
     public static void main(String[] args) {
         SpringApplication.run(PortalApplication.class, args);

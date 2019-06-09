@@ -47,7 +47,10 @@
         <if test="menuId != null">
             and menu_id=#{menuId}
         </if>
+    </delete>
 
+    <delete id="deleteRoleMenuByMenuId">
+        delete from ant_role_menu where  menu_id=#{menuId}
     </delete>
 
     <insert id="addRoleMenu">

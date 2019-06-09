@@ -1,13 +1,9 @@
 package timing.ukulele.service.portal.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
@@ -21,9 +17,7 @@ import timing.ukulele.facade.portal.model.view.AntMenuVO;
 import timing.ukulele.service.portal.service.AntIconService;
 import timing.ukulele.service.portal.service.AntMenuService;
 import timing.ukulele.web.controller.BaseController;
-import timing.ukulele.web.util.Request2ModelUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
@@ -67,7 +61,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     public ResponseData<Boolean> delete(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        return successResponse(this.antMenuService.removeById(id));
+        return this.antMenuService.removeMenu(id);
     }
 
     @Override
