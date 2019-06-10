@@ -68,10 +68,10 @@ public abstract class BaseUserDetailService implements UserDetailsService {
                 resourcesTemplate.opsForList().leftPush(baseUser.getId() + "-menu", e);
             });
         }
-
+        boolean enabled = baseUser.getDeleted() != null && !baseUser.getDeleted();
         // 返回带有用户权限信息的User
         User user = new User(baseUser.getUsername(),
-                baseUser.getPassword(), baseUser.getEnable(), true, true, true, authorities);
+                baseUser.getPassword(), enabled, true, true, true, authorities);
         return new BaseUserDetail(baseUser, user);
     }
 
