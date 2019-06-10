@@ -13,7 +13,7 @@
         <result column="dept_id" property="deptId"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
-        <result column="enable_" property="enable"/>
+        <result column="deleted_" property="deleted"/>
     </resultMap>
 
     <select id="selectUserVoByUsername" resultMap="BaseResultMap">
