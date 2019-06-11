@@ -16,7 +16,7 @@
         <result column="type_" property="type"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
-        <result column="enable_" property="enable"/>
+        <result column="deleted_" property="deleted"/>
     </resultMap>
 
     <select id="findMenuByRoleName" resultMap="BaseResultMap">
@@ -27,8 +27,8 @@
         LEFT JOIN sys_role_menu ON sys_role_menu.role_id = sys_role.id_
         LEFT JOIN sys_menu ON sys_menu.id_ = sys_role_menu.menu_id
         WHERE
-        sys_role.enable_ = 1
-        AND sys_menu.enable_ = 1
+        sys_role.deleted_ = 0
+        AND sys_menu.deleted_ = 0
         AND sys_role.role_code = #{role}
         ORDER BY sys_menu.sort_ DESC
     </select>
@@ -49,6 +49,6 @@
         select m.* from sys_menu m
         left join sys_role_menu rm on m.id_=rm.menu_id
         left join sys_role r on r.id_=rm.role_id
-        left join sys_user_role ur on r.id_=ur.role_id where ur.user_id=#{userId} and m.enable_=1 and r.enable_=1;
+        left join sys_user_role ur on r.id_=ur.role_id where ur.user_id=#{userId} and m.deleted_=0 and r.deleted_=0;
     </select>
 </mapper>

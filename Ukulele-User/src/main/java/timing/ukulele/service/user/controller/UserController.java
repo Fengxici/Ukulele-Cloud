@@ -8,10 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.user.api.IUserFacade;
-import timing.ukulele.facade.user.model.data.UserDTO;
 import timing.ukulele.facade.user.model.persistent.SysUser;
 import timing.ukulele.facade.user.model.view.UserVO;
 import timing.ukulele.service.user.service.SysUserService;
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @RestController
 public class UserController extends BaseController implements IUserFacade {

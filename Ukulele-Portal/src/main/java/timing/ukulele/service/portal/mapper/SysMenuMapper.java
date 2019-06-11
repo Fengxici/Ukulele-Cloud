@@ -1,5 +1,6 @@
 package timing.ukulele.service.portal.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import timing.ukulele.facade.portal.model.persistent.SysMenu;
 import timing.ukulele.facade.portal.model.view.MenuVO;
@@ -12,6 +13,7 @@ import java.util.List;
  * 菜单权限表 Mapper 接口
  * </p>
  */
+@Mapper
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 
     /**

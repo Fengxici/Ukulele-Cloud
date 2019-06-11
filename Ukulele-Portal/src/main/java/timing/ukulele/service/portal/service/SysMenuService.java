@@ -18,14 +18,14 @@ public class SysMenuService extends BaseService<SysMenu> {
         // 删除当前节点
         SysMenu condition1 = new SysMenu();
         condition1.setId(id);
-        condition1.setEnable(Boolean.FALSE);
+        condition1.setDeleted(Boolean.TRUE);
         this.updateById(condition1);
 
         // 删除父节点为当前节点的节点
         SysMenu condition2 = new SysMenu();
         condition2.setParentId(id);
         SysMenu sysMenu = new SysMenu();
-        sysMenu.setEnable(Boolean.FALSE);
+        sysMenu.setDeleted(Boolean.TRUE);
         return this.save(sysMenu);
     }
 

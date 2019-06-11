@@ -1,7 +1,7 @@
 package timing.ukulele.service.user.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import timing.ukulele.facade.user.model.persistent.SysUser;
-import timing.ukulele.facade.user.model.view.UserVO;
 import timing.ukulele.persistence.mapper.BaseMapper;
 
 /**
@@ -9,6 +9,7 @@ import timing.ukulele.persistence.mapper.BaseMapper;
  * 用户表 Mapper 接口
  * </p>
  */
+@Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
     /**
      * 通过用户名查询用户信息（含有角色信息）

@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import timing.ukulele.common.data.ResponseCode;
+import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.model.persistent.AntMenu;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.portal.mapper.AntMenuMapper;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AntMenuService extends BaseService<AntMenu> {
@@ -26,6 +29,17 @@ public class AntMenuService extends BaseService<AntMenu> {
 
     public List<AntMenu> getMenuByUserId(Long userId) {
         return ((AntMenuMapper) this.baseMapper).getMenuByUserId(userId);
+    }
+
+    public ResponseData<Boolean> removeMenu(Long id) {
+        Map<String, Object> filter = new HashMap<>();
+        filter.put("parent_id", id);
+        if (!CollectionUtils.isEmpty(listByMap(filter))) {
+            return new ResponseData<>(ResponseCode.BUSINESS_ERROR.getCode(), "请先删除子项", Boolean.FALSE);
+        }
+        ((AntMenuMapper) this.baseMapper).deleteRoleMenuByMenuId(id);
+        removeById(id);
+        return new ResponseData<>(ResponseCode.SUCCESS, Boolean.TRUE);
     }
 
     public IPage<AntMenu> getPage(AntMenu antMenu, int current, int size) {

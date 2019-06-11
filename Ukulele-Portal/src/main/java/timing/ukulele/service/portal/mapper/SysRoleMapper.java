@@ -1,5 +1,6 @@
 package timing.ukulele.service.portal.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import timing.ukulele.facade.portal.model.persistent.SysRole;
 import timing.ukulele.persistence.mapper.BaseMapper;
@@ -12,6 +13,7 @@ import java.util.Map;
  * Mapper 接口
  * </p>
  */
+@Mapper
 public interface SysRoleMapper extends BaseMapper<SysRole> {
 
     /**
