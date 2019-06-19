@@ -1,5 +1,6 @@
 package timing.ukulele.service.portal.controller;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,8 @@ public final class AntMenuController extends BaseController implements IAntMenuF
             list.forEach(menu -> {
                 AntMenuVO vo = new AntMenuVO();
                 BeanUtils.copyProperties(menu, vo);
+                if (StringUtils.isNotEmpty(menu.getAcl()))
+                    vo.setAcl(JSON.parseArray(menu.getAcl(), String.class));
                 menus.add(vo);
             });
         return successResponse(menus);
@@ -122,12 +125,15 @@ public final class AntMenuController extends BaseController implements IAntMenuF
             menuList.forEach(menu -> {
                 AntMenuTree node = new AntMenuTree();
                 BeanUtils.copyProperties(menu, node);
-                if (menu.getIconId() != null) {
-                    AntIcon icon = this.antIconService.getById(menu.getIconId());
-                    AntIconVO antIconVO = new AntIconVO();
-                    BeanUtils.copyProperties(icon, antIconVO);
-                    node.setIcon(antIconVO);
-                }
+                if (StringUtils.isNotEmpty(menu.getAcl()))
+                    node.setAcl(JSON.parseArray(menu.getAcl(), String.class));
+                if (StringUtils.isNotEmpty(menu.getAcl()))
+                    if (menu.getIconId() != null) {
+                        AntIcon icon = this.antIconService.getById(menu.getIconId());
+                        AntIconVO antIconVO = new AntIconVO();
+                        BeanUtils.copyProperties(icon, antIconVO);
+                        node.setIcon(antIconVO);
+                    }
                 menuTreeList.add(node);
             });
         return TreeUtil.buildByRecursive(menuTreeList, 0L);
