@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.facade.portal.model.persistent.SysDept;
 import timing.ukulele.persistence.service.BaseService;
+import timing.ukulele.service.portal.persistent.SysDept;
 
 import java.util.HashMap;
 import java.util.Map;

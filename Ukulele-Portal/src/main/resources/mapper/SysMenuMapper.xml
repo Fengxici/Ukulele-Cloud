@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="timing.ukulele.service.portal.mapper.SysMenuMapper">
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="timing.ukulele.facade.portal.model.persistent.SysMenu">
+    <resultMap id="BaseResultMap" type="timing.ukulele.service.portal.persistent.SysMenu">
         <id column="id_" property="id"/>
         <result column="name_" property="name"/>
         <result column="permission_" property="permission"/>

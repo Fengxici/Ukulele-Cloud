@@ -4,7 +4,7 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import timing.ukulele.facade.user.model.persistent.SysUser;
+import timing.ukulele.facade.user.model.view.UserVO;
 
 import java.util.Collection;
 
@@ -14,10 +14,10 @@ import java.util.Collection;
  */
 public class BaseUserDetail implements UserDetails, CredentialsContainer {
 
-    private final SysUser baseUser;
+    private final UserVO baseUser;
     private final User user;
 
-    public BaseUserDetail(SysUser baseUser, User user) {
+    public BaseUserDetail(UserVO baseUser, User user) {
         this.baseUser = baseUser;
         this.user = user;
     }
@@ -62,7 +62,7 @@ public class BaseUserDetail implements UserDetails, CredentialsContainer {
         return user.isEnabled();
     }
 
-    public SysUser getBaseUser() {
+    public UserVO getBaseUser() {
         return baseUser;
     }
 }

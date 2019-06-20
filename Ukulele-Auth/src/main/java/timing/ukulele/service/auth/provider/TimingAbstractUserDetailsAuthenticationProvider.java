@@ -18,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.cache.NullUserCache;
 import org.springframework.util.Assert;
-import timing.ukulele.service.auth.token.TimingAuthenticationToken;
 
 /**
  * 自定义 AuthenticationProvider， 以使用自定义的 TimingAuthenticationToken

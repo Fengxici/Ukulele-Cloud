@@ -2,8 +2,8 @@ package timing.ukulele.service.portal.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import timing.ukulele.facade.portal.model.persistent.SysRole;
 import timing.ukulele.persistence.mapper.BaseMapper;
+import timing.ukulele.service.portal.persistent.SysRole;
 
 import java.util.List;
 import java.util.Map;

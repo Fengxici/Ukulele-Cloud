@@ -9,7 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import timing.ukulele.facade.syslog.api.feign.ILogFeignFacade;
 import timing.ukulele.facade.syslog.model.LogType;
-import timing.ukulele.facade.syslog.model.persistent.SysLog;
+import timing.ukulele.facade.syslog.model.view.LogVO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -71,7 +71,7 @@ public class PreRequestLogFilter extends ZuulFilter {
      * @param ctx     RequestContext
      */
     private void addLog(HttpServletRequest request, RequestContext ctx) {
-        final SysLog log = new SysLog();
+        final LogVO log = new LogVO();
         log.setCreateTime(new Date());
         log.setRemoteAddr(request.getRemoteAddr());
         log.setRequestUri(request.getRequestURI());

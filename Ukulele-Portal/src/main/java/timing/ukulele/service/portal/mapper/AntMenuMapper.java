@@ -2,8 +2,8 @@ package timing.ukulele.service.portal.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import timing.ukulele.facade.portal.model.persistent.AntMenu;
 import timing.ukulele.persistence.mapper.BaseMapper;
+import timing.ukulele.service.portal.persistent.AntMenu;
 
 import java.util.List;
 @Mapper

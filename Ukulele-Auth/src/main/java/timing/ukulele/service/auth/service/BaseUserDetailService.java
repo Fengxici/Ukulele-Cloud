@@ -13,10 +13,10 @@ import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.api.feign.IMenuFeignFacade;
 import timing.ukulele.facade.portal.api.feign.IRoleFeignFacade;
-import timing.ukulele.facade.portal.model.persistent.SysMenu;
-import timing.ukulele.facade.portal.model.persistent.SysRole;
+import timing.ukulele.facade.portal.model.view.MenuVO;
+import timing.ukulele.facade.portal.model.view.RoleVO;
 import timing.ukulele.facade.user.api.feign.IUserFeignFacade;
-import timing.ukulele.facade.user.model.persistent.SysUser;
+import timing.ukulele.facade.user.model.view.UserVO;
 import timing.ukulele.service.auth.BaseUserDetail;
 
 import java.util.ArrayList;
@@ -28,11 +28,11 @@ public abstract class BaseUserDetailService implements UserDetailsService {
     protected final IRoleFeignFacade roleService;
     protected final IUserFeignFacade userService;
     protected final IMenuFeignFacade menuService;
-    protected final RedisTemplate<String, SysRole> redisTemplate;
-    protected final RedisTemplate<String, SysMenu> resourcesTemplate;
+    protected final RedisTemplate<String, RoleVO> redisTemplate;
+    protected final RedisTemplate<String, MenuVO> resourcesTemplate;
 
     @Autowired
-    public BaseUserDetailService(IUserFeignFacade userService, IRoleFeignFacade roleService, IMenuFeignFacade menuService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
+    public BaseUserDetailService(IUserFeignFacade userService, IRoleFeignFacade roleService, IMenuFeignFacade menuService, RedisTemplate<String, RoleVO> redisTemplate, RedisTemplate<String, MenuVO> resourcesTemplate) {
         this.userService = userService;
         this.roleService = roleService;
         this.menuService = menuService;
@@ -43,11 +43,11 @@ public abstract class BaseUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String var1) throws UsernameNotFoundException {
 
-        SysUser baseUser = getUser(var1);
+        UserVO baseUser = getUser(var1);
 
         // 调用FeignClient查询角色
-        ResponseData<List<SysRole>> baseRoleListResponseData = roleService.getRoleByUserId(baseUser.getId());
-        List<SysRole> roles;
+        ResponseData<List<RoleVO>> baseRoleListResponseData = roleService.getRoleByUserId(baseUser.getId());
+        List<RoleVO> roles;
         if (baseRoleListResponseData.getData() == null || !ResponseCode.SUCCESS.getCode().equals(baseRoleListResponseData.getCode())) {
             log.error("查询角色失败！");
             roles = new ArrayList<>();
@@ -56,7 +56,7 @@ public abstract class BaseUserDetailService implements UserDetailsService {
         }
 
         //调用FeignClient查询菜单
-        ResponseData<List<SysMenu>> baseModuleResourceListResponseData = menuService.getMenuByUserId(baseUser.getId());
+        ResponseData<List<MenuVO>> baseModuleResourceListResponseData = menuService.getMenuByUserId(baseUser.getId());
 
         // 获取用户权限列表
         List<GrantedAuthority> authorities = convertToAuthorities(baseUser, roles);
@@ -75,10 +75,10 @@ public abstract class BaseUserDetailService implements UserDetailsService {
         return new BaseUserDetail(baseUser, user);
     }
 
-    protected abstract SysUser getUser(String var1);
+    protected abstract UserVO getUser(String var1);
 
 
-    private List<GrantedAuthority> convertToAuthorities(SysUser baseUser, List<SysRole> roles) {
+    private List<GrantedAuthority> convertToAuthorities(UserVO baseUser, List<RoleVO> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         // 清除 Redis 中用户的角色
         redisTemplate.delete(baseUser.getId().toString());

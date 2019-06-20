@@ -2,15 +2,18 @@ package timing.ukulele.service.portal.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import timing.ukulele.facade.portal.model.data.RoleDTO;
-import timing.ukulele.facade.portal.model.persistent.SysRole;
+import org.springframework.util.CollectionUtils;
+import timing.ukulele.facade.portal.model.view.RoleVO;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.portal.mapper.SysRoleMapper;
+import timing.ukulele.service.portal.persistent.SysRole;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +25,7 @@ public class SysRoleService extends BaseService<SysRole> {
      * @param roleDto 角色信息
      * @return 成功、失败
      */
-    public Boolean insertRole(RoleDTO roleDto) {
+    public Boolean insertRole(RoleVO roleDto) {
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
         this.baseMapper.insert(sysRole);
@@ -36,7 +39,7 @@ public class SysRoleService extends BaseService<SysRole> {
      * @return 成功、失败
      */
     @Transactional(rollbackFor = Exception.class)
-    public Boolean updateRoleById(RoleDTO roleDto) {
+    public Boolean updateRoleById(RoleVO roleDto) {
         //更新角色信息
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
@@ -68,9 +71,18 @@ public class SysRoleService extends BaseService<SysRole> {
         return ((SysRoleMapper) this.baseMapper).addUserRole(userId, roleId) > 0;
     }
 
-    public IPage<SysRole> getPage(SysRole role, int current, int size) {
+    public IPage<RoleVO> getPage(SysRole role, int current, int size) {
         Page<SysRole> page = new Page<>(current, size);
         IPage<SysRole> iPage = this.baseMapper.selectPage(page, new QueryWrapper<>(role));
-        return page.setRecords(iPage.getRecords());
+        Page<RoleVO> voPage = new Page<>(current, size);
+        if (iPage != null && !CollectionUtils.isEmpty(iPage.getRecords())) {
+            List<RoleVO> voList = new ArrayList<>(iPage.getRecords().size());
+            iPage.getRecords().forEach(po -> {
+                RoleVO vo = new RoleVO();
+                BeanUtils.copyProperties(po, vo);
+                voList.add(vo);
+            });
+        }
+        return voPage;
     }
 }

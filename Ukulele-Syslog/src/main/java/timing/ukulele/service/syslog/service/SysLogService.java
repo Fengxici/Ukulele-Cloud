@@ -5,8 +5,15 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.graalvm.compiler.hotspot.debug.BenchmarkCounters;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import timing.ukulele.facade.syslog.model.persistent.SysLog;
+import org.springframework.util.CollectionUtils;
+import timing.ukulele.facade.syslog.model.view.LogVO;
+import timing.ukulele.service.syslog.persistent.SysLog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -15,9 +22,19 @@ import timing.ukulele.facade.syslog.model.persistent.SysLog;
  */
 @Service
 public class SysLogService extends ServiceImpl<BaseMapper<SysLog>, SysLog> {
-    public IPage<SysLog> getPage(SysLog log,int current,int pageSize) {
+    public IPage<LogVO> getPage(SysLog log, int current, int pageSize) {
         Page<SysLog> page = new Page<>(current, pageSize);
-        IPage<SysLog> iPage=this.baseMapper.selectPage(page, new QueryWrapper<>(log).orderByDesc("create_time"));
-        return page.setRecords(iPage.getRecords());
+        IPage<SysLog> iPage = this.baseMapper.selectPage(page, new QueryWrapper<>(log).orderByDesc("create_time"));
+        IPage<LogVO> voPage = new Page<>(current, pageSize);
+        if (iPage != null && !CollectionUtils.isEmpty(voPage.getRecords())) {
+            List<LogVO> voList = new ArrayList<>(voPage.getRecords().size());
+            voPage.getRecords().forEach(po -> {
+                LogVO vo = new LogVO();
+                BeanUtils.copyProperties(po, vo);
+                voList.add(vo);
+            });
+            voPage.setRecords(voList);
+        }
+        return voPage;
     }
 }

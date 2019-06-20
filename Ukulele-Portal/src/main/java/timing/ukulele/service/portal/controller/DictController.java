@@ -9,14 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.api.IDictFacade;
-import timing.ukulele.facade.portal.model.persistent.SysDict;
-import timing.ukulele.facade.portal.model.persistent.SysDictIndex;
 import timing.ukulele.facade.portal.model.view.DictIndexVO;
 import timing.ukulele.facade.portal.model.view.DictVO;
+import timing.ukulele.service.portal.persistent.SysDict;
+import timing.ukulele.service.portal.persistent.SysDictIndex;
 import timing.ukulele.service.portal.service.SysDictIndexService;
 import timing.ukulele.service.portal.service.SysDictService;
 import timing.ukulele.web.controller.BaseController;
@@ -37,28 +36,43 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
-    public ResponseData<SysDict> dict(Long id) {
+    public ResponseData<DictVO> dict(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        return successResponse(this.dictService.getById(id));
+        SysDict dict = this.dictService.getById(id);
+        if (dict == null)
+            return successResponse();
+        DictVO vo = new DictVO();
+        BeanUtils.copyProperties(dict, vo);
+        return successResponse(vo);
     }
 
     @Override
-    public ResponseData<List<SysDict>> findDictByIndex(String key) {
+    public ResponseData<List<DictVO>> findDictByIndex(String key) {
         if (StringUtils.isEmpty(key))
             return paraErrorResponse();
         SysDictIndex index = dictIndexService.getOne(new QueryWrapper<SysDictIndex>().eq("key_", key));
         if (index == null)
-            failResponse();
+            return successResponse();
         List<SysDict> list = this.dictService.list(new QueryWrapper<SysDict>().eq("index_id", index.getId()));
-        return successResponse(list);
+        if (CollectionUtils.isEmpty(list))
+            return successResponse();
+        List<DictVO> voList = new ArrayList<>(list.size());
+        list.forEach(po -> {
+            DictVO vo = new DictVO();
+            BeanUtils.copyProperties(po, vo);
+            voList.add(vo);
+        });
+        return successResponse(voList);
     }
 
     @Override
-    public ResponseData<Boolean> dict(SysDict sysDict) {
+    public ResponseData<Boolean> dict(DictVO sysDict) {
         if (sysDict == null || sysDict.getId() != null)
             return paraErrorResponse();
-        return successResponse(this.dictService.save(sysDict));
+        SysDict dict = new SysDict();
+        BeanUtils.copyProperties(sysDict, dict);
+        return successResponse(this.dictService.save(dict));
     }
 
     @Override
@@ -78,31 +92,42 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
-    public ResponseData<Boolean> editDict(SysDict sysDict) {
+    public ResponseData<Boolean> editDict(DictVO sysDict) {
         if (sysDict == null || sysDict.getId() == null)
             return paraErrorResponse();
-        return successResponse(this.dictService.saveOrUpdate(sysDict));
+        SysDict dict = new SysDict();
+        BeanUtils.copyProperties(sysDict, dict);
+        return successResponse(this.dictService.saveOrUpdate(dict));
     }
 
     @Override
-    public ResponseData<SysDictIndex> dictIndex(Long id) {
+    public ResponseData<DictIndexVO> dictIndex(Long id) {
         if (id == null || id < 0)
             return paraErrorResponse();
-        return this.successResponse(this.dictIndexService.getById(id));
+        SysDictIndex dictIndex = this.dictIndexService.getById(id);
+        if (dictIndex == null)
+            return this.successResponse();
+        DictIndexVO vo = new DictIndexVO();
+        BeanUtils.copyProperties(dictIndex, vo);
+        return successResponse(vo);
     }
 
     @Override
-    public ResponseData<Boolean> dictIndex(SysDictIndex dictIndex) {
+    public ResponseData<Boolean> dictIndex(DictIndexVO dictIndex) {
         if (dictIndex == null || dictIndex.getId() != null)
             return paraErrorResponse();
-        return successResponse(this.dictIndexService.save(dictIndex));
+        SysDictIndex po = new SysDictIndex();
+        BeanUtils.copyProperties(dictIndex, po);
+        return successResponse(this.dictIndexService.save(po));
     }
 
     @Override
-    public ResponseData<Boolean> editDictIndex(SysDictIndex dictIndex) {
+    public ResponseData<Boolean> editDictIndex(DictIndexVO dictIndex) {
         if (dictIndex == null || dictIndex.getId() == null)
             return paraErrorResponse();
-        return successResponse(this.dictIndexService.updateById(dictIndex));
+        SysDictIndex po = new SysDictIndex();
+        BeanUtils.copyProperties(dictIndex, po);
+        return successResponse(this.dictIndexService.updateById(po));
     }
 
     @Override

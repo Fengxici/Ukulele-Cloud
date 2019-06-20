@@ -3,7 +3,7 @@
 <mapper namespace="timing.ukulele.service.syslog.mapper.SysLogMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="timing.ukulele.facade.syslog.model.persistent.SysLog">
+    <resultMap id="BaseResultMap" type="timing.ukulele.service.syslog.persistent.SysLog">
         <id column="id_" property="id"/>
         <result column="type_" property="type"/>
         <result column="title_" property="title"/>

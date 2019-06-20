@@ -8,7 +8,8 @@ import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.common.util.TreeUtil;
 import timing.ukulele.facade.portal.api.IDeptFacade;
 import timing.ukulele.facade.portal.model.data.DeptTree;
-import timing.ukulele.facade.portal.model.persistent.SysDept;
+import timing.ukulele.facade.portal.model.view.SysDeptVO;
+import timing.ukulele.service.portal.persistent.SysDept;
 import timing.ukulele.service.portal.service.SysDeptService;
 import timing.ukulele.web.controller.BaseController;
 
@@ -27,18 +28,31 @@ public final class DeptController extends BaseController implements IDeptFacade 
     }
 
     @Override
-    public ResponseData<SysDept> get(Long id) {
+    public ResponseData<SysDeptVO> get(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        return successResponse(this.deptService.getById(id));
+        SysDept dept = this.deptService.getById(id);
+        if (dept == null)
+            return successResponse();
+        SysDeptVO vo = new SysDeptVO();
+        BeanUtils.copyProperties(dept, vo);
+        return successResponse(vo);
     }
 
     @Override
-    public ResponseData<List<SysDept>> getDeptByParam(Map<String, Object> map) {
+    public ResponseData<List<SysDeptVO>> getDeptByParam(Map<String, Object> map) {
         if (map == null)
             return paraErrorResponse();
         List<SysDept> list = new ArrayList<>(this.deptService.listByMap(map));
-        return successResponse(list);
+        if (CollectionUtils.isEmpty(list))
+            return successResponse();
+        List<SysDeptVO> voList = new ArrayList<>(list.size());
+        list.forEach(po -> {
+            SysDeptVO vo = new SysDeptVO();
+            BeanUtils.copyProperties(po, vo);
+            voList.add(vo);
+        });
+        return successResponse(voList);
     }
 
     @Override
@@ -48,10 +62,12 @@ public final class DeptController extends BaseController implements IDeptFacade 
     }
 
     @Override
-    public ResponseData<Boolean> add(SysDept sysDept) {
+    public ResponseData<Boolean> add(SysDeptVO sysDept) {
         if (sysDept == null || sysDept.getId() != null)
             return paraErrorResponse();
-        return successResponse(this.deptService.save(sysDept));
+        SysDept po = new SysDept();
+        BeanUtils.copyProperties(sysDept, po);
+        return successResponse(this.deptService.save(po));
     }
 
     @Override
@@ -62,10 +78,12 @@ public final class DeptController extends BaseController implements IDeptFacade 
     }
 
     @Override
-    public ResponseData<Boolean> edit(SysDept sysDept) {
+    public ResponseData<Boolean> edit(SysDeptVO sysDept) {
         if (sysDept == null || sysDept.getId() == null)
             return paraErrorResponse();
-        return successResponse(this.deptService.updateById(sysDept));
+        SysDept po = new SysDept();
+        BeanUtils.copyProperties(sysDept, po);
+        return successResponse(this.deptService.updateById(po));
     }
 
     private List<DeptTree> createMenuTree(Collection<SysDept> menuList) {

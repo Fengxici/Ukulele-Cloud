@@ -4,13 +4,19 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import timing.ukulele.facade.user.model.persistent.SysUser;
+import org.springframework.util.CollectionUtils;
+import timing.ukulele.facade.user.model.view.UserVO;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.user.mapper.SysUserMapper;
+import timing.ukulele.service.user.persistent.SysUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -38,9 +44,19 @@ public class SysUserService extends BaseService<SysUser> {
         return sysUserMapper.selectUserVoByMobile(mobile);
     }
 
-    public IPage<SysUser> getPage(SysUser user, int current, int size) {
+    public IPage<UserVO> getPage(SysUser user, int current, int size) {
         Page<SysUser> page = new Page<>(current, size);
-        IPage<SysUser> iPage=this.baseMapper.selectPage(page, new QueryWrapper<>(user));
-        return page.setRecords(iPage.getRecords());
+        IPage<SysUser> iPage = this.baseMapper.selectPage(page, new QueryWrapper<>(user));
+        Page<UserVO> voPage = new Page<>(current, size);
+        if (iPage != null && !CollectionUtils.isEmpty(iPage.getRecords())) {
+            List<UserVO> voList = new ArrayList<>(iPage.getRecords().size());
+            iPage.getRecords().forEach(po -> {
+                UserVO vo = new UserVO();
+                BeanUtils.copyProperties(po, vo);
+                voList.add(vo);
+            });
+            voPage.setRecords(voList);
+        }
+        return voPage;
     }
 }
