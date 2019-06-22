@@ -82,6 +82,7 @@ public class SysRoleService extends BaseService<SysRole> {
                 BeanUtils.copyProperties(po, vo);
                 voList.add(vo);
             });
+            voPage.setRecords(voList);
         }
         return voPage;
     }
