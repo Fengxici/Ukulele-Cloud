@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import timing.ukulele.facade.portal.model.view.MenuVO;
+import timing.ukulele.facade.portal.model.view.RoleVO;
 import timing.ukulele.facade.user.model.view.UserVO;
 
 /**
@@ -20,8 +21,8 @@ public class RedisAuthConfiguration {
     private JedisConnectionFactory con;
 
     @Bean
-    public RedisTemplate<String, UserVO> baseRoleTemplate() {
-        RedisTemplate<String, UserVO> template = new RedisTemplate<>();
+    public RedisTemplate<String, RoleVO> baseRoleTemplate() {
+        RedisTemplate<String, RoleVO> template = new RedisTemplate<>();
         template.setConnectionFactory(con);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new RedisObjectSerializer());
