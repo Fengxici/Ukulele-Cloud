@@ -8,24 +8,24 @@ import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.api.feign.IMenuFeignFacade;
 import timing.ukulele.facade.portal.api.feign.IRoleFeignFacade;
-import timing.ukulele.facade.portal.model.persistent.SysMenu;
-import timing.ukulele.facade.portal.model.persistent.SysRole;
+import timing.ukulele.facade.portal.model.view.MenuVO;
+import timing.ukulele.facade.portal.model.view.RoleVO;
 import timing.ukulele.facade.user.api.feign.IUserFeignFacade;
-import timing.ukulele.facade.user.model.persistent.SysUser;
+import timing.ukulele.facade.user.model.view.UserVO;
 
 @Service
 @Slf4j
 public class UsernameUserDetailService extends BaseUserDetailService {
 
     public UsernameUserDetailService(IUserFeignFacade userService, IRoleFeignFacade roleService, IMenuFeignFacade
-            menuService, RedisTemplate<String, SysRole> redisTemplate, RedisTemplate<String, SysMenu> resourcesTemplate) {
+            menuService, RedisTemplate<String, RoleVO> redisTemplate, RedisTemplate<String, MenuVO> resourcesTemplate) {
         super(userService, roleService, menuService, redisTemplate, resourcesTemplate);
     }
 
     @Override
-    protected SysUser getUser(String username) {
+    protected UserVO getUser(String username) {
         // 账号密码登陆调用FeignClient根据用户名查询用户
-        ResponseData<SysUser> baseUserResponseData = userService.getUserByUserName(username);
+        ResponseData<UserVO> baseUserResponseData = userService.getUserByUserName(username);
         if (baseUserResponseData.getData() == null || !ResponseCode.SUCCESS.getCode().equals(baseUserResponseData.getCode())) {
             log.error("找不到该用户，用户名：" + username);
             throw new UsernameNotFoundException("找不到该用户，用户名：" + username);

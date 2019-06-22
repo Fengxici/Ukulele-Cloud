@@ -3,7 +3,7 @@
 <mapper namespace="timing.ukulele.service.portal.mapper.SysRoleMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="timing.ukulele.facade.portal.model.persistent.SysRole">
+    <resultMap id="BaseResultMap" type="timing.ukulele.service.portal.persistent.SysRole">
         <id column="id" property="id"/>
         <result column="role_name" property="roleName"/>
         <result column="role_code" property="roleCode"/>
@@ -13,20 +13,7 @@
         <result column="deleted_" property="deleted"/>
     </resultMap>
 
-    <!--roleDto-->
-    <resultMap id="RoleDtoMap" type="timing.ukulele.facade.portal.model.data.RoleDTO">
-        <id column="id_" property="id"/>
-        <result column="role_name" property="roleName"/>
-        <result column="role_code" property="roleCode"/>
-        <result column="role_desc" property="roleDesc"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-        <result column="deleted_" property="deleted"/>
-        <result column="dept_id" property="roleDeptId"/>
-        <result column="name" property="deptName"/>
-    </resultMap>
-
-    <select id="selectRolePage" resultMap="RoleDtoMap">
+    <select id="selectRolePage" resultMap="BaseResultMap">
         SELECT
         *
         FROM

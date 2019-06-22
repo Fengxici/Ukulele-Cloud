@@ -1,5 +1,6 @@
 package timing.ukulele.service.portal.controller;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,10 @@ import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.common.util.TreeUtil;
 import timing.ukulele.facade.portal.api.IAntMenuFacade;
 import timing.ukulele.facade.portal.model.data.AntMenuTree;
-import timing.ukulele.facade.portal.model.persistent.AntIcon;
-import timing.ukulele.facade.portal.model.persistent.AntMenu;
 import timing.ukulele.facade.portal.model.view.AntIconVO;
 import timing.ukulele.facade.portal.model.view.AntMenuVO;
+import timing.ukulele.service.portal.persistent.AntIcon;
+import timing.ukulele.service.portal.persistent.AntMenu;
 import timing.ukulele.service.portal.service.AntIconService;
 import timing.ukulele.service.portal.service.AntMenuService;
 import timing.ukulele.web.controller.BaseController;
@@ -33,15 +34,29 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
-    public ResponseData<AntMenu> get(Long id) {
+    public ResponseData<AntMenuVO> get(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        return successResponse(this.antMenuService.getById(id));
+        AntMenu menu = this.antMenuService.getById(id);
+        if (menu == null)
+            return successResponse();
+        AntMenuVO vo = new AntMenuVO();
+        BeanUtils.copyProperties(menu, vo);
+        return successResponse(vo);
     }
 
     @Override
-    public ResponseData<List<AntMenu>> getByParam(Map<String, Object> map) {
-        return successResponse((List<AntMenu>) this.antMenuService.listByMap(map));
+    public ResponseData<List<AntMenuVO>> getByParam(Map<String, Object> map) {
+        Collection<AntMenu> poList = this.antMenuService.listByMap(map);
+        if (CollectionUtils.isEmpty(poList))
+            return successResponse();
+        List<AntMenuVO> voList = new ArrayList<>(poList.size());
+        poList.forEach(po -> {
+            AntMenuVO vo = new AntMenuVO();
+            BeanUtils.copyProperties(po, vo);
+            voList.add(vo);
+        });
+        return successResponse(voList);
     }
 
     @Override
@@ -51,10 +66,12 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
-    public ResponseData<Boolean> add(AntMenu sysMenuAnt) {
+    public ResponseData<Boolean> add(AntMenuVO sysMenuAnt) {
         if (sysMenuAnt == null || sysMenuAnt.getId() != null)
             return paraErrorResponse();
-        return successResponse(this.antMenuService.save(sysMenuAnt));
+        AntMenu po = new AntMenu();
+        BeanUtils.copyProperties(sysMenuAnt, po);
+        return successResponse(this.antMenuService.save(po));
     }
 
     @Override
@@ -65,10 +82,12 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
-    public ResponseData<Boolean> edit(AntMenu sysMenuAnt) {
+    public ResponseData<Boolean> edit(AntMenuVO sysMenuAnt) {
         if (sysMenuAnt == null || sysMenuAnt.getId() == null)
             return paraErrorResponse();
-        return successResponse(this.antMenuService.saveOrUpdate(sysMenuAnt));
+        AntMenu po = new AntMenu();
+        BeanUtils.copyProperties(sysMenuAnt, po);
+        return successResponse(this.antMenuService.saveOrUpdate(po));
     }
 
     @Override
@@ -81,6 +100,8 @@ public final class AntMenuController extends BaseController implements IAntMenuF
             list.forEach(menu -> {
                 AntMenuVO vo = new AntMenuVO();
                 BeanUtils.copyProperties(menu, vo);
+                if (StringUtils.isNotEmpty(menu.getAcl()))
+                    vo.setAcl(JSON.parseArray(menu.getAcl(), String.class));
                 menus.add(vo);
             });
         return successResponse(menus);
@@ -101,10 +122,19 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
-    public ResponseData<List<AntMenu>> getMenuByUserId(Long userId) {
+    public ResponseData<List<AntMenuVO>> getMenuByUserId(Long userId) {
         if (userId == null || userId <= 0)
             return paraErrorResponse();
-        return successResponse(this.antMenuService.getMenuByUserId(userId));
+        List<AntMenu> poList = this.antMenuService.getMenuByUserId(userId);
+        if (CollectionUtils.isEmpty(poList))
+            return successResponse();
+        List<AntMenuVO> voList = new ArrayList<>(poList.size());
+        poList.forEach(po -> {
+            AntMenuVO vo = new AntMenuVO();
+            BeanUtils.copyProperties(po, vo);
+            voList.add(vo);
+        });
+        return successResponse(voList);
     }
 
     @Override
@@ -122,12 +152,15 @@ public final class AntMenuController extends BaseController implements IAntMenuF
             menuList.forEach(menu -> {
                 AntMenuTree node = new AntMenuTree();
                 BeanUtils.copyProperties(menu, node);
-                if (menu.getIconId() != null) {
-                    AntIcon icon = this.antIconService.getById(menu.getIconId());
-                    AntIconVO antIconVO = new AntIconVO();
-                    BeanUtils.copyProperties(icon, antIconVO);
-                    node.setIcon(antIconVO);
-                }
+                if (StringUtils.isNotEmpty(menu.getAcl()))
+                    node.setAcl(JSON.parseArray(menu.getAcl(), String.class));
+                if (StringUtils.isNotEmpty(menu.getAcl()))
+                    if (menu.getIconId() != null) {
+                        AntIcon icon = this.antIconService.getById(menu.getIconId());
+                        AntIconVO antIconVO = new AntIconVO();
+                        BeanUtils.copyProperties(icon, antIconVO);
+                        node.setIcon(antIconVO);
+                    }
                 menuTreeList.add(node);
             });
         return TreeUtil.buildByRecursive(menuTreeList, 0L);

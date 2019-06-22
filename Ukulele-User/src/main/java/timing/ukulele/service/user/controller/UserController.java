@@ -1,26 +1,27 @@
 package timing.ukulele.service.user.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
+import timing.ukulele.common.util.JsonUtils;
 import timing.ukulele.facade.user.api.IUserFacade;
-import timing.ukulele.facade.user.model.persistent.SysUser;
 import timing.ukulele.facade.user.model.view.UserVO;
+import timing.ukulele.service.user.persistent.SysUser;
 import timing.ukulele.service.user.service.SysUserService;
 import timing.ukulele.web.controller.BaseController;
 import timing.ukulele.web.util.Request2ModelUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 public class UserController extends BaseController implements IUserFacade {
@@ -38,11 +39,14 @@ public class UserController extends BaseController implements IUserFacade {
      * @return UseVo 对象
      */
     @Override
-    public ResponseData<SysUser> getUserByUserName(String username) {
+    public ResponseData<UserVO> getUserByUserName(String username) {
         if (StringUtils.isEmpty(username))
             return paraErrorResponse();
         SysUser user = userService.findUserByUsername(username);
-        return successResponse(user);
+        user.setPassword(null);
+        UserVO vo = new UserVO();
+        BeanUtils.copyProperties(user, vo);
+        return successResponse(vo);
     }
 
     /**
@@ -52,17 +56,30 @@ public class UserController extends BaseController implements IUserFacade {
      * @return UseVo 对象
      */
     @Override
-    public ResponseData<SysUser> getUserByPhone(String mobile) {
+    public ResponseData<UserVO> getUserByPhone(String mobile) {
         if (StringUtils.isEmpty(mobile))
             return paraErrorResponse();
         SysUser user = userService.findUserByMobile(mobile);
-        return successResponse(user);
+        user.setPassword(null);
+        UserVO vo = new UserVO();
+        BeanUtils.copyProperties(user, vo);
+        return successResponse(vo);
     }
 
     @Override
-    public ResponseData<List<SysUser>> getUserByParam(Map<String, Object> map) {
+    public ResponseData<List<UserVO>> getUserByParam(Map<String, Object> map) {
         List<SysUser> list = new ArrayList<>(userService.listByMap(map));
-        return successResponse(list);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<UserVO> voList = new ArrayList<>(list.size());
+            list.forEach(user -> {
+                user.setPassword(null);
+                UserVO vo = new UserVO();
+                BeanUtils.copyProperties(user, vo);
+                voList.add(vo);
+            });
+            return successResponse(voList);
+        }
+        return successResponse();
     }
 
     @Override
@@ -74,6 +91,8 @@ public class UserController extends BaseController implements IUserFacade {
         if (user != null) {
             user.setPassword(null);
             BeanUtils.copyProperties(user, vo);
+            if (StringUtils.isNotEmpty(user.getLabel()))
+                vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
         }
         return successResponse(vo);
     }
@@ -92,6 +111,8 @@ public class UserController extends BaseController implements IUserFacade {
             return paraErrorResponse();
         SysUser userPO = new SysUser();
         BeanUtils.copyProperties(user, userPO);
+        if (!CollectionUtils.isEmpty(user.getLabel()))
+            userPO.setLabel(Arrays.toString(user.getLabel().toArray()));
         // TODO 部分属性暂时默认值
         userPO.setPassword(new BCryptPasswordEncoder(6).encode("123456"));//密码
         Random random = new Random();
@@ -110,24 +131,21 @@ public class UserController extends BaseController implements IUserFacade {
         user.setAvatar(null);
         user.setCreateTime(null);
         user.setUpdateTime(null);
-        user.setLabel(null);
-        user.setSalt(null);
         SysUser po = new SysUser();
         BeanUtils.copyProperties(user, po);
+        if (!CollectionUtils.isEmpty(user.getLabel()))
+            po.setLabel(Arrays.toString(user.getLabel().toArray()));
         Boolean success = userService.updateById(po);
         return successResponse(success);
     }
 
     @GetMapping("/page/{current}/{size}")
-    public ResponseData<IPage<SysUser>> getPage(@PathVariable(name = "current") int current,
-                                                @PathVariable(name = "size") int size, HttpServletRequest request) {
+    public ResponseData<IPage<UserVO>> getPage(@PathVariable(name = "current") int current,
+                                               @PathVariable(name = "size") int size, HttpServletRequest request) {
         SysUser user = Request2ModelUtil.covert(SysUser.class, request);
         if (size == 0) size = 10;
         if (current == 0) current = 1;
-        IPage<SysUser> page = this.userService.getPage(user, current, size);
-        List<SysUser> list = page.getRecords();
-        if (list != null)
-            list.forEach(po -> po.setPassword(null));
+        IPage<UserVO> page = this.userService.getPage(user, current, size);
         return successResponse(page);
     }
 }

@@ -3,19 +3,21 @@ package timing.ukulele.service.portal.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.facade.portal.api.IRoleFacade;
-import timing.ukulele.facade.portal.model.persistent.SysRole;
 import timing.ukulele.facade.portal.model.view.RoleVO;
+import timing.ukulele.service.portal.persistent.SysRole;
 import timing.ukulele.service.portal.service.SysRoleService;
 import timing.ukulele.web.controller.BaseController;
 import timing.ukulele.web.util.Request2ModelUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -29,15 +31,29 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
-    public ResponseData<SysRole> role(Long id) {
+    public ResponseData<RoleVO> role(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        return successResponse(this.sysRoleService.getById(id));
+        SysRole po = this.sysRoleService.getById(id);
+        if (po == null)
+            return successResponse();
+        RoleVO vo = new RoleVO();
+        BeanUtils.copyProperties(po, vo);
+        return successResponse(vo);
     }
 
     @Override
-    public ResponseData<List<SysRole>> getRoleByParam(Map<String, Object> map) {
-        return successResponse(new ArrayList<>(this.sysRoleService.listByMap(map)));
+    public ResponseData<List<RoleVO>> getRoleByParam(Map<String, Object> map) {
+        Collection<SysRole> poList = this.sysRoleService.listByMap(map);
+        if (CollectionUtils.isEmpty(poList))
+            return successResponse();
+        List<RoleVO> voList = new ArrayList<>(poList.size());
+        poList.forEach(po -> {
+            RoleVO vo = new RoleVO();
+            BeanUtils.copyProperties(po, vo);
+            voList.add(vo);
+        });
+        return successResponse(voList);
     }
 
     @Override
@@ -66,10 +82,19 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
-    public ResponseData<List<SysRole>> getRoleByUserId(Long id) {
+    public ResponseData<List<RoleVO>> getRoleByUserId(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        return successResponse(this.sysRoleService.getRoleByUserId(id));
+        List<SysRole> poList = this.sysRoleService.getRoleByUserId(id);
+        if (CollectionUtils.isEmpty(poList))
+            return successResponse();
+        List<RoleVO> voList = new ArrayList<>(poList.size());
+        poList.forEach(po -> {
+            RoleVO vo = new RoleVO();
+            BeanUtils.copyProperties(po, vo);
+            voList.add(vo);
+        });
+        return successResponse(voList);
     }
 
     @Override
@@ -87,13 +112,13 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @GetMapping("/page/{current}/{size}")
-    public ResponseData<IPage<SysRole>> getPage(@PathVariable(name="current")int current,
-                                                @PathVariable(name="size") int size, HttpServletRequest request) {
+    public ResponseData<IPage<RoleVO>> getPage(@PathVariable(name = "current") int current,
+                                                @PathVariable(name = "size") int size, HttpServletRequest request) {
         RoleVO roleVO = Request2ModelUtil.covert(RoleVO.class, request);
-        if(size==0)size=10;
-        if(current==0)current=1;
+        if (size == 0) size = 10;
+        if (current == 0) current = 1;
         SysRole role = new SysRole();
-        BeanUtils.copyProperties(roleVO,role);
-        return successResponse(this.sysRoleService.getPage(role,current,size));
+        BeanUtils.copyProperties(roleVO, role);
+        return successResponse(this.sysRoleService.getPage(role, current, size));
     }
 }

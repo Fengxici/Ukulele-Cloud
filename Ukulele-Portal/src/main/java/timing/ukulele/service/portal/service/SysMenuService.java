@@ -1,9 +1,9 @@
 package timing.ukulele.service.portal.service;
 
 import org.springframework.stereotype.Service;
-import timing.ukulele.facade.portal.model.persistent.SysMenu;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.portal.mapper.SysMenuMapper;
+import timing.ukulele.service.portal.persistent.SysMenu;
 
 import java.util.List;
 

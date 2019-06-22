@@ -2,13 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="timing.ukulele.service.user.mapper.SysUserMapper">
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="timing.ukulele.facade.user.model.persistent.SysUser">
+    <resultMap id="BaseResultMap" type="timing.ukulele.service.user.persistent.SysUser">
         <id column="id_" property="id"/>
         <result column="username_" property="username"/>
         <result column="password_" property="password"/>
         <result column="phone_" property="phone"/>
         <result column="avatar_" property="avatar"/>
-        <result column="salt_" property="salt"/>
         <result column="label_" property="label"/>
         <result column="dept_id" property="deptId"/>
         <result column="create_time" property="createTime"/>

@@ -5,7 +5,7 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import timing.ukulele.common.util.JsonUtils;
-import timing.ukulele.facade.user.model.persistent.SysUser;
+import timing.ukulele.facade.user.model.view.UserVO;
 import timing.ukulele.service.auth.BaseUserDetail;
 import timing.ukulele.service.auth.Constant;
 
@@ -29,7 +29,7 @@ public class JwtAccessToken extends JwtAccessTokenConverter {
         //客户端模式不包含用户信息
         if (authentication.getPrincipal() instanceof BaseUserDetail) {
             // 设置额外用户信息
-            SysUser baseUser = ((BaseUserDetail) authentication.getPrincipal()).getBaseUser();
+            UserVO baseUser = ((BaseUserDetail) authentication.getPrincipal()).getBaseUser();
             baseUser.setPassword(null);
             // 将用户信息添加到token额外信息中
             defaultOAuth2AccessToken.getAdditionalInformation().put(Constant.USER_INFO, baseUser);
@@ -56,9 +56,9 @@ public class JwtAccessToken extends JwtAccessTokenConverter {
 
     }
 
-    private SysUser convertUserData(Object map) {
+    private UserVO convertUserData(Object map) {
         String json = JsonUtils.deserializer(map);
-        SysUser user = JsonUtils.serializable(json, SysUser.class);
+        UserVO user = JsonUtils.serializable(json, UserVO.class);
         return user;
     }
 }

@@ -1,8 +1,8 @@
 package timing.ukulele.service.user.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import timing.ukulele.facade.user.model.persistent.SysUser;
 import timing.ukulele.persistence.mapper.BaseMapper;
+import timing.ukulele.service.user.persistent.SysUser;
 
 /**
  * <p>
@@ -15,7 +15,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * 通过用户名查询用户信息（含有角色信息）
      *
      * @param username 用户名
-     * @return userVo
+     * @return SysUser
      */
     SysUser selectUserVoByUsername(String username);
 
@@ -24,7 +24,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * 通过手机号查询用户信息（含有角色信息）
      *
      * @param mobile 用户名
-     * @return userVo
+     * @return SysUser
      */
     SysUser selectUserVoByMobile(String mobile);
 }
