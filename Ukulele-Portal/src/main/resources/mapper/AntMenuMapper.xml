@@ -42,20 +42,6 @@
         AND sys_role.role_code = #{role}
     </select>
 
-    <delete id="deleteRoleMenu">
-        delete from ant_role_menu where role_id=#{roleId}
-        <if test="menuId != null">
-            and menu_id=#{menuId}
-        </if>
-    </delete>
-
-    <delete id="deleteRoleMenuByMenuId">
-        delete from ant_role_menu where  menu_id=#{menuId}
-    </delete>
-
-    <insert id="addRoleMenu">
-        insert into ant_role_menu(role_id,menu_id) values(#{roleId},#{menuId})
-    </insert>
 
     <select id="getMenuByUserId" resultMap="BaseResultMap">
         select m.* from ant_menu m

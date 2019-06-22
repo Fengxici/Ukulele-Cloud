@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="timing.ukulele.service.portal.mapper.AntRoleMenuMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="timing.ukulele.service.portal.persistent.AntRoleMenu">
+        <id column="role_id" property="roleId"/>
+        <id column="menu_id" property="menuId"/>
+        <id column="ability_" property="ability"/>
+    </resultMap>
+    <select id="selectRoleMenu" resultMap="BaseResultMap">
+        select role_id,menu_id,ability_ from ant_role_menu where role_id=#{roleId}
+    </select>
+
+    <delete id="deleteRoleMenu">
+        delete from ant_role_menu where role_id=#{roleId}
+        <if test="menuId != null">
+            and menu_id=#{menuId}
+        </if>
+    </delete>
+
+    <delete id="deleteRoleMenuByMenuId">
+        delete from ant_role_menu where  menu_id=#{menuId}
+    </delete>
+
+    <insert id="addRoleMenu">
+        insert into ant_role_menu(role_id,menu_id) values(#{roleId},#{menuId})
+    </insert>
+</mapper>

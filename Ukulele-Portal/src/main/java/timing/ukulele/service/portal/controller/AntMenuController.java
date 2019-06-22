@@ -11,6 +11,7 @@ import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.common.util.TreeUtil;
 import timing.ukulele.facade.portal.api.IAntMenuFacade;
 import timing.ukulele.facade.portal.model.data.AntMenuTree;
+import timing.ukulele.facade.portal.model.data.RoleMenuTree;
 import timing.ukulele.facade.portal.model.view.AntIconVO;
 import timing.ukulele.facade.portal.model.view.AntMenuVO;
 import timing.ukulele.service.portal.persistent.AntIcon;
@@ -88,6 +89,14 @@ public final class AntMenuController extends BaseController implements IAntMenuF
         AntMenu po = new AntMenu();
         BeanUtils.copyProperties(sysMenuAnt, po);
         return successResponse(this.antMenuService.saveOrUpdate(po));
+    }
+
+    @Override
+    public ResponseData<List<RoleMenuTree>> findAllMenuWithRole(Long roleId) {
+        if(roleId==null)
+            return paraErrorResponse();
+        List<RoleMenuTree> list = this.antMenuService.findAllMenuWithRole(roleId);
+        return successResponse(list);
     }
 
     @Override
