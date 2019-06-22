@@ -54,9 +54,10 @@ public class SysUserService extends BaseService<SysUser> {
             List<UserVO> voList = new ArrayList<>(iPage.getRecords().size());
             iPage.getRecords().forEach(po -> {
                 UserVO vo = new UserVO();
+                po.setPassword(null);
                 BeanUtils.copyProperties(po, vo);
-                if (StringUtils.isNotEmpty(user.getLabel()))
-                    vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
+                if (StringUtils.isNotEmpty(po.getLabel()))
+                    vo.setLabel(JSON.parseArray(po.getLabel(), String.class));
                 voList.add(vo);
             });
             voPage.setRecords(voList);
