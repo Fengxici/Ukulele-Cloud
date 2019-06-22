@@ -43,7 +43,6 @@ public class UserController extends BaseController implements IUserFacade {
         if (StringUtils.isEmpty(username))
             return paraErrorResponse();
         SysUser user = userService.findUserByUsername(username);
-        user.setPassword(null);
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(user, vo);
         return successResponse(vo);
@@ -60,7 +59,6 @@ public class UserController extends BaseController implements IUserFacade {
         if (StringUtils.isEmpty(mobile))
             return paraErrorResponse();
         SysUser user = userService.findUserByMobile(mobile);
-        user.setPassword(null);
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(user, vo);
         return successResponse(vo);
