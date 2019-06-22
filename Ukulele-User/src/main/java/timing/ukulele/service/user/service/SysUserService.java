@@ -1,9 +1,11 @@
 package timing.ukulele.service.user.service;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,6 +55,8 @@ public class SysUserService extends BaseService<SysUser> {
             iPage.getRecords().forEach(po -> {
                 UserVO vo = new UserVO();
                 BeanUtils.copyProperties(po, vo);
+                if (StringUtils.isNotEmpty(user.getLabel()))
+                    vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
                 voList.add(vo);
             });
             voPage.setRecords(voList);

@@ -45,6 +45,8 @@ public class UserController extends BaseController implements IUserFacade {
         SysUser user = userService.findUserByUsername(username);
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(user, vo);
+        if (StringUtils.isNotEmpty(user.getLabel()))
+            vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
         return successResponse(vo);
     }
 
@@ -61,6 +63,8 @@ public class UserController extends BaseController implements IUserFacade {
         SysUser user = userService.findUserByMobile(mobile);
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(user, vo);
+        if (StringUtils.isNotEmpty(user.getLabel()))
+            vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
         return successResponse(vo);
     }
 
@@ -73,6 +77,8 @@ public class UserController extends BaseController implements IUserFacade {
                 user.setPassword(null);
                 UserVO vo = new UserVO();
                 BeanUtils.copyProperties(user, vo);
+                if (StringUtils.isNotEmpty(user.getLabel()))
+                    vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
                 voList.add(vo);
             });
             return successResponse(voList);
