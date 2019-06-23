@@ -51,9 +51,13 @@ public class AntMenuService extends BaseService<AntMenu> {
                 RoleMenuTree node = new RoleMenuTree();
                 node.setId(menu.getId());
                 node.setText(menu.getText());
+                node.setParentId(menu.getParentId());
                 AntRoleMenu roleMenu = roleMenuMap.get(menu.getId());
-                if (roleMenu != null && StringUtils.isNotEmpty(roleMenu.getAbility()))
-                    node.setAbilities(JSON.parseArray(roleMenu.getAbility(), String.class));
+                if (roleMenu != null) {
+                    node.setRoleId(roleId);
+                    if (StringUtils.isNotEmpty(roleMenu.getAbility()))
+                        node.setAbilities(JSON.parseArray(roleMenu.getAbility(), String.class));
+                }
                 menuTreeList.add(node);
             });
         return TreeUtil.buildByRecursive(menuTreeList, 0L);
