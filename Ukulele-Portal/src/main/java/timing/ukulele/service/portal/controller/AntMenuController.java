@@ -14,6 +14,8 @@ import timing.ukulele.facade.portal.model.data.AntMenuTree;
 import timing.ukulele.facade.portal.model.data.RoleMenuTree;
 import timing.ukulele.facade.portal.model.view.AntIconVO;
 import timing.ukulele.facade.portal.model.view.AntMenuVO;
+import timing.ukulele.facade.portal.model.view.AntRoleMenuEditVO;
+import timing.ukulele.facade.portal.model.view.RoleMenuEditVO;
 import timing.ukulele.service.portal.persistent.AntIcon;
 import timing.ukulele.service.portal.persistent.AntMenu;
 import timing.ukulele.service.portal.service.AntIconService;
@@ -21,6 +23,7 @@ import timing.ukulele.service.portal.service.AntMenuService;
 import timing.ukulele.web.controller.BaseController;
 
 import java.util.*;
+import java.util.zip.CheckedOutputStream;
 
 @RestController
 public final class AntMenuController extends BaseController implements IAntMenuFacade {
@@ -93,7 +96,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
 
     @Override
     public ResponseData<List<RoleMenuTree>> findAllMenuWithRole(Long roleId) {
-        if(roleId==null)
+        if (roleId == null)
             return paraErrorResponse();
         List<RoleMenuTree> list = this.antMenuService.findAllMenuWithRole(roleId);
         return successResponse(list);
@@ -128,6 +131,13 @@ public final class AntMenuController extends BaseController implements IAntMenuF
         if (roleId == null || roleId <= 0 || menuId == null || menuId <= 0)
             return paraErrorResponse();
         return successResponse(this.antMenuService.addRoleMenu(roleId, menuId));
+    }
+
+    @Override
+    public ResponseData<Boolean> editRoleMenu(AntRoleMenuEditVO vo) {
+        if (null == vo || null == vo.getRoleId())
+            return paraErrorResponse();
+        return antMenuService.editRoleMenu(vo.getRoleId(), vo.getMenuList());
     }
 
     @Override
