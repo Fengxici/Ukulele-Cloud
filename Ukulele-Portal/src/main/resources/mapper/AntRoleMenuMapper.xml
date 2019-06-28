@@ -22,7 +22,29 @@
         delete from ant_role_menu where  menu_id=#{menuId}
     </delete>
 
-    <insert id="addRoleMenu">
-        insert into ant_role_menu(role_id,menu_id) values(#{roleId},#{menuId})
+    <delete id="batchDeleteRoleMenu">
+        delete from ant_role_menu where role_id=#{roleId} and menu_id in
+        <foreach collection="menus" item="menu" open="(" close=")" separator=",">
+            #{menu}
+        </foreach>
+    </delete>
+
+    <insert id="batchAddRoleMenu">
+        INSERT INTO ant_role_menu (role_id,menu_id,ability_) VALUES
+        <foreach collection="roleMenus" item="menu" separator=",">
+            (#{menu.roleId},#{menu.menuId},#{menu.ability})
+        </foreach>
     </insert>
+
+    <update id="batchUpdateRoleMenu" parameterType="java.util.List">
+        <foreach collection="roleMenus" item="menu" index="index" open="" close="" separator=";">
+            UPDATE ant_role_menu
+            <set>
+                ability_=#{menu.ability}
+            </set>
+            <where>
+                role_id = #{menu.roleId} and menu_id= #{menu.menuId}
+            </where>
+        </foreach>
+    </update>
 </mapper>

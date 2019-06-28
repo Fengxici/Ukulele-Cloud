@@ -5,13 +5,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang.StringUtils;
+import org.checkerframework.checker.units.qual.C;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
+import timing.ukulele.common.data.TreeNode;
 import timing.ukulele.common.util.TreeUtil;
+import timing.ukulele.facade.portal.model.data.MenuTree;
 import timing.ukulele.facade.portal.model.data.RoleMenuTree;
+import timing.ukulele.facade.portal.model.view.AntRoleMenuEditVO;
 import timing.ukulele.facade.portal.model.view.RoleMenuEditVO;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.portal.mapper.AntMenuMapper;
@@ -40,10 +45,20 @@ public class AntMenuService extends BaseService<AntMenu> {
 
     public List<RoleMenuTree> findAllMenuWithRole(Long roleId) {
         List<AntMenu> menuList = list();
+        if (CollectionUtils.isEmpty(menuList))
+            return null;
         List<AntRoleMenu> roleMenuList = roleMenuMapper.selectRoleMenu(roleId);
         Map<Long, AntRoleMenu> roleMenuMap = new HashMap<>(CollectionUtils.isEmpty(roleMenuList) ? 0 : roleMenuList.size());
         if (!CollectionUtils.isEmpty(roleMenuList))
             roleMenuList.forEach(item -> roleMenuMap.put(item.getMenuId(), item));
+        //父节点集合
+        Set<Long> parentSet = new HashSet<>();
+        if (!CollectionUtils.isEmpty(menuList)) {
+            menuList.forEach(menu -> {
+                if (!parentSet.contains(menu.getParentId()))
+                    parentSet.add(menu.getParentId());
+            });
+        }
         List<RoleMenuTree> menuTreeList = new ArrayList<>();
         if (!CollectionUtils.isEmpty(menuList))
             menuList.forEach(menu -> {
@@ -54,17 +69,18 @@ public class AntMenuService extends BaseService<AntMenu> {
                 AntRoleMenu roleMenu = roleMenuMap.get(menu.getId());
                 if (roleMenu != null) {
                     node.setRoleId(roleId);
+                    //叶子节点才设置选中状态，ng-alain前端会判断父节点是否要选中
+                    node.setChecked(!parentSet.contains(menu.getId()));
                     if (StringUtils.isNotEmpty(roleMenu.getAbility()))
                         node.setAbilities(JSON.parseArray(roleMenu.getAbility(), String.class));
+                } else {
+                    node.setChecked(false);
                 }
                 menuTreeList.add(node);
             });
         return TreeUtil.buildByRecursive(menuTreeList, 0L);
     }
 
-    public Boolean addRoleMenu(Long roleId, Long menuId) {
-        return roleMenuMapper.addRoleMenu(roleId, menuId) > 0;
-    }
 
     public List<AntMenu> getMenuByUserId(Long userId) {
         return ((AntMenuMapper) this.baseMapper).getMenuByUserId(userId);
@@ -81,57 +97,47 @@ public class AntMenuService extends BaseService<AntMenu> {
         return new ResponseData<>(ResponseCode.SUCCESS, Boolean.TRUE);
     }
 
-    public ResponseData<Boolean> editRoleMenu(Long roleId, List<RoleMenuEditVO> list) {
-        if (CollectionUtils.isEmpty(list))
+    public ResponseData<Boolean> editRoleMenu(AntRoleMenuEditVO vo) {
+        if (null == vo || vo.getRoleId() == null)
             return new ResponseData<>(ResponseCode.ERROR.getCode(), "菜单列表为空", Boolean.FALSE);
+        //列表为空则是删除
+        if (CollectionUtils.isEmpty(vo.getMenuList()))
+            return new ResponseData<>(ResponseCode.SUCCESS, Boolean.TRUE);
         //1,查询菜单列表
         List<AntMenu> menuList = this.list();
         if (CollectionUtils.isEmpty(menuList))
             return new ResponseData<>(ResponseCode.ERROR.getCode(), "系统尚无任何菜单", Boolean.FALSE);
         Map<Long, AntMenu> menuMap = new HashMap<>(menuList.size());
         menuList.forEach(item -> menuMap.put(item.getId(), item));
-        //2.查询该角色已有的菜单
-        List<AntRoleMenu> roleMenuList = this.roleMenuMapper.selectRoleMenu(roleId);
-        Map<Long, RoleMenuEditVO> roleMenuMap = new HashMap<>(CollectionUtils.isEmpty(roleMenuList) ? 0 : roleMenuList.size());
+        Map<Long, RoleMenuEditVO> roleMenuMap = new HashMap<>(vo.getMenuList().size());
         List<AntRoleMenu> toAddList = new ArrayList<>();
-        List<AntRoleMenu> toDeleteList = new ArrayList<>();
-        Set<Long> toDeleteSet = new HashSet<>();
         Set<Long> toAddSet = new HashSet<>();
-        list.forEach(item -> {
-            roleMenuMap.put(item.getMenuId(), item);
-            //系统存在的菜单才处理
-            if (null != menuMap.get(item.getMenuId())) {
-                if (item.isDelete()) {
-                    toDeleteSet.addAll(getNodeAndAllParent(item.getMenuId(), menuMap));
-                } else {
+        //新增列表
+        if (!CollectionUtils.isEmpty(vo.getMenuList())) {
+            vo.getMenuList().forEach(item -> {
+                roleMenuMap.put(item.getMenuId(), item);
+                //系统存在的菜单才处理
+                if (null != menuMap.get(item.getMenuId())) {
                     toAddSet.addAll(getNodeAndAllParent(item.getMenuId(), menuMap));
                 }
-            }
-        });
-        // 如果删除和新增的存在交集，则程序无法处理
-        Set<Long> result = new HashSet<>(toAddSet.size() > toDeleteSet.size() ? toAddSet : toDeleteSet);
-        if (!CollectionUtils.isEmpty(toAddSet) && !CollectionUtils.isEmpty(toDeleteSet) && result.retainAll(toDeleteSet))
-            return new ResponseData<>(ResponseCode.ERROR.getCode(), "要删除的和要新增的才能在交集，无法处理", Boolean.FALSE);
+            });
+        }
+        //新增列表
         if (!CollectionUtils.isEmpty(toAddSet)) {
             toAddSet.forEach(item -> {
                 AntRoleMenu roleMenu = new AntRoleMenu();
                 roleMenu.setMenuId(item);
-                roleMenu.setRoleId(roleId);
-                RoleMenuEditVO vo = roleMenuMap.get(item);
-                if (null != vo && !CollectionUtils.isEmpty(vo.getAbilities()))
-                    roleMenu.setAbility(Arrays.toString(vo.getAbilities().toArray()));
+                roleMenu.setRoleId(vo.getRoleId());
+                RoleMenuEditVO voItem = roleMenuMap.get(item);
+                if (null != voItem && !CollectionUtils.isEmpty(voItem.getAbilities())) {
+                    roleMenu.setAbility(JSON.toJSONString(voItem.getAbilities()));
+                }
                 toAddList.add(roleMenu);
             });
         }
-        if (!CollectionUtils.isEmpty(toDeleteSet)) {
-            toDeleteSet.forEach(item -> {
-                AntRoleMenu roleMenu = new AntRoleMenu();
-                roleMenu.setMenuId(item);
-                roleMenu.setRoleId(roleId);
-                toDeleteList.add(roleMenu);
-            });
-        }
-        return new ResponseData<>(ResponseCode.SUCCESS, Boolean.TRUE);
+        if (batchEditRoleMenu(vo.getRoleId(), toAddList))
+            return new ResponseData<>(ResponseCode.SUCCESS, Boolean.TRUE);
+        return new ResponseData<>(ResponseCode.BUSINESS_ERROR, false);
     }
 
     public IPage<AntMenu> getPage(AntMenu antMenu, int current, int size) {
@@ -140,7 +146,7 @@ public class AntMenuService extends BaseService<AntMenu> {
         return page.setRecords(iPage.getRecords());
     }
 
-    public Set<Long> getNodeAndAllParent(Long menuId, Map<Long, AntMenu> menuMap) {
+    private Set<Long> getNodeAndAllParent(Long menuId, Map<Long, AntMenu> menuMap) {
         Set<Long> set = new HashSet<>();
         AntMenu menu = menuMap.get(menuId);
         if (menu == null)
@@ -149,6 +155,15 @@ public class AntMenuService extends BaseService<AntMenu> {
         if (!menu.getParentId().equals(0L))
             set.addAll(getNodeAndAllParent(menu.getParentId(), menuMap));
         return set;
+    }
+
+    private Boolean batchEditRoleMenu(Long roleId, List<AntRoleMenu> addList) {
+        //删除原有的
+        this.roleMenuMapper.deleteRoleMenu(roleId, null);
+        //插入新提交的
+        if (!CollectionUtils.isEmpty(addList))
+            this.roleMenuMapper.batchAddRoleMenu(addList);
+        return true;
     }
 
 }

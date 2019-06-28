@@ -15,7 +15,11 @@ public interface AntRoleMenuMapper {
 
     int deleteRoleMenu(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
 
-    int addRoleMenu(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
-
     int deleteRoleMenuByMenuId(@Param("menuId") Long menuId);
+
+    int batchDeleteRoleMenu(@Param("roleId") Long roleId, @Param("menus") List<Long> menus);
+
+    int batchAddRoleMenu(@Param("roleMenus") List<AntRoleMenu> list);
+
+    int batchUpdateRoleMenu(@Param("roleMenus") List<AntRoleMenu> list);
 }

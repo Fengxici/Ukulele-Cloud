@@ -127,17 +127,10 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
-    public ResponseData<Boolean> addRoleMenu(Long roleId, Long menuId) {
-        if (roleId == null || roleId <= 0 || menuId == null || menuId <= 0)
-            return paraErrorResponse();
-        return successResponse(this.antMenuService.addRoleMenu(roleId, menuId));
-    }
-
-    @Override
     public ResponseData<Boolean> editRoleMenu(AntRoleMenuEditVO vo) {
         if (null == vo || null == vo.getRoleId())
             return paraErrorResponse();
-        return antMenuService.editRoleMenu(vo.getRoleId(), vo.getMenuList());
+        return antMenuService.editRoleMenu(vo);
     }
 
     @Override
