@@ -2,6 +2,7 @@ package timing.ukulele.service.portal.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import timing.ukulele.persistence.mapper.BaseMapper;
 import timing.ukulele.service.portal.persistent.SysMenu;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * </p>
  */
 @Mapper
+@Repository
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 
     /**

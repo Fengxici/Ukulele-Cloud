@@ -11,8 +11,11 @@ import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.common.util.TreeUtil;
 import timing.ukulele.facade.portal.api.IAntMenuFacade;
 import timing.ukulele.facade.portal.model.data.AntMenuTree;
+import timing.ukulele.facade.portal.model.data.RoleMenuTree;
 import timing.ukulele.facade.portal.model.view.AntIconVO;
 import timing.ukulele.facade.portal.model.view.AntMenuVO;
+import timing.ukulele.facade.portal.model.view.AntRoleMenuEditVO;
+import timing.ukulele.facade.portal.model.view.RoleMenuEditVO;
 import timing.ukulele.service.portal.persistent.AntIcon;
 import timing.ukulele.service.portal.persistent.AntMenu;
 import timing.ukulele.service.portal.service.AntIconService;
@@ -20,6 +23,7 @@ import timing.ukulele.service.portal.service.AntMenuService;
 import timing.ukulele.web.controller.BaseController;
 
 import java.util.*;
+import java.util.zip.CheckedOutputStream;
 
 @RestController
 public final class AntMenuController extends BaseController implements IAntMenuFacade {
@@ -91,6 +95,14 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    public ResponseData<List<RoleMenuTree>> findAllMenuWithRole(Long roleId) {
+        if (roleId == null)
+            return paraErrorResponse();
+        List<RoleMenuTree> list = this.antMenuService.findAllMenuWithRole(roleId);
+        return successResponse(list);
+    }
+
+    @Override
     public ResponseData<List<AntMenuVO>> findMenuByRole(String role) {
         if (StringUtils.isEmpty(role))
             return paraErrorResponse();
@@ -115,10 +127,10 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
-    public ResponseData<Boolean> addRoleMenu(Long roleId, Long menuId) {
-        if (roleId == null || roleId <= 0 || menuId == null || menuId <= 0)
+    public ResponseData<Boolean> editRoleMenu(AntRoleMenuEditVO vo) {
+        if (null == vo || null == vo.getRoleId())
             return paraErrorResponse();
-        return successResponse(this.antMenuService.addRoleMenu(roleId, menuId));
+        return antMenuService.editRoleMenu(vo);
     }
 
     @Override

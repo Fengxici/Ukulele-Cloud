@@ -10,6 +10,7 @@ import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.common.util.TreeUtil;
 import timing.ukulele.facade.portal.api.IMenuFacade;
 import timing.ukulele.facade.portal.model.data.MenuTree;
+import timing.ukulele.facade.portal.model.view.AntRoleMenuEditVO;
 import timing.ukulele.facade.portal.model.view.MenuVO;
 import timing.ukulele.service.portal.persistent.SysMenu;
 import timing.ukulele.service.portal.service.SysMenuService;
@@ -109,6 +110,11 @@ public final class MenuController extends BaseController implements IMenuFacade 
         if (roleId == null || roleId <= 0 || menuId == null || menuId <= 0)
             return paraErrorResponse();
         return successResponse(this.sysMenuService.addRoleMenu(roleId, menuId));
+    }
+
+    @Override
+    public ResponseData<Boolean> editRoleMenu(AntRoleMenuEditVO vo) {
+        return null;
     }
 
     @Override

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="timing.ukulele.service.portal.mapper.AntRoleMenuMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="timing.ukulele.service.portal.persistent.AntRoleMenu">
+        <id column="role_id" property="roleId"/>
+        <id column="menu_id" property="menuId"/>
+        <id column="ability_" property="ability"/>
+    </resultMap>
+    <select id="selectRoleMenu" resultMap="BaseResultMap">
+        select role_id,menu_id,ability_ from ant_role_menu where role_id=#{roleId}
+    </select>
+
+    <delete id="deleteRoleMenu">
+        delete from ant_role_menu where role_id=#{roleId}
+        <if test="menuId != null">
+            and menu_id=#{menuId}
+        </if>
+    </delete>
+
+    <delete id="deleteRoleMenuByMenuId">
+        delete from ant_role_menu where  menu_id=#{menuId}
+    </delete>
+
+    <delete id="batchDeleteRoleMenu">
+        delete from ant_role_menu where role_id=#{roleId} and menu_id in
+        <foreach collection="menus" item="menu" open="(" close=")" separator=",">
+            #{menu}
+        </foreach>
+    </delete>
+
+    <insert id="batchAddRoleMenu">
+        INSERT INTO ant_role_menu (role_id,menu_id,ability_) VALUES
+        <foreach collection="roleMenus" item="menu" separator=",">
+            (#{menu.roleId},#{menu.menuId},#{menu.ability})
+        </foreach>
+    </insert>
+
+    <update id="batchUpdateRoleMenu" parameterType="java.util.List">
+        <foreach collection="roleMenus" item="menu" index="index" open="" close="" separator=";">
+            UPDATE ant_role_menu
+            <set>
+                ability_=#{menu.ability}
+            </set>
+            <where>
+                role_id = #{menu.roleId} and menu_id= #{menu.menuId}
+            </where>
+        </foreach>
+    </update>
+</mapper>
