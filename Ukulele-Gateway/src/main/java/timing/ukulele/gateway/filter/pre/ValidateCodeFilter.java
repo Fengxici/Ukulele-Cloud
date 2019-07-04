@@ -5,6 +5,7 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
@@ -12,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 import timing.ukulele.common.data.ResponseVO;
-import timing.ukulele.redisson.CacheUtil;
+import timing.ukulele.redisson.cache.CacheManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,8 +39,9 @@ public class ValidateCodeFilter extends ZuulFilter {
      * 默认保存code的前缀
      */
     String DEFAULT_CODE_KEY = "DEFAULT_CODE_KEY";
-//    @Autowired
-//    private RedisTemplate redisTemplate;
+
+    @Autowired
+    CacheManager cacheManager;
 
     @Override
     public String filterType() {
@@ -112,11 +114,11 @@ public class ValidateCodeFilter extends ZuulFilter {
         }
 
         final String key = DEFAULT_CODE_KEY + randomStr;
-        if (!CacheUtil.getCache().exists(key)) {
+        if (!cacheManager.exists(key)) {
             throw new Exception(EXPIRED_CAPTCHA_ERROR);
         }
 
-        final Object codeObj = CacheUtil.getCache().get(key);
+        final Object codeObj = cacheManager.get(key);
 
         if (codeObj == null) {
             throw new Exception(EXPIRED_CAPTCHA_ERROR);
@@ -124,15 +126,15 @@ public class ValidateCodeFilter extends ZuulFilter {
 
         final String saveCode = codeObj.toString();
         if (StringUtils.isBlank(saveCode)) {
-            CacheUtil.getCache().del(key);
+            cacheManager.del(key);
             throw new Exception(EXPIRED_CAPTCHA_ERROR);
         }
 
         if (!StringUtils.equals(saveCode, code)) {
-            CacheUtil.getCache().del(key);
+            cacheManager.del(key);
             throw new Exception("验证码错误，请重新输入");
         }
 
-        CacheUtil.getCache().del(key);
+        cacheManager.del(key);
     }
 }
