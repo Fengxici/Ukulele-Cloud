@@ -2,9 +2,6 @@ server:
   port: 7070
 
 spring:
-  redisson:
-    lock:
-      address: redis://127.0.0.1:6379
   application:
     name: gateway
   security:
@@ -13,7 +10,6 @@ spring:
       password: root
   main:
     allow-bean-definition-overriding: true
-
 
 eureka:
   instance:
@@ -104,6 +100,26 @@ ukulele:
   rest-template:
     readTimeout: 60000
     connectTimeout: 60000
+  redis:
+    database: 0
+    password:
+    timeout: 30
+    mode: single #sentinel/cluster/single
+    #    连接池
+    pool:
+      max-idle: 16
+      min-idle: 8
+      max-active: 8
+      max-wait: 3000
+      conn-timeout: 3000
+      so-timeout: 3000
+      size: 10
+    #    单机
+    single:
+      address: redis://127.0.0.1:6379
+    lock:
+      waitTime: 60
+      leaseTime: 60
 # oauth2 配置
 #ukulele:
 #  oauth2:

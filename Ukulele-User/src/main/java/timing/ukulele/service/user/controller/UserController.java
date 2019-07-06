@@ -138,7 +138,7 @@ public class UserController extends BaseController implements IUserFacade {
         SysUser po = new SysUser();
         BeanUtils.copyProperties(user, po);
         if (!CollectionUtils.isEmpty(user.getLabel()))
-            po.setLabel(Arrays.toString(user.getLabel().toArray()));
+            po.setLabel(JSON.toJSONString(user.getLabel()));
         Boolean success = userService.updateById(po);
         return successResponse(success);
     }

@@ -1,6 +1,7 @@
 package timing.ukulele.service.user.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 import timing.ukulele.persistence.mapper.BaseMapper;
 import timing.ukulele.service.user.persistent.SysUser;
 
@@ -10,6 +11,7 @@ import timing.ukulele.service.user.persistent.SysUser;
  * </p>
  */
 @Mapper
+@Repository
 public interface SysUserMapper extends BaseMapper<SysUser> {
     /**
      * 通过用户名查询用户信息（含有角色信息）

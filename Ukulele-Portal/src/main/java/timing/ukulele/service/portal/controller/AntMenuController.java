@@ -166,13 +166,12 @@ public final class AntMenuController extends BaseController implements IAntMenuF
                 BeanUtils.copyProperties(menu, node);
                 if (StringUtils.isNotEmpty(menu.getAcl()))
                     node.setAcl(JSON.parseArray(menu.getAcl(), String.class));
-                if (StringUtils.isNotEmpty(menu.getAcl()))
-                    if (menu.getIconId() != null) {
-                        AntIcon icon = this.antIconService.getById(menu.getIconId());
-                        AntIconVO antIconVO = new AntIconVO();
-                        BeanUtils.copyProperties(icon, antIconVO);
-                        node.setIcon(antIconVO);
-                    }
+                if (menu.getIconId() != null) {
+                    AntIcon icon = this.antIconService.getById(menu.getIconId());
+                    AntIconVO antIconVO = new AntIconVO();
+                    BeanUtils.copyProperties(icon, antIconVO);
+                    node.setIcon(antIconVO);
+                }
                 menuTreeList.add(node);
             });
         return TreeUtil.buildByRecursive(menuTreeList, 0L);
