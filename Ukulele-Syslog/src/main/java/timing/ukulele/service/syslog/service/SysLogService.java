@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import timing.ukulele.facade.syslog.model.view.LogVO;
+import timing.ukulele.data.syslog.view.LogVO;
 import timing.ukulele.service.syslog.persistent.SysLog;
 
 import java.util.ArrayList;

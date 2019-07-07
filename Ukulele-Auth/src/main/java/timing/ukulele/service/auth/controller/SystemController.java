@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.facade.auth.api.IClientFacade;
-import timing.ukulele.facade.auth.model.persistent.OAuthClientDetailsModel;
+import timing.ukulele.data.auth.persistent.OAuthClientDetailsModel;
+import timing.ukulele.facade.auth.IClientFacade;
 import timing.ukulele.service.auth.service.OauthClientDetailsService;
 
 import java.util.ArrayList;

@@ -8,7 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import timing.ukulele.facade.portal.model.view.RoleVO;
+import timing.ukulele.data.portal.view.RoleVO;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.portal.mapper.SysRoleMapper;
 import timing.ukulele.service.portal.persistent.SysRole;

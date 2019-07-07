@@ -7,9 +7,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import timing.ukulele.facade.syslog.api.feign.ILogFeignFacade;
-import timing.ukulele.facade.syslog.model.LogType;
-import timing.ukulele.facade.syslog.model.view.LogVO;
+import timing.ukulele.data.syslog.LogType;
+import timing.ukulele.data.syslog.view.LogVO;
+import timing.ukulele.facade.syslog.feign.ILogFeignFacade;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;

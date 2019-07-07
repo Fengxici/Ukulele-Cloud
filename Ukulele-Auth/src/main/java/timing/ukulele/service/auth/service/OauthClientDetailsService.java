@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import timing.ukulele.facade.auth.model.persistent.OAuthClientDetailsModel;
+import timing.ukulele.data.auth.persistent.OAuthClientDetailsModel;
 
 import java.util.List;
 

@@ -14,7 +14,7 @@
         <result column="external_link" property="externalLink"/>
         <result column="target_" property="target"/>
         <result column="icon_id" property="iconId"/>
-        <result column="disable_" property="disable"/>
+        <result column="disabled_" property="disabled"/>
         <result column="hide_" property="hide"/>
         <result column="hide_in_breadcrumb" property="hideInBreadcrumb"/>
         <result column="acl_" property="acl"/>

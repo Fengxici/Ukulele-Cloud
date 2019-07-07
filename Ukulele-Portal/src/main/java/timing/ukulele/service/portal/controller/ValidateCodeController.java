@@ -1,7 +1,7 @@
 package timing.ukulele.service.portal.controller;
 
 import org.springframework.web.bind.annotation.RestController;
-import timing.ukulele.facade.portal.api.IValidateCodeFacade;
+import timing.ukulele.facade.portal.IValidateCodeFacade;
 
 import javax.servlet.http.HttpServletResponse;
 

@@ -7,9 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import timing.ukulele.facade.portal.model.view.MenuVO;
-import timing.ukulele.facade.portal.model.view.RoleVO;
-import timing.ukulele.facade.user.model.view.UserVO;
+import timing.ukulele.data.portal.view.MenuVO;
+import timing.ukulele.data.portal.view.RoleVO;
 
 /**
  * Redis配置类
