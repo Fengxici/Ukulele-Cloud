@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
-import timing.ukulele.facade.auth.model.persistent.OAuthClientDetailsModel;
+import timing.ukulele.data.auth.persistent.OAuthClientDetailsModel;
 import timing.ukulele.service.auth.service.OauthClientDetailsService;
 
 import javax.servlet.http.HttpServletRequest;

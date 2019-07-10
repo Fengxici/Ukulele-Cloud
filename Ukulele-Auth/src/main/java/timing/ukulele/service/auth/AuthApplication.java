@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
-@EnableFeignClients(basePackages = {"timing.ukulele.facade.user.api", "timing.ukulele.facade.portal.api"})
+@EnableFeignClients(basePackages = {"timing.ukulele.facade.user", "timing.ukulele.facade.portal"})
 @EnableCircuitBreaker
 @EnableAuthorizationServer
 public class AuthApplication {

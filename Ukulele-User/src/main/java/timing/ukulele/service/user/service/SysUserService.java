@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import timing.ukulele.facade.user.model.view.UserVO;
+import timing.ukulele.data.user.view.UserVO;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.user.mapper.SysUserMapper;
 import timing.ukulele.service.user.persistent.SysUser;

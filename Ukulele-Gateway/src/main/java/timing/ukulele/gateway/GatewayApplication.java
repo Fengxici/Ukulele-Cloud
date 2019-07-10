@@ -17,7 +17,7 @@ import javax.servlet.MultipartConfigElement;
 @SpringBootApplication
 @EnableResourceServer
 @EnableOAuth2Sso
-@EnableFeignClients(basePackages = {"timing.ukulele.facade.syslog.api", "timing.ukulele.facade.portal.api"})
+@EnableFeignClients(basePackages = {"timing.ukulele.facade.syslog", "timing.ukulele.facade.portal"})
 public class GatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);

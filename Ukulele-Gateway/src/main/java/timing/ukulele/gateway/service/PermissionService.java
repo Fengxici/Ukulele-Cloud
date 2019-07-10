@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.facade.portal.api.feign.IMenuFeignFacade;
-import timing.ukulele.facade.portal.model.view.MenuVO;
+import timing.ukulele.data.portal.view.MenuVO;
+import timing.ukulele.facade.portal.feign.IMenuFeignFacade;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

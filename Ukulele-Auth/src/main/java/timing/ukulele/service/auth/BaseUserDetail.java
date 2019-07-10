@@ -4,7 +4,7 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import timing.ukulele.facade.user.model.view.UserVO;
+import timing.ukulele.data.user.view.UserVO;
 
 import java.util.Collection;
 
