@@ -5,14 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang.StringUtils;
-import org.checkerframework.checker.units.qual.C;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.common.data.TreeNode;
 import timing.ukulele.common.util.TreeUtil;
 import timing.ukulele.data.portal.data.RoleMenuTree;
 import timing.ukulele.data.portal.view.AntRoleMenuEditVO;
@@ -20,18 +17,24 @@ import timing.ukulele.data.portal.view.RoleMenuEditVO;
 import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.portal.mapper.AntMenuMapper;
 import timing.ukulele.service.portal.mapper.AntRoleMenuMapper;
+import timing.ukulele.service.portal.mapper.SysRoleMapper;
 import timing.ukulele.service.portal.persistent.AntMenu;
 import timing.ukulele.service.portal.persistent.AntRoleMenu;
+import timing.ukulele.service.portal.persistent.SysRole;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class AntMenuService extends BaseService<AntMenu> {
     private final AntRoleMenuMapper roleMenuMapper;
+    private final SysRoleMapper roleMapper;
 
     @Autowired
-    public AntMenuService(AntRoleMenuMapper roleMenuMapper) {
+    public AntMenuService(AntRoleMenuMapper roleMenuMapper, SysRoleMapper roleMapper) {
         this.roleMenuMapper = roleMenuMapper;
+        this.roleMapper = roleMapper;
     }
 
     public List<AntMenu> findMenuByRoleName(String role) {
@@ -80,6 +83,34 @@ public class AntMenuService extends BaseService<AntMenu> {
         return TreeUtil.buildByRecursive(menuTreeList, 0L);
     }
 
+
+    public HashSet<String> findUserPageAbilities(Long userId, String router) {
+        List<AntMenu> menuList = list();
+        if (CollectionUtils.isEmpty(menuList))
+            return null;
+        List<AntMenu> routerMenu = menuList.stream().filter(antMenu -> router.equalsIgnoreCase(antMenu.getLink())).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(routerMenu))
+            return null;
+        Set<Long> routerSet = routerMenu.stream().map(AntMenu::getId).collect(Collectors.toSet());
+        List<SysRole> roleList = roleMapper.getRoleByUserId(userId);
+        if (CollectionUtils.isEmpty(roleList))
+            return null;
+        List<String> abilityList = new ArrayList<>();
+        roleList.forEach(item -> {
+            List<AntRoleMenu> roleMenuList = roleMenuMapper.selectRoleMenu(item.getId());
+            if (!CollectionUtils.isEmpty(roleMenuList)) {
+                roleMenuList.forEach(ability -> {
+                    if (routerSet.contains(ability.getMenuId())) {
+                        if (StringUtils.isNotEmpty(ability.getAbility())) {
+                            List<String> tmp = JSON.parseArray(ability.getAbility(), String.class);
+                            abilityList.addAll(tmp);
+                        }
+                    }
+                });
+            }
+        });
+        return new HashSet<>(abilityList);
+    }
 
     public List<AntMenu> getMenuByUserId(Long userId) {
         return ((AntMenuMapper) this.baseMapper).getMenuByUserId(userId);
