@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.common.util.TreeUtil;
@@ -22,7 +23,6 @@ import timing.ukulele.service.portal.service.AntMenuService;
 import timing.ukulele.web.controller.BaseController;
 
 import java.util.*;
-import java.util.zip.CheckedOutputStream;
 
 @RestController
 public final class AntMenuController extends BaseController implements IAntMenuFacade {
@@ -152,9 +152,21 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     public ResponseData<List<AntMenuTree>> getUserMenu(@RequestHeader("x-role-header") String roles) {
         if (StringUtils.isEmpty(roles))
             return paraErrorResponse();
+        return successResponse(createMenuTree(getUserAntMenu(roles)));
+    }
+
+    @Override
+    public ResponseData<Set<String>> userAbilities(Long userId, @RequestParam("router") String router) {
+        if (userId == null || StringUtils.isEmpty(router))
+            return paraErrorResponse();
+        Set<String> abilities = this.antMenuService.findUserPageAbilities(userId, router);
+        return successResponse(abilities);
+    }
+
+    private Set<AntMenu> getUserAntMenu(String roles) {
         Set<AntMenu> all = new HashSet<>();
         Arrays.stream(roles.split(",")).forEach(role -> all.addAll(this.antMenuService.findMenuByRoleName(role)));
-        return successResponse(createMenuTree(all));
+        return all;
     }
 
     private List<AntMenuTree> createMenuTree(Collection<AntMenu> menuList) {
