@@ -10,8 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ukulele-syslog</artifactId>
     <name>ukulele-syslog</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <url>https://fengxici.github.io</url>
 
     <dependencies>
         <!--API依赖-->
@@ -35,6 +34,10 @@
         <dependency>
             <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-ribbon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>ukulele-swagger</artifactId>
         </dependency>
         <!--第三方依赖-->
         <dependency>
