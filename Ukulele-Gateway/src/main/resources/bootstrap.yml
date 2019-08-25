@@ -44,8 +44,6 @@ zuul:
   #添加代理头
   add-proxy-headers: true
   # 需要聚合的swagger服务
-  swagger:
-    serviceIds: user-service,syslog-service,portal-service
 
 proxy:
   auth:
@@ -98,8 +96,8 @@ management:
 
 ukulele:
   rest-template:
-    readTimeout: 60000
-    connectTimeout: 60000
+    read-timeout: 60000
+    connect-timeout: 60000
   redis:
     database: 0
     password:
@@ -118,8 +116,25 @@ ukulele:
     single:
       address: redis://127.0.0.1:6379
     lock:
-      waitTime: 60
-      leaseTime: 60
+      wait-time: 60
+      lease-time: 60
+  swagger:
+    enabled: true
+    contact:
+      name: 吕自聪
+      email: 910980941@qq.com
+      url: https://fengxici.github.io
+    description: ukulele框架相关服务接口
+    license: MIT
+    version: 1.0
+    title: ukulele
+    oauth-url: http://127.0.0.1:9090/auth
+    global-operation-parameters:
+      - name: Authorization
+        description: 权限
+        parameter-type: header
+        required: true
+        model-ref: String
 # oauth2 配置
 #ukulele:
 #  oauth2:

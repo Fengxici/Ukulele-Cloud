@@ -18,9 +18,6 @@ import java.util.List;
 @Primary
 public class RegistrySwaggerResourcesProvider implements SwaggerResourcesProvider {
 
-    @Value("#{'${zuul.swagger.serviceIds}'.split(',')}")
-    private List<String> serviceIds;
-
     private final RouteLocator routeLocator;
 
     public RegistrySwaggerResourcesProvider(RouteLocator routeLocator) {
@@ -33,7 +30,7 @@ public class RegistrySwaggerResourcesProvider implements SwaggerResourcesProvide
 
         List<Route> routes = routeLocator.getRoutes();
         routes.forEach(route -> {
-            if (serviceIds.contains(route.getId().toLowerCase())) {
+            if (route.getFullPath().startsWith("/api")) {
                 resources.add(swaggerResource(route.getId(), route.getFullPath().replace("**", "v2/api-docs")));
             }
         });
