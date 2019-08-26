@@ -16,7 +16,7 @@ eureka:
       user.password: root
   client:
     serviceUrl:
-#      defaultZone: http://root:root@192.168.0.109:8080/eureka
+      #      defaultZone: http://root:root@192.168.0.109:8080/eureka
       defaultZone: http://root:root@127.0.0.1:8080/eureka
 
 encrypt:
@@ -103,3 +103,23 @@ management:
 logging:
   level:
     com.baomidou: debug
+
+ukulele:
+  swagger:
+    enabled: true
+    title: ukulele-auth
+    version: 1.0
+    license: MIT
+    description: 鉴权服务
+    contact:
+      name: 吕自聪
+      email: 910980941@qq.com
+      url: http://fengxici.github.io
+    base-package: timing.ukulele.service.auth.controller
+    oauth-url: http://127.0.0.1:9090/auth
+    global-operation-parameters:
+      - name: Authorization
+        description: 权限
+        parameter-type: header
+        required: false
+        mode-ref: String

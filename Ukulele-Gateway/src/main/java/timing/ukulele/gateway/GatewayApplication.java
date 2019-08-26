@@ -10,6 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.util.unit.DataSize;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.MultipartConfigElement;
 
@@ -18,6 +19,7 @@ import javax.servlet.MultipartConfigElement;
 @EnableResourceServer
 @EnableOAuth2Sso
 @EnableFeignClients(basePackages = {"timing.ukulele.facade.syslog", "timing.ukulele.facade.portal"})
+@EnableSwagger2
 public class GatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);

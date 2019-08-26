@@ -13,10 +13,27 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //     "/info", "/error", "/health", "/env", "/metrics", "/trace", "/dump","/logfile", "/refresh", "/flyway", "/liquibase", "/loggers",
+
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/actuator/**", "/css/**", "/js/**", "/favicon.ico", "/webjars/**", "/images/**", "/static/**",
-                "/hystrix.stream/**", "/jolokia", "/configprops", "/activiti", "/druid/**", "/oauth/deleteToken", "/backReferer");
+        web.ignoring().antMatchers(
+                "/actuator/**",
+                "/css/**",
+                "/js/**",
+                "/favicon.ico",
+                "/webjars/**",
+                "/images/**",
+                "/static/**",
+                "/hystrix.stream/**",
+                "/jolokia",
+                "/configprops",
+                "/druid/**",
+                "/oauth/deleteToken",
+                "/backReferer",
+                "/resources/**",
+                "/swagger-ui.html",
+                "/swagger-resources/**",
+                "/api/**/v2/**");
     }
 
 //    @Override

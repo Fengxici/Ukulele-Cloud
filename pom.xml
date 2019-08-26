@@ -17,8 +17,7 @@
     </modules>
 
     <name>ukulele-cloud</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <url>https://fengxici.github.io</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

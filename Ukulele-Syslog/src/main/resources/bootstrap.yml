@@ -100,3 +100,23 @@ management:
 logging:
   level:
     timing.ukulele: debug
+
+ukulele:
+  swagger:
+    enabled: true
+    title: ukulele-syslog
+    version: 1.0
+    license: MIT
+    description: "日志服务"
+    contact:
+      name: 吕自聪
+      email: 910980941@qq.com
+      url: http://fengxici.github.io
+    base-package: timing.ukulele.service.syslog.controller
+    oauth-url: http://127.0.0.1:9090/auth
+    global-operation-parameters:
+      - name: Authorization
+        description: 权限
+        parameter-type: header
+        model-ref: String
+        required: false
