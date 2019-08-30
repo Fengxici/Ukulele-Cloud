@@ -43,8 +43,8 @@
             <artifactId>ukulele-ribbon</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>ukulele-eureka</artifactId>
         </dependency>
         <!--增加feign服务代理依赖 -->
         <dependency>

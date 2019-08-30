@@ -47,11 +47,11 @@
             <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-swagger</artifactId>
         </dependency>
-        <!--第三方依赖-->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>ukulele-eureka</artifactId>
         </dependency>
+        <!--第三方依赖-->
         <!--增加feign服务代理依赖 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
