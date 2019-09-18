@@ -4,12 +4,14 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import timing.ukulele.data.syslog.LogExchange;
 import timing.ukulele.data.syslog.LogType;
 import timing.ukulele.data.syslog.view.LogVO;
-import timing.ukulele.facade.syslog.feign.ILogFeignFacade;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -26,18 +28,15 @@ import static timing.ukulele.gateway.filter.GatewayHeaderConstants.USER_HEADER;
 @Component
 @Slf4j
 public class PreRequestLogFilter extends ZuulFilter {
-
+    private final AmqpTemplate rabbitTemplate;
     /**
      * oauth token
      */
     private static final String OAUTH_TOKEN_URL = "/oauth/token";
 
-
-    private final ILogFeignFacade logService;
-
     @Autowired
-    public PreRequestLogFilter(ILogFeignFacade logService) {
-        this.logService = logService;
+    public PreRequestLogFilter(AmqpTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -84,15 +83,15 @@ public class PreRequestLogFilter extends ZuulFilter {
             log.setTitle(LogType.Login.name());
             log.setParams(queryParam(request));
             log.setCreateBy(request.getParameter("username"));
-            logService.add(log);
+            rabbitTemplate.convertAndSend(LogExchange.SYS_LOG_EXCHANGE, LogExchange.SYS_LOG_ROUTING_KEY, log);
         } else {
             // 记录操作日志
             log.setType(LogType.Operation.name());
             log.setTitle(LogType.Operation.name());
-            if(HttpMethod.GET.matches(request.getMethod()))
+            if (HttpMethod.GET.matches(request.getMethod()))
                 log.setParams(queryParam(request));
             log.setCreateBy(ctx.getZuulRequestHeaders().get(USER_HEADER));
-            logService.add(log);
+            rabbitTemplate.convertAndSend(LogExchange.SYS_LOG_EXCHANGE, LogExchange.SYS_LOG_ROUTING_KEY, log);
         }
     }
 
