@@ -10,10 +10,7 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.http.OkHttpManager;
 import timing.ukulele.web.controller.BaseController;
@@ -68,7 +65,7 @@ public class EurekaClientController extends BaseController {
     }
 
     @RequestMapping(value = "status/{appName}", method = RequestMethod.POST)
-    public ResponseData<Boolean> status(@PathVariable String appName, String instanceId, String status) {
+    public ResponseData<Boolean> status(@PathVariable String appName, @RequestParam("instanceId") String instanceId, @RequestParam("status") String status) {
         Application application = eurekaClient.getApplication(appName);
         InstanceInfo instanceInfo = application.getByInstanceId(instanceId);
         instanceInfo.setStatus(InstanceStatus.toEnum(status));
