@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.data.ResponseData;
+import timing.ukulele.data.portal.data.RolePermission;
 import timing.ukulele.data.portal.view.RoleVO;
 import timing.ukulele.facade.portal.IRoleFacade;
 import timing.ukulele.service.portal.persistent.SysRole;
@@ -23,18 +24,18 @@ import java.util.Map;
 
 @RestController
 public final class RoleController extends BaseController implements IRoleFacade {
-    private final SysRoleService sysRoleService;
+    private final SysRoleService roleService;
 
     @Autowired
     public RoleController(SysRoleService sysRoleService) {
-        this.sysRoleService = sysRoleService;
+        this.roleService = sysRoleService;
     }
 
     @Override
     public ResponseData<RoleVO> role(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        SysRole po = this.sysRoleService.getById(id);
+        SysRole po = this.roleService.getById(id);
         if (po == null)
             return successResponse();
         RoleVO vo = new RoleVO();
@@ -44,7 +45,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
 
     @Override
     public ResponseData<List<RoleVO>> getRoleByParam(Map<String, Object> map) {
-        Collection<SysRole> poList = this.sysRoleService.listByMap(map);
+        Collection<SysRole> poList = this.roleService.listByMap(map);
         if (CollectionUtils.isEmpty(poList))
             return successResponse();
         List<RoleVO> voList = new ArrayList<>(poList.size());
@@ -62,7 +63,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
             return paraErrorResponse();
         SysRole roleData = new SysRole();
         BeanUtils.copyProperties(role, roleData);
-        return successResponse(this.sysRoleService.save(roleData));
+        return successResponse(this.roleService.save(roleData));
     }
 
     @Override
@@ -71,21 +72,21 @@ public final class RoleController extends BaseController implements IRoleFacade 
             return paraErrorResponse();
         SysRole roleData = new SysRole();
         BeanUtils.copyProperties(role, roleData);
-        return successResponse(this.sysRoleService.saveOrUpdate(roleData));
+        return successResponse(this.roleService.saveOrUpdate(roleData));
     }
 
     @Override
     public ResponseData<Boolean> roleDel(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        return successResponse(this.sysRoleService.removeById(id));
+        return successResponse(this.roleService.removeById(id));
     }
 
     @Override
     public ResponseData<List<RoleVO>> getRoleByUserId(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
-        List<SysRole> poList = this.sysRoleService.getRoleByUserId(id);
+        List<SysRole> poList = this.roleService.getRoleByUserId(id);
         if (CollectionUtils.isEmpty(poList))
             return successResponse();
         List<RoleVO> voList = new ArrayList<>(poList.size());
@@ -101,14 +102,14 @@ public final class RoleController extends BaseController implements IRoleFacade 
     public ResponseData<Boolean> deleteUserRole(Long userId, Long roleId) {
         if (userId == null || userId <= 0)
             return paraErrorResponse();
-        return successResponse(this.sysRoleService.deleteUserRole(userId, roleId));
+        return successResponse(this.roleService.deleteUserRole(userId, roleId));
     }
 
     @Override
     public ResponseData<Boolean> addUserRole(Long userId, Long roleId) {
         if (userId == null || userId <= 0 || roleId == null || roleId <= 0)
             return paraErrorResponse();
-        return successResponse(this.sysRoleService.addUserRole(userId, roleId));
+        return successResponse(this.roleService.addUserRole(userId, roleId));
     }
 
     @GetMapping("/page/{current}/{size}")
@@ -119,6 +120,11 @@ public final class RoleController extends BaseController implements IRoleFacade 
         if (current == 0) current = 1;
         SysRole role = new SysRole();
         BeanUtils.copyProperties(roleVO, role);
-        return successResponse(this.sysRoleService.getPage(role, current, size));
+        return successResponse(this.roleService.getPage(role, current, size));
+    }
+
+    @Override
+    public ResponseData<Map<String, Map<String, RolePermission>>> rolePermission(List<String> roleCode) {
+        return successResponse(roleService.rolePermission(roleCode));
     }
 }

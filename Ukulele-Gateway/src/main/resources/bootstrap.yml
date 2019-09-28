@@ -100,6 +100,9 @@ management:
       show-details: ALWAYS
 
 ukulele:
+  oauth2:
+    url-permit-all:
+      - /api/portal-service/ant-menu/user
   rest-template:
     read-timeout: 60000
     connect-timeout: 60000

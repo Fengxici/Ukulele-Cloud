@@ -11,6 +11,11 @@
         select role_id,menu_id,ability_ from ant_role_menu where role_id=#{roleId}
     </select>
 
+    <select id="selectAll" resultMap="BaseResultMap">
+        select role_id,menu_id,ability_ from ant_role_menu
+    </select>
+
+
     <delete id="deleteRoleMenu">
         delete from ant_role_menu where role_id=#{roleId}
         <if test="menuId != null">

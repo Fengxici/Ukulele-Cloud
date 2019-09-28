@@ -1,23 +1,41 @@
 package timing.ukulele.service.portal.service;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import timing.ukulele.data.portal.data.RolePermission;
 import timing.ukulele.data.portal.view.RoleVO;
 import timing.ukulele.persistence.service.BaseService;
+import timing.ukulele.service.portal.mapper.AntRoleMenuMapper;
 import timing.ukulele.service.portal.mapper.SysRoleMapper;
+import timing.ukulele.service.portal.persistent.AntMenu;
+import timing.ukulele.service.portal.persistent.AntRoleMenu;
 import timing.ukulele.service.portal.persistent.SysRole;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SysRoleService extends BaseService<SysRole> {
+    private final AntMenuService menuService;
+    private final AntRoleMenuMapper roleMenuMapper;
+
+    @Autowired
+    public SysRoleService(AntMenuService menuService, AntRoleMenuMapper roleMenuMapper) {
+        this.menuService = menuService;
+        this.roleMenuMapper = roleMenuMapper;
+    }
 
     /**
      * 添加角色
@@ -69,6 +87,46 @@ public class SysRoleService extends BaseService<SysRole> {
 
     public Boolean addUserRole(Long userId, Long roleId) {
         return ((SysRoleMapper) this.baseMapper).addUserRole(userId, roleId) > 0;
+    }
+
+    public Map<String, Map<String, RolePermission>> rolePermission(List<String> roleCode) {
+        List<AntMenu> menuList = menuService.list();
+        if (CollectionUtils.isEmpty(menuList))
+            return null;
+        Map<Long, AntMenu> menuMap = menuList.stream().collect(Collectors.toMap(AntMenu::getId, a -> a, (k1, k2) -> k1));
+        List<SysRole> roleList = list();
+        if (CollectionUtils.isEmpty(roleList))
+            return null;
+        Map<Long, SysRole> roleMap = roleList.stream().collect(Collectors.toMap(SysRole::getId, a -> a, (k1, k2) -> k1));
+        List<AntRoleMenu> roleMenuList = roleMenuMapper.selectAll();
+        if (CollectionUtils.isEmpty(roleMenuList))
+            return null;
+        Map<String, Map<String, RolePermission>> roleMenuPermissionMap = new HashMap<>(roleMap.size());
+        roleMenuList.forEach(antRoleMenu -> {
+            AntMenu menu = menuMap.get(antRoleMenu.getMenuId());
+            if (null == menu || StringUtils.isEmpty(menu.getLink()))
+                return;
+            if (null == roleMap.get(antRoleMenu.getRoleId()))
+                return;
+            if (StringUtils.isEmpty(menu.getAcl()))
+                return;
+            if (StringUtils.isEmpty(antRoleMenu.getAbility()))
+                return;
+            Map<String, RolePermission> rolePermissionMap = roleMenuPermissionMap.computeIfAbsent(roleMap.get(antRoleMenu.getRoleId()).getRoleCode(), k -> new HashMap<>());
+            String router = menuMap.get(antRoleMenu.getMenuId()).getLink();
+            RolePermission rolePermission = new RolePermission();
+            rolePermission.setAcl(JSON.parseArray(menu.getAcl(), String.class));
+            rolePermission.setAbility(JSON.parseArray(antRoleMenu.getAbility(), String.class));
+            rolePermissionMap.put(router, rolePermission);
+        });
+        if (!CollectionUtils.isEmpty(roleCode)) {
+            Map<String, Map<String, RolePermission>> selectedRoleMenuPermissionMap = new HashMap<>(roleCode.size());
+            roleCode.forEach(item -> {
+                selectedRoleMenuPermissionMap.put(item, roleMenuPermissionMap.get(item));
+            });
+            return selectedRoleMenuPermissionMap;
+        }
+        return roleMenuPermissionMap;
     }
 
     public IPage<RoleVO> getPage(SysRole role, int current, int size) {

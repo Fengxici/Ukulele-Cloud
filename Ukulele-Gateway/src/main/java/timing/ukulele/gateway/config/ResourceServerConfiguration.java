@@ -6,15 +6,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -26,12 +23,8 @@ import org.springframework.web.client.RestTemplate;
 import timing.ukulele.gateway.UkuleleOauth2Properties;
 import timing.ukulele.gateway.handler.UkuleleAccessDeniedHandler;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Base64;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 资源服务器配置
@@ -41,27 +34,17 @@ import java.util.stream.Collectors;
 @EnableConfigurationProperties(UkuleleOauth2Properties.class)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-    private static final String PUBLIC_KEY = "pubkey.txt";
+    @Autowired
+    private UkuleleOauth2Properties oauth2Properties;
 
     @Autowired
-    private  UkuleleOauth2Properties oauth2Properties;
+    private OAuth2WebSecurityExpressionHandler expressionHandler;
 
     @Autowired
-    private  OAuth2WebSecurityExpressionHandler expressionHandler;
+    private UkuleleAccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    private  UkuleleAccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private  ResourceServerProperties resource;
-
-//    @Autowired
-//    public ResourceServerConfiguration(UkuleleOauth2Properties oauth2Properties, OAuth2WebSecurityExpressionHandler expressionHandler, UkuleleAccessDeniedHandler accessDeniedHandler, ResourceServerProperties resource) {
-//        this.oauth2Properties = oauth2Properties;
-//        this.expressionHandler = expressionHandler;
-//        this.accessDeniedHandler = accessDeniedHandler;
-//        this.resource = resource;
-//    }
+    private ResourceServerProperties resource;
 
     @Bean
     public TokenStore tokenStore(JwtAccessTokenConverter jwtAccessTokenConverter) {
@@ -71,22 +54,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setVerifierKey(getPubKey());
+        converter.setVerifierKey(getKeyFromAuthorizationServer());
         return converter;
-    }
-
-    /**
-     * 获取非对称加密公钥 Key
-     *
-     * @return 公钥 Key
-     */
-    private String getPubKey() {
-//        Resource resource = new ClassPathResource(PUBLIC_KEY);
-//        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-//            return br.lines().collect(Collectors.joining("\n"));
-//        } catch (IOException ioe) {
-            return getKeyFromAuthorizationServer();
-//        }
     }
 
     /**

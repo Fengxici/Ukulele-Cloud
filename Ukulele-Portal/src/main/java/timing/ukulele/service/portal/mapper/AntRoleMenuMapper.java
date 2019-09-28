@@ -13,6 +13,8 @@ public interface AntRoleMenuMapper {
 
     List<AntRoleMenu> selectRoleMenu(@Param("roleId") Long roleId);
 
+    List<AntRoleMenu> selectAll();
+
     int deleteRoleMenu(@Param("roleId") Long roleId, @Param("menuId") Long menuId);
 
     int deleteRoleMenuByMenuId(@Param("menuId") Long menuId);
