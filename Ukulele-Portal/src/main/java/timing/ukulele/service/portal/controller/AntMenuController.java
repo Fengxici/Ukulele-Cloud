@@ -8,6 +8,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import timing.ukulele.common.constant.AbilityConstant;
+import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.common.util.TreeUtil;
 import timing.ukulele.data.portal.data.AntMenuTree;
@@ -20,14 +22,15 @@ import timing.ukulele.service.portal.persistent.AntIcon;
 import timing.ukulele.service.portal.persistent.AntMenu;
 import timing.ukulele.service.portal.service.AntIconService;
 import timing.ukulele.service.portal.service.AntMenuService;
+import timing.ukulele.web.annotation.RequiredPermission;
 import timing.ukulele.web.controller.BaseController;
 
 import java.util.*;
 
 @RestController
 public final class AntMenuController extends BaseController implements IAntMenuFacade {
+    private final String router = "/system/menu";
     private final AntMenuService antMenuService;
-
     private final AntIconService antIconService;
 
     @Autowired
@@ -37,6 +40,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<AntMenuVO> get(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -49,6 +53,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<List<AntMenuVO>> getByParam(Map<String, Object> map) {
         Collection<AntMenu> poList = this.antMenuService.listByMap(map);
         if (CollectionUtils.isEmpty(poList))
@@ -63,12 +68,14 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<List<AntMenuTree>> getMenuTree() {
         List<AntMenu> list = antMenuService.list();
         return successResponse(createMenuTree(list));
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> add(AntMenuVO sysMenuAnt) {
         if (sysMenuAnt == null || sysMenuAnt.getId() != null)
             return paraErrorResponse();
@@ -78,6 +85,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> delete(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -85,6 +93,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> edit(AntMenuVO sysMenuAnt) {
         if (sysMenuAnt == null || sysMenuAnt.getId() == null)
             return paraErrorResponse();
@@ -94,6 +103,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<List<RoleMenuTree>> findAllMenuWithRole(Long roleId) {
         if (roleId == null)
             return paraErrorResponse();
@@ -102,6 +112,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<List<AntMenuVO>> findMenuByRole(String role) {
         if (StringUtils.isEmpty(role))
             return paraErrorResponse();
@@ -119,6 +130,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> deleteRoleMenu(Long roleId, Long menuId) {
         if (roleId == null || roleId <= 0)
             return paraErrorResponse();
@@ -126,6 +138,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> editRoleMenu(AntRoleMenuEditVO vo) {
         if (null == vo || null == vo.getRoleId())
             return paraErrorResponse();
@@ -133,6 +146,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<List<AntMenuVO>> getMenuByUserId(Long userId) {
         if (userId == null || userId <= 0)
             return paraErrorResponse();

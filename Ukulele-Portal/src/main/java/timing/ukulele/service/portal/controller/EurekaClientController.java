@@ -1,6 +1,5 @@
 package timing.ukulele.service.portal.controller;
 
-
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.appinfo.InstanceInfo.InstanceStatus;
 import com.netflix.discovery.EurekaClient;
@@ -11,8 +10,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import timing.ukulele.common.constant.AbilityConstant;
+import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.http.OkHttpManager;
+import timing.ukulele.web.annotation.RequiredPermission;
 import timing.ukulele.web.controller.BaseController;
 
 import javax.annotation.Resource;
@@ -22,13 +24,14 @@ import java.util.*;
 @RestController
 @RequestMapping("eureka")
 public class EurekaClientController extends BaseController {
-
+    private final String router = "/monitor/node";
     @Resource
     private EurekaClient eurekaClient;
 
     /**
      * 获取服务数量和节点数量
      */
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     @RequestMapping(value = "home", method = RequestMethod.GET)
     public ResponseData<Map<String, Object>> home() {
         List<Application> apps = eurekaClient.getApplications().getRegisteredApplications();
@@ -54,6 +57,7 @@ public class EurekaClientController extends BaseController {
     /**
      * 获取所有服务节点
      */
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     @RequestMapping(value = "apps", method = RequestMethod.GET)
     public ResponseData<List<Application>> apps() {
         List<Application> apps = eurekaClient.getApplications().getRegisteredApplications();
@@ -65,6 +69,7 @@ public class EurekaClientController extends BaseController {
     }
 
     @RequestMapping(value = "status/{appName}", method = RequestMethod.POST)
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> status(@PathVariable String appName, @RequestParam("instanceId") String instanceId, @RequestParam("status") String status) {
         Application application = eurekaClient.getApplication(appName);
         InstanceInfo instanceInfo = application.getByInstanceId(instanceId);

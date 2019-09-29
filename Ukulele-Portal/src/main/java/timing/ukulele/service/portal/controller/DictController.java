@@ -10,6 +10,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import timing.ukulele.common.constant.AbilityConstant;
+import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.data.portal.view.DictIndexVO;
 import timing.ukulele.data.portal.view.DictVO;
@@ -18,6 +20,7 @@ import timing.ukulele.service.portal.persistent.SysDict;
 import timing.ukulele.service.portal.persistent.SysDictIndex;
 import timing.ukulele.service.portal.service.SysDictIndexService;
 import timing.ukulele.service.portal.service.SysDictService;
+import timing.ukulele.web.annotation.RequiredPermission;
 import timing.ukulele.web.controller.BaseController;
 import timing.ukulele.web.util.Request2ModelUtil;
 
@@ -26,6 +29,7 @@ import java.util.*;
 
 @RestController
 public final class DictController extends BaseController implements IDictFacade {
+    private final String router = "/system/dict";
     private final SysDictService dictService;
     private final SysDictIndexService dictIndexService;
 
@@ -67,6 +71,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> dict(DictVO sysDict) {
         if (sysDict == null || sysDict.getId() != null)
             return paraErrorResponse();
@@ -76,6 +81,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> deleteDict(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -92,6 +98,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> editDict(DictVO sysDict) {
         if (sysDict == null || sysDict.getId() == null)
             return paraErrorResponse();
@@ -113,6 +120,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> dictIndex(DictIndexVO dictIndex) {
         if (dictIndex == null || dictIndex.getId() != null)
             return paraErrorResponse();
@@ -122,6 +130,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> editDictIndex(DictIndexVO dictIndex) {
         if (dictIndex == null || dictIndex.getId() == null)
             return paraErrorResponse();
@@ -131,6 +140,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> deleteDictIndex(Long id) {
         if (id == null || id < 0)
             return paraErrorResponse();

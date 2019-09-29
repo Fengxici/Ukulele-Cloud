@@ -11,12 +11,15 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import timing.ukulele.common.constant.AbilityConstant;
+import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.common.util.JsonUtils;
 import timing.ukulele.data.user.view.UserVO;
 import timing.ukulele.facade.user.IUserFacade;
 import timing.ukulele.service.user.persistent.SysUser;
 import timing.ukulele.service.user.service.SysUserService;
+import timing.ukulele.web.annotation.RequiredPermission;
 import timing.ukulele.web.controller.BaseController;
 import timing.ukulele.web.util.Request2ModelUtil;
 
@@ -25,6 +28,7 @@ import java.util.*;
 
 @RestController
 public class UserController extends BaseController implements IUserFacade {
+    private final String router = "/system/user";
     private final SysUserService userService;
 
     @Autowired
@@ -69,6 +73,7 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<List<UserVO>> getUserByParam(Map<String, Object> map) {
         List<SysUser> list = new ArrayList<>(userService.listByMap(map));
         if (!CollectionUtils.isEmpty(list)) {
@@ -102,6 +107,7 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> userDel(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -110,6 +116,7 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> user(UserVO user) {
         if (user == null || user.getId() != null)
             return paraErrorResponse();
@@ -144,6 +151,7 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @GetMapping("/page/{current}/{size}")
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<IPage<UserVO>> getPage(@PathVariable(name = "current") int current,
                                                @PathVariable(name = "size") int size, HttpServletRequest request) {
         SysUser user = Request2ModelUtil.covert(SysUser.class, request);

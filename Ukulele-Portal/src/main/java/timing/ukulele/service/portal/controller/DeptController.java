@@ -4,6 +4,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
+import timing.ukulele.common.constant.AbilityConstant;
+import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.common.util.TreeUtil;
 import timing.ukulele.data.portal.data.DeptTree;
@@ -11,6 +13,7 @@ import timing.ukulele.data.portal.view.SysDeptVO;
 import timing.ukulele.facade.portal.IDeptFacade;
 import timing.ukulele.service.portal.persistent.SysDept;
 import timing.ukulele.service.portal.service.SysDeptService;
+import timing.ukulele.web.annotation.RequiredPermission;
 import timing.ukulele.web.controller.BaseController;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.Map;
 
 @RestController
 public final class DeptController extends BaseController implements IDeptFacade {
+    private final String router = "/system/dept";
     private final SysDeptService deptService;
 
     @Autowired
@@ -56,12 +60,14 @@ public final class DeptController extends BaseController implements IDeptFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<List<DeptTree>> getDeptTree() {
         List<SysDept> list = this.deptService.list();
         return successResponse(createMenuTree(list));
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> add(SysDeptVO sysDept) {
         if (sysDept == null || sysDept.getId() != null)
             return paraErrorResponse();
@@ -71,6 +77,7 @@ public final class DeptController extends BaseController implements IDeptFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> delete(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -78,6 +85,7 @@ public final class DeptController extends BaseController implements IDeptFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> edit(SysDeptVO sysDept) {
         if (sysDept == null || sysDept.getId() == null)
             return paraErrorResponse();

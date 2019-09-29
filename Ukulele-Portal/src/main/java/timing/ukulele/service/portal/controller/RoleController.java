@@ -7,12 +7,15 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import timing.ukulele.common.constant.AbilityConstant;
+import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.data.portal.data.RolePermission;
 import timing.ukulele.data.portal.view.RoleVO;
 import timing.ukulele.facade.portal.IRoleFacade;
 import timing.ukulele.service.portal.persistent.SysRole;
 import timing.ukulele.service.portal.service.SysRoleService;
+import timing.ukulele.web.annotation.RequiredPermission;
 import timing.ukulele.web.controller.BaseController;
 import timing.ukulele.web.util.Request2ModelUtil;
 
@@ -24,6 +27,7 @@ import java.util.Map;
 
 @RestController
 public final class RoleController extends BaseController implements IRoleFacade {
+    private final String router = "/system/role";
     private final SysRoleService roleService;
 
     @Autowired
@@ -32,6 +36,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<RoleVO> role(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -44,6 +49,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN, RoleConstant.USER}, router = this.router)
     public ResponseData<List<RoleVO>> getRoleByParam(Map<String, Object> map) {
         Collection<SysRole> poList = this.roleService.listByMap(map);
         if (CollectionUtils.isEmpty(poList))
@@ -58,6 +64,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> role(RoleVO role) {
         if (role == null || role.getId() != null)
             return paraErrorResponse();
@@ -67,6 +74,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> roleUpdate(RoleVO role) {
         if (role == null || role.getId() == null)
             return paraErrorResponse();
@@ -76,6 +84,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> roleDel(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -83,6 +92,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN, RoleConstant.USER}, router = this.router)
     public ResponseData<List<RoleVO>> getRoleByUserId(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -99,6 +109,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> deleteUserRole(Long userId, Long roleId) {
         if (userId == null || userId <= 0)
             return paraErrorResponse();
@@ -106,6 +117,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<Boolean> addUserRole(Long userId, Long roleId) {
         if (userId == null || userId <= 0 || roleId == null || roleId <= 0)
             return paraErrorResponse();
@@ -113,8 +125,9 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @GetMapping("/page/{current}/{size}")
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
     public ResponseData<IPage<RoleVO>> getPage(@PathVariable(name = "current") int current,
-                                                @PathVariable(name = "size") int size, HttpServletRequest request) {
+                                               @PathVariable(name = "size") int size, HttpServletRequest request) {
         RoleVO roleVO = Request2ModelUtil.covert(RoleVO.class, request);
         if (size == 0) size = 10;
         if (current == 0) current = 1;
@@ -124,6 +137,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN, RoleConstant.USER}, router = this.router)
     public ResponseData<Map<String, Map<String, RolePermission>>> rolePermission(List<String> roleCode) {
         return successResponse(roleService.rolePermission(roleCode));
     }

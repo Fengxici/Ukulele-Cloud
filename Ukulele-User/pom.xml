@@ -17,6 +17,10 @@
             <groupId>timing.ukulele</groupId>
             <artifactId>user-cloud-facade</artifactId>
         </dependency>
+        <dependency>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>portal-cloud-facade</artifactId>
+        </dependency>
         <!--ukulele依赖-->
         <dependency>
             <groupId>timing.ukulele</groupId>

@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
+import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseCode;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.data.portal.data.RolePermission;
@@ -36,7 +37,17 @@ public class PermissionService {
                 log.warn("角色列表为空：{}", authentication.getPrincipal());
                 return false;
             }
-            return true;
+            final boolean[] hasPermission = {false};
+            //系统支持 admin,super,user三种类型的角色，含有任一个角色就放行
+            for (SimpleGrantedAuthority item : grantedAuthorityList) {
+                if (RoleConstant.USER.equalsIgnoreCase(item.getAuthority())
+                        || RoleConstant.ADMIN.equalsIgnoreCase(item.getAuthority())
+                        || RoleConstant.SUPER.equalsIgnoreCase(item.getAuthority())) {
+                    hasPermission[0] = true;
+                    break;
+                }
+            }
+            return hasPermission[0];
         }
         log.warn("Principal为空！");
         return false;

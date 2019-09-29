@@ -8,11 +8,14 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import timing.ukulele.common.constant.AbilityConstant;
+import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.data.syslog.view.LogVO;
 import timing.ukulele.facade.syslog.ILogFacade;
 import timing.ukulele.service.syslog.persistent.SysLog;
 import timing.ukulele.service.syslog.service.SysLogService;
+import timing.ukulele.web.annotation.RequiredPermission;
 import timing.ukulele.web.controller.BaseController;
 import timing.ukulele.web.util.Request2ModelUtil;
 
@@ -27,7 +30,7 @@ import java.util.List;
  */
 @RestController
 public final class LogController extends BaseController implements ILogFacade {
-
+    private final String router = "/monitor/log";
     private final SysLogService sysLogService;
 
     @Autowired
@@ -36,6 +39,7 @@ public final class LogController extends BaseController implements ILogFacade {
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> add(LogVO sysLog) {
         if (sysLog == null || sysLog.getId() != null)
             return paraErrorResponse();
@@ -47,6 +51,7 @@ public final class LogController extends BaseController implements ILogFacade {
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<Boolean> delete(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -54,6 +59,7 @@ public final class LogController extends BaseController implements ILogFacade {
     }
 
     @Override
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<List<LogVO>> getByParam(HttpServletRequest request) {
         SysLog log = Request2ModelUtil.covert(SysLog.class, request);
 
@@ -70,6 +76,7 @@ public final class LogController extends BaseController implements ILogFacade {
     }
 
     @GetMapping("/log/page/{current}/{size}")
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
     public ResponseData<IPage<LogVO>> getPage(@PathVariable(name = "current") int current,
                                               @PathVariable(name = "size") int size, HttpServletRequest request) {
         SysLog log = Request2ModelUtil.covert(SysLog.class, request);
