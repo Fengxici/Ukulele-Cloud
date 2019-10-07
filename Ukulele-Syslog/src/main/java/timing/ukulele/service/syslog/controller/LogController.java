@@ -39,7 +39,7 @@ public final class LogController extends BaseController implements ILogFacade {
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> add(LogVO sysLog) {
         if (sysLog == null || sysLog.getId() != null)
             return paraErrorResponse();
@@ -51,7 +51,7 @@ public final class LogController extends BaseController implements ILogFacade {
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> delete(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -59,7 +59,7 @@ public final class LogController extends BaseController implements ILogFacade {
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<List<LogVO>> getByParam(HttpServletRequest request) {
         SysLog log = Request2ModelUtil.covert(SysLog.class, request);
 
@@ -76,12 +76,13 @@ public final class LogController extends BaseController implements ILogFacade {
     }
 
     @GetMapping("/log/page/{current}/{size}")
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<IPage<LogVO>> getPage(@PathVariable(name = "current") int current,
                                               @PathVariable(name = "size") int size, HttpServletRequest request) {
         SysLog log = Request2ModelUtil.covert(SysLog.class, request);
         if (size == 0) size = 10;
         if (current == 0) current = 1;
-        return successResponse(this.sysLogService.getPage(log, current, size));
+        IPage<LogVO> page = this.sysLogService.getPage(log, current, size);
+        return successResponse(page);
     }
 }

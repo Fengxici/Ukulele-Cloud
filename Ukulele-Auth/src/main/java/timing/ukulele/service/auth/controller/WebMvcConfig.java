@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-//public class WebMvcConfig extends WebMvcConfigurerAdapter {
 public class WebMvcConfig implements WebMvcConfigurer {
     /**
      * ftl视图
@@ -25,6 +24,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-//        super.addResourceHandlers(registry);
     }
 }

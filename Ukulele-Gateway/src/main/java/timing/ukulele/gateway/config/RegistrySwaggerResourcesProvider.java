@@ -1,6 +1,5 @@
 package timing.ukulele.gateway.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.netflix.zuul.filters.Route;
 import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
 import org.springframework.context.annotation.Primary;

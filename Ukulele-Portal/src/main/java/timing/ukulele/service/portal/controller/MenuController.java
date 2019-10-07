@@ -32,7 +32,7 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<MenuVO> menu(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -45,7 +45,7 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> menu(MenuVO sysMenu) {
         if (sysMenu == null || sysMenu.getId() != null)
             return paraErrorResponse();
@@ -55,7 +55,7 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> menuDel(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -63,7 +63,7 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> menuUpdate(MenuVO sysMenu) {
         if (sysMenu == null || sysMenu.getId() == null)
             return paraErrorResponse();
@@ -73,13 +73,11 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN, RoleConstant.USER}, router = this.router)
     public ResponseData<List<MenuTree>> getMenuTree() {
         return null;
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN, RoleConstant.USER}, router = this.router)
     public ResponseData<List<MenuVO>> getByParam(Map<String, Object> map) {
         Collection<SysMenu> menuList = this.sysMenuService.listByMap(map);
         if (CollectionUtils.isEmpty(menuList))
@@ -94,7 +92,6 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN, RoleConstant.USER}, router = this.router)
     public ResponseData<List<MenuVO>> findMenuByRole(String roleName) {
         List<MenuVO> list = new ArrayList<>();
         List<SysMenu> menus = this.sysMenuService.findMenuByRoleName(roleName);
@@ -109,7 +106,7 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> deleteRoleMenu(Long roleId, Long menuId) {
         if (roleId == null || roleId <= 0)
             return paraErrorResponse();
@@ -117,7 +114,7 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> addRoleMenu(Long roleId, Long menuId) {
         if (roleId == null || roleId <= 0 || menuId == null || menuId <= 0)
             return paraErrorResponse();
@@ -125,13 +122,12 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> editRoleMenu(AntRoleMenuEditVO vo) {
         return null;
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN, RoleConstant.USER}, router = this.router)
     public ResponseData<List<MenuVO>> getMenuByUserId(Long userId) {
         if (userId == null || userId <= 0)
             return paraErrorResponse();
@@ -148,7 +144,6 @@ public final class MenuController extends BaseController implements IMenuFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN, RoleConstant.USER}, router = this.router)
     public ResponseData<List<MenuTree>> getUserMenu(@RequestHeader("x-role-header") String roles) {
         if (StringUtils.isEmpty(roles))
             return paraErrorResponse();

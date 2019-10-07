@@ -12,7 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Order(2147483636)
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    //     "/info", "/error", "/health", "/env", "/metrics", "/trace", "/dump","/logfile", "/refresh", "/flyway", "/liquibase", "/loggers",
 
     @Override
     public void configure(WebSecurity web) {
@@ -36,11 +35,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/api/**/v2/**");
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf().disable();
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.
@@ -50,12 +44,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
-//                //允许访问首页
-//                .antMatchers("/", "/login").permitAll()
-//                .and()
-//                // 设置登出URL为 /logout
-//                .logout().logoutUrl("/logout").permitAll()
-//                .logoutSuccessUrl("/")
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

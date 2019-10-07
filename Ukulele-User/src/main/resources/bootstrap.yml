@@ -42,6 +42,8 @@ spring:
   #    user:
   #      name: root
   #      password: root
+  main:
+    allow-bean-definition-overriding: true
   # 数据源配置
   datasource:
     druid:
@@ -94,7 +96,7 @@ spring:
         share-prepared-statements: true
         connection-error-retry-attempts: 3
         break-after-acquire-failure: true
-        filters: stat,wall # 注意这个值和druid原生不一致，默认启动了stat,wall
+        filters: stat,wall,sql # 注意这个值和druid原生不一致，默认启动了stat,wall
         stat:
           merge-sql: true
           log-slow-sql: true

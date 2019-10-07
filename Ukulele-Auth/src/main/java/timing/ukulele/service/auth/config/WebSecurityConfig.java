@@ -24,7 +24,6 @@ import timing.ukulele.service.auth.service.QrUserDetailService;
 import timing.ukulele.service.auth.service.UsernameUserDetailService;
 
 @Configuration
-//@Order(2147483636)
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -66,7 +65,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        return authenticationManager;
 //    }
 
-    //    "/info", "/error", "/health", "/env", "/metrics", "/trace", "/dump","/logfile", "/refresh", "/flyway", "/liquibase", "/loggers",
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/actuator/**", "/css/**", "/js/**", "/favicon.ico", "/webjars/**", "/images/**", "/static/**",
@@ -76,7 +74,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                //.addFilterAt(getMyLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(getPhoneLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(getQrLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 // 配置登陆页/login并允许访问

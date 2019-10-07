@@ -73,7 +73,7 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<List<UserVO>> getUserByParam(Map<String, Object> map) {
         List<SysUser> list = new ArrayList<>(userService.listByMap(map));
         if (!CollectionUtils.isEmpty(list)) {
@@ -107,7 +107,7 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> userDel(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -116,7 +116,7 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> user(UserVO user) {
         if (user == null || user.getId() != null)
             return paraErrorResponse();
@@ -151,7 +151,7 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @GetMapping("/page/{current}/{size}")
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<IPage<UserVO>> getPage(@PathVariable(name = "current") int current,
                                                @PathVariable(name = "size") int size, HttpServletRequest request) {
         SysUser user = Request2ModelUtil.covert(SysUser.class, request);

@@ -52,62 +52,17 @@ public class UserInfoHeaderFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        HttpServletRequest request = ctx.getRequest();
+//        HttpServletRequest request = ctx.getRequest();
         ctx.set("startTime", System.currentTimeMillis());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             RequestContext requestContext = RequestContext.getCurrentContext();
             requestContext.addZuulRequestHeader(USER_HEADER, authentication.getName());
             String authorities = Arrays.toString(authentication.getAuthorities().toArray());
-            authorities = authorities.replace("[","");
-            authorities = authorities.replace("]","");
+            authorities = authorities.replace("[", "");
+            authorities = authorities.replace("]", "");
             requestContext.addZuulRequestHeader(ROLE_HEADER, authorities);
-            String tokenValue = extractToken(request);
-            if (!StringUtils.isEmpty(tokenValue)) {
-                OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
-                if (accessToken != null && !CollectionUtils.isEmpty(accessToken.getAdditionalInformation())) {
-                    requestContext.addZuulRequestHeader(HEADER_LABEL, accessToken.getAdditionalInformation
-                            ().get(HEADER_LABEL) + "");
-                }
-            }
         }
-        return null;
-    }
-
-    /**
-     * 获取请求Bearer Token
-     *
-     * @param request request对象
-     * @return tokenValue
-     */
-    private String extractToken(HttpServletRequest request) {
-        String token = extractHeaderToken(request);
-        if (token == null) {
-            token = request.getParameter(OAuth2AccessToken.ACCESS_TOKEN);
-        }
-        return token;
-    }
-
-    /**
-     * 请求头中获取Bearer Token
-     *
-     * @param request The request.
-     * @return The token, or null if no OAuth authorization header was supplied.
-     */
-    private String extractHeaderToken(HttpServletRequest request) {
-        Enumeration<String> headers = request.getHeaders(TOKEN_HEADER);
-        while (headers.hasMoreElements()) {
-            String value = headers.nextElement();
-            if ((value.toLowerCase().startsWith(OAuth2AccessToken.BEARER_TYPE.toLowerCase()))) {
-                String authHeaderValue = value.substring(OAuth2AccessToken.BEARER_TYPE.length()).trim();
-                int commaIndex = authHeaderValue.indexOf(',');
-                if (commaIndex > 0) {
-                    authHeaderValue = authHeaderValue.substring(0, commaIndex);
-                }
-                return authHeaderValue;
-            }
-        }
-
         return null;
     }
 }

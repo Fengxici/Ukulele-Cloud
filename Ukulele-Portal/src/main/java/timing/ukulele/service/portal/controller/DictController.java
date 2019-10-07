@@ -71,7 +71,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> dict(DictVO sysDict) {
         if (sysDict == null || sysDict.getId() != null)
             return paraErrorResponse();
@@ -81,7 +81,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> deleteDict(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -98,7 +98,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> editDict(DictVO sysDict) {
         if (sysDict == null || sysDict.getId() == null)
             return paraErrorResponse();
@@ -120,7 +120,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> dictIndex(DictIndexVO dictIndex) {
         if (dictIndex == null || dictIndex.getId() != null)
             return paraErrorResponse();
@@ -130,7 +130,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> editDictIndex(DictIndexVO dictIndex) {
         if (dictIndex == null || dictIndex.getId() == null)
             return paraErrorResponse();
@@ -140,7 +140,7 @@ public final class DictController extends BaseController implements IDictFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> deleteDictIndex(Long id) {
         if (id == null || id < 0)
             return paraErrorResponse();

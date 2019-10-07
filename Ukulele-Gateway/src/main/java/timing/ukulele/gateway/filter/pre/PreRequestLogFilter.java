@@ -21,7 +21,6 @@ import static timing.ukulele.gateway.filter.GatewayFilterConstants.PRE_REQUEST_L
 import static timing.ukulele.gateway.filter.GatewayFilterConstants.PRE_TYPE;
 import static timing.ukulele.gateway.filter.GatewayHeaderConstants.USER_HEADER;
 
-
 /**
  * 请求日志记录
  */

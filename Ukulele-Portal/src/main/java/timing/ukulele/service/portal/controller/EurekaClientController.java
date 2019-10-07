@@ -31,7 +31,7 @@ public class EurekaClientController extends BaseController {
     /**
      * 获取服务数量和节点数量
      */
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = router)
     @RequestMapping(value = "home", method = RequestMethod.GET)
     public ResponseData<Map<String, Object>> home() {
         List<Application> apps = eurekaClient.getApplications().getRegisteredApplications();
@@ -57,7 +57,7 @@ public class EurekaClientController extends BaseController {
     /**
      * 获取所有服务节点
      */
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER}, router = router)
     @RequestMapping(value = "apps", method = RequestMethod.GET)
     public ResponseData<List<Application>> apps() {
         List<Application> apps = eurekaClient.getApplications().getRegisteredApplications();
@@ -69,7 +69,7 @@ public class EurekaClientController extends BaseController {
     }
 
     @RequestMapping(value = "status/{appName}", method = RequestMethod.POST)
-    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> status(@PathVariable String appName, @RequestParam("instanceId") String instanceId, @RequestParam("status") String status) {
         Application application = eurekaClient.getApplication(appName);
         InstanceInfo instanceInfo = application.getByInstanceId(instanceId);

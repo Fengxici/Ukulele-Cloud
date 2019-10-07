@@ -60,14 +60,14 @@ public final class DeptController extends BaseController implements IDeptFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<List<DeptTree>> getDeptTree() {
         List<SysDept> list = this.deptService.list();
         return successResponse(createMenuTree(list));
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> add(SysDeptVO sysDept) {
         if (sysDept == null || sysDept.getId() != null)
             return paraErrorResponse();
@@ -77,7 +77,7 @@ public final class DeptController extends BaseController implements IDeptFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> delete(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
@@ -85,7 +85,7 @@ public final class DeptController extends BaseController implements IDeptFacade 
     }
 
     @Override
-    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = this.router)
+    @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> edit(SysDeptVO sysDept) {
         if (sysDept == null || sysDept.getId() == null)
             return paraErrorResponse();

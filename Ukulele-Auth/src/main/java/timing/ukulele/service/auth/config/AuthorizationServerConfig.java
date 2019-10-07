@@ -25,7 +25,6 @@ import timing.ukulele.service.auth.token.JwtAccessToken;
 import javax.sql.DataSource;
 
 @Configuration
-//@Order(2)
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final UsernameUserDetailService userDetailsService;
@@ -68,7 +67,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenConverter(jwtAccessTokenConverter())
                 // refresh_token需要userDetailsService
                 .reuseRefreshTokens(false).userDetailsService(userDetailsService);
-        //.tokenStore(getJdbcTokenStore());
     }
 
     @Override
@@ -88,14 +86,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
 
         final JwtAccessTokenConverter converter = new JwtAccessToken();
-        // 导入证书
+        // 导入证书 todo 配置
         KeyStoreKeyFactory keyStoreKeyFactory =
                 new KeyStoreKeyFactory(new ClassPathResource("taroco.jks"), "taroco!@#$".toCharArray());
         converter.setKeyPair(keyStoreKeyFactory.getKeyPair("taroco"));
-//        KeyStoreKeyFactory keyStoreKeyFactory =
-//                new KeyStoreKeyFactory(new ClassPathResource("keystore.jks"), "foobar".toCharArray());
-//        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("test"));
-
         return converter;
     }
 

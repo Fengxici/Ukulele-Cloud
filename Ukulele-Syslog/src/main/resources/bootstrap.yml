@@ -42,6 +42,8 @@ spring:
   #    user:
   #      name: root
   #      password: root
+  main:
+    allow-bean-definition-overriding: true
   # 数据源配置
   datasource:
     druid:
