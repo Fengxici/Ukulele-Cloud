@@ -57,37 +57,14 @@ proxy:
       user-service: oauth2
       syslog-service: oauth2
       auth-service: oauth2
-#security:
-#  oauth2:
-#    resource:
-#      jwt:
-#        key-uri: http://${AUTH_CENTER_HOST:localhost}:${AUTH_CENTER_PORT:18001}/auth/oauth/token_key
-#      id: ${spring.application.name}
-#      serviceId: ${spring.application.name}
 
 security:
   oauth2:
-    #    client:
-    #      access-token-uri: http://localhost:9090/auth/oauth/token #令牌端点
-    #      user-authorization-uri: http://localhost:9090/auth/oauth/authorize #授权端点
-    #      client-id: test #OAuth2客户端ID
-    #      client-secret: test #OAuth2客户端密钥
     resource:
       jwt:
         key-uri: http://localhost:9090/auth/oauth/token_key
       id: ${spring.application.name}
       serviceId: ${spring.application.name}
-#security:
-#  oauth2:
-#    sso:
-#      loginPath: /login   # 登录路径
-#    client:
-#      clientId: client
-#      clientSecret: secret
-#      userAuthorizationUri: http://localhost:8081/oauth/authorize
-#      access-token-uri: http://localhost:8081/oauth/token
-#    resource:
-#      userInfoUri: http://localhost:8082/user
 
 management:
   endpoints:
@@ -143,19 +120,21 @@ ukulele:
         parameter-type: header
         required: true
         model-ref: String
-# oauth2 配置
-#ukulele:
-#  oauth2:
-#    url-permit-all:
-#      - /actuator/**
-#      - /mobile/**
-#      - /auth/**
-#      - /admin/code/*
-#      - /admin/smsCode/*
-#      - /admin/user/info
-#      - /admin/menu/userMenu
-#      - /swagger-resources/**
-#      - /swagger-ui.html
-#      - /*/v2/api-docs
-#      - /swagger/api-docs
-#      - /webjars/**
+  kaptcha:
+    height: 50
+    width: 200
+    content:
+      length: 4
+      source: abcdefghjklmnopqrstuvwxyz23456789
+      space: 2
+    font:
+      color: black
+      name: Arial
+      size: 40
+    background-color:
+      from: lightGray
+      to: white
+    border:
+      enabled: true
+      color: black
+      thickness: 1

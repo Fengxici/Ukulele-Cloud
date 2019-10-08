@@ -19,29 +19,9 @@ mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: timing.ukulele.facade.syslog.model.persistent
 
-
-# 权限配置 安全校验在网关中统一处理
-#security:
-#  oauth2:
-#    client:
-#      clientId: test
-#      clientSecret: test
-#      userAuthorizationUri: http://localhost:9090/oauth/authorize
-#      grant-type: password
-#      scope: read
-#      access-token-uri: http://localhost:9090/oauth/token
-#    resource:
-#      jwt:
-#        key-uri: http://localhost:9090/oauth/token_key
-
 spring:
   application:
     name: syslog-service
-  #    安全校验在网关中统一处理
-  #  security:
-  #    user:
-  #      name: root
-  #      password: root
   main:
     allow-bean-definition-overriding: true
   # 数据源配置
