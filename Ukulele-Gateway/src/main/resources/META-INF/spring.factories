@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+timing.ukulele.gateway.kaptcha.config.KaptchaAutoConfiguration

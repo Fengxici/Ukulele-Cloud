@@ -1,0 +1,142 @@
+{
+  "groups": [
+    {
+      "name": "ukulele.kaptcha",
+      "description": "kaptcha配置组.",
+      "type": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties"
+    },
+    {
+      "name": "ukulele.kaptcha.content",
+      "type": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Content",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties",
+      "description": "kaptcha内容配置组."
+    },
+    {
+      "name": "ukulele.kaptcha.background-color",
+      "type": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$BackgroundColor",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties",
+      "description": "kaptcha背景色配置组."
+    },
+    {
+      "name": "ukulele.kaptcha.font",
+      "type": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Font",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties",
+      "description": "kaptcha字体配置组."
+    },
+    {
+      "name": "ukulele.kaptcha.border",
+      "type": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Border",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties",
+      "description": "kaptcha边框配置组."
+    }
+  ],
+  "properties": [
+    {
+      "name": "ukulele.kaptcha.width",
+      "type": "java.lang.Integer",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties",
+      "description": "宽度.",
+      "defaultValue": 200
+    },
+    {
+      "name": "ukulele.kaptcha.height",
+      "type": "java.lang.Integer",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties",
+      "description": "高度.",
+      "defaultValue": 200
+    },
+    {
+      "name": "ukulele.kaptcha.content.source",
+      "type": "java.lang.String",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Content",
+      "description": "内容源.",
+      "defaultValue": "abcdefghjklmnopqrstuvwxyz23456789"
+    },
+    {
+      "name": "ukulele.kaptcha.content.length",
+      "type": "java.lang.Integer",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Content",
+      "description": "内容长度.",
+      "defaultValue": 4
+    },
+    {
+      "name": "ukulele.kaptcha.content.space",
+      "type": "java.lang.Integer",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Content",
+      "description": "内容间隔.",
+      "defaultValue": 2
+    },
+    {
+      "name": "ukulele.kaptcha.background-color.from",
+      "type": "java.lang.String",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$BackgroundColor",
+      "description": "开始渐变色.",
+      "defaultValue": "lightGray"
+    },
+    {
+      "name": "ukulele.kaptcha.background-color.to",
+      "type": "java.lang.String",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$BackgroundColor",
+      "description": "结束渐变色.",
+      "defaultValue": "white"
+    },
+    {
+      "name": "ukulele.kaptcha.border.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Border",
+      "description": "是否开启.",
+      "defaultValue": true
+    },
+    {
+      "name": "ukulele.kaptcha.border.color",
+      "type": "java.lang.String",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Border",
+      "description": "颜色.",
+      "defaultValue": "black"
+    },
+    {
+      "name": "ukulele.kaptcha.border.thickness",
+      "type": "java.lang.Integer",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Border",
+      "description": "厚度.",
+      "defaultValue": 1
+    },
+    {
+      "name": "ukulele.kaptcha.font.name",
+      "type": "java.lang.String",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Font",
+      "description": "名称.",
+      "defaultValue": "Arial"
+    },
+    {
+      "name": "ukulele.kaptcha.font.color",
+      "type": "java.lang.String",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Font",
+      "description": "颜色.",
+      "defaultValue": "black"
+    },
+    {
+      "name": "ukulele.kaptcha.font.size",
+      "type": "java.lang.Integer",
+      "sourceType": "timing.ukulele.gateway.kaptcha.config.KaptchaProperties$Font",
+      "description": "大小.",
+      "defaultValue": 40
+    }
+  ],
+  "hints": [
+    {
+      "name": "kulele.kaptcha.border.enabled",
+      "values": [
+        {
+          "value": true,
+          "description": "启用."
+        },
+        {
+          "value": false,
+          "description": "不启用."
+        }
+      ]
+    }
+  ]
+}
