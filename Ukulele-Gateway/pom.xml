@@ -23,10 +23,6 @@
         </dependency>
         <dependency>
             <groupId>timing.ukulele</groupId>
-            <artifactId>ukulele-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-swagger</artifactId>
         </dependency>
         <dependency>

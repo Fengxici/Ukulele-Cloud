@@ -2,18 +2,19 @@ server:
   port: 9090
   servlet:
     context-path: /auth
-
 eureka:
   instance:
     hostname: localhost
     prefer-ip-address: true
     instance-id: ${eureka.instance.hostname}:${server.port}
+    home-page-url-path: ${server.servlet.context-path}/
     metadata-map:
       management:
         context-path: ${server.servlet.context-path}/actuator
-      health-check-url-path: ${server.servlet.context-path}/actuator/health
       user.name: root
       user.password: root
+#    health-check-url: /actuator/health
+#    status-page-url: /actuator/info
   client:
     serviceUrl:
       #      defaultZone: http://root:root@192.168.0.109:8080/eureka
@@ -100,7 +101,11 @@ spring:
 #        connection-properties:
   main:
     allow-bean-definition-overriding: true
-
+  zipkin:
+    base-url: http://127.0.0.1:7070
+  sleuth:
+    sampler:
+      probability: 1.0
 # mybatis-plus 配置
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
@@ -108,9 +113,6 @@ mybatis-plus:
 
 
 management:
-  server:
-    servlet:
-      context-path: ${server.servlet.context-path}
   endpoints:
     web:
       exposure:
