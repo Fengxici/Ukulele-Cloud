@@ -13,8 +13,6 @@ eureka:
         context-path: ${server.servlet.context-path}/actuator
       user.name: root
       user.password: root
-#    health-check-url: /actuator/health
-#    status-page-url: /actuator/info
   client:
     serviceUrl:
       #      defaultZone: http://root:root@192.168.0.109:8080/eureka
