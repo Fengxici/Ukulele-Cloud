@@ -21,9 +21,8 @@ import timing.ukulele.service.portal.mapper.SysRoleMapper;
 import timing.ukulele.service.portal.persistent.AntMenu;
 import timing.ukulele.service.portal.persistent.AntRoleMenu;
 import timing.ukulele.service.portal.persistent.SysRole;
-
+import timing.ukulele.service.portal.persistent.MenuPermission;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
