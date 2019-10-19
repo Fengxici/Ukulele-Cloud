@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import timing.ukulele.persistence.mapper.BaseMapper;
 import timing.ukulele.service.portal.persistent.AntMenu;
-
+import timing.ukulele.service.portal.persistent.MenuPermission;
 import java.util.List;
 @Mapper
 @Repository
@@ -18,6 +18,7 @@ public interface AntMenuMapper extends BaseMapper<AntMenu> {
      */
     List<AntMenu> findMenuByRoleName(@Param("role") String role);
 
-
+    List<MenuPermission> findRoleMenuAbility(@Param("role") String role);
+    
     List<AntMenu> getMenuByUserId(@Param("userId") Long userId);
 }
