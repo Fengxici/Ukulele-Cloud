@@ -36,7 +36,11 @@ public class AntMenuService extends BaseService<AntMenu> {
         this.roleMenuMapper = roleMenuMapper;
         this.roleMapper = roleMapper;
     }
-
+    
+    public List<MenuPermission> findRoleMenuPermission(String role) {
+        return ((AntMenuMapper) this.baseMapper).findRoleMenuAbility(role);
+    }
+    
     public List<AntMenu> findMenuByRoleName(String role) {
         return ((AntMenuMapper) this.baseMapper).findMenuByRoleName(role);
     }
