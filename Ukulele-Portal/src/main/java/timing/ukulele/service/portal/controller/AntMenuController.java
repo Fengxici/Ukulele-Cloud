@@ -178,6 +178,23 @@ public final class AntMenuController extends BaseController implements IAntMenuF
         return successResponse(abilities);
     }
 
+    @GetMapping({"/role/abilities"})
+    public ResponseData<Map<String, List<String>>> userAbilities(@RequestHeader(WebConstant.X_ROLE_HEADER) String roles) {
+        Set<MenuPermission> all = new HashSet<>();
+        Arrays.stream(roles.split(",")).forEach(role -> all.addAll(this.antMenuService.findRoleMenuPermission(role)));
+        if (CollectionUtils.isEmpty(all)) {
+            return successResponse();
+        }
+        Map<String, List<String>> abilityMap = new HashMap<>();
+        all.forEach(item -> {
+            if (StringUtils.isNotEmpty(item.getRouter())) {
+                if (StringUtils.isNotEmpty(item.getAbility()))
+                    abilityMap.put(item.getRouter(), JSON.parseArray(item.getAbility(), String.class));
+            }
+        });
+        return successResponse(abilityMap);
+    }
+    
     private Set<AntMenu> getUserAntMenu(String roles) {
         Set<AntMenu> all = new HashSet<>();
         Arrays.stream(roles.split(",")).forEach(role -> all.addAll(this.antMenuService.findMenuByRoleName(role)));
