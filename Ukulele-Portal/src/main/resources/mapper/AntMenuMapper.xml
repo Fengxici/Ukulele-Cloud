@@ -42,6 +42,18 @@
         AND sys_role.role_code = #{role}
     </select>
 
+    <select id="findRoleMenuAbility" resultType="timing.ukulele.service.portal.persistent.MenuPermission">
+          SELECT
+            ant_menu.id_ as id,ant_menu.link_ as router,ant_role_menu.ability_ as ability
+        FROM
+        sys_role
+        LEFT JOIN ant_role_menu ON ant_role_menu.role_id = sys_role.id_
+        LEFT JOIN ant_menu ON ant_menu.id_ = ant_role_menu.menu_id
+        WHERE
+        sys_role.deleted_ = 0
+        AND ant_menu.deleted_ = 0
+        AND sys_role.role_code = #{role};
+    </select>
 
     <select id="getMenuByUserId" resultMap="BaseResultMap">
         select m.* from ant_menu m
