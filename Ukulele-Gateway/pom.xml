@@ -15,11 +15,11 @@
     <dependencies>
         <dependency>
             <groupId>timing.ukulele</groupId>
-            <artifactId>portal-cloud-facade</artifactId>
+            <artifactId>syslog-data</artifactId>
         </dependency>
         <dependency>
             <groupId>timing.ukulele</groupId>
-            <artifactId>syslog-cloud-facade</artifactId>
+            <artifactId>portal-cloud-facade</artifactId>
         </dependency>
         <dependency>
             <groupId>timing.ukulele</groupId>

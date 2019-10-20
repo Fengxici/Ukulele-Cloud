@@ -2,7 +2,6 @@ package timing.ukulele.service.user.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import timing.ukulele.common.constant.AbilityConstant;
 import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseData;
-import timing.ukulele.common.util.JsonUtils;
 import timing.ukulele.data.user.view.UserVO;
 import timing.ukulele.facade.user.IUserFacade;
 import timing.ukulele.service.user.persistent.SysUser;

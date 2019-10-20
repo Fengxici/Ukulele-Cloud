@@ -120,6 +120,11 @@
                 <artifactId>ukulele-eureka</artifactId>
                 <version>${timing.ukulele-version}</version>
             </dependency>
+            <dependency>
+                <groupId>timing.ukulele</groupId>
+                <artifactId>syslog-data</artifactId>
+                <version>${timing.ukulele-version}</version>
+            </dependency>
             <!--第三方框架-->
             <dependency>
                 <groupId>mysql</groupId>
