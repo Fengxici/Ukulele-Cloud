@@ -50,6 +50,9 @@ zuul:
     auth-service:
       path: /api/auth-service/**
       serviceId: auth-service
+    supply-service:
+      path: /api/supply-service/**
+      serviceId: supply-service
   #添加代理头
   add-proxy-headers: true
   # 需要聚合的swagger服务
@@ -61,6 +64,7 @@ proxy:
       user-service: oauth2
       syslog-service: oauth2
       auth-service: oauth2
+      supply-service: oauth2
 
 security:
   oauth2:
