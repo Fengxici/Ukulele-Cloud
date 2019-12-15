@@ -52,7 +52,7 @@ zuul:
       serviceId: auth-service
     supply-service:
       path: /api/supply-service/**
-      serviceId: supply-service
+      serviceId: yqg-service
   #添加代理头
   add-proxy-headers: true
   # 需要聚合的swagger服务
