@@ -42,6 +42,10 @@
             <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-swagger</artifactId>
         </dependency>
+        <dependency>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>ukulele-http</artifactId>
+        </dependency>
         <!--第三方依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

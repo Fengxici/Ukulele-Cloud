@@ -38,9 +38,5 @@ public class SysUser extends BaseModel {
      */
     @TableField("label_")
     private String label;
-    /**
-     * 部门ID
-     */
-    private Long deptId;
 
 }

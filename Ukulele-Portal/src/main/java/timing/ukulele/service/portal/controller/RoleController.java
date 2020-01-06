@@ -69,6 +69,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
             return paraErrorResponse();
         SysRole roleData = new SysRole();
         BeanUtils.copyProperties(role, roleData);
+        roleData.setRoleCode(roleData.getRoleCode().toUpperCase());
         return successResponse(this.roleService.save(roleData));
     }
 
@@ -79,6 +80,7 @@ public final class RoleController extends BaseController implements IRoleFacade 
             return paraErrorResponse();
         SysRole roleData = new SysRole();
         BeanUtils.copyProperties(role, roleData);
+        roleData.setRoleCode(roleData.getRoleCode().toUpperCase());
         return successResponse(this.roleService.saveOrUpdate(roleData));
     }
 

@@ -71,6 +71,16 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @Override
+    public ResponseData<UserVO> getUserByPhoneOrName(String param) {
+        SysUser sysUser = userService.selectUserByParam(param);
+        if(null==sysUser)
+            return successResponse();
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(sysUser,userVO);
+        return successResponse(userVO);
+    }
+
+    @Override
     @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<List<UserVO>> getUserByParam(Map<String, Object> map) {
         List<SysUser> list = new ArrayList<>(userService.listByMap(map));
@@ -121,14 +131,12 @@ public class UserController extends BaseController implements IUserFacade {
         SysUser userPO = new SysUser();
         BeanUtils.copyProperties(user, userPO);
         if (!CollectionUtils.isEmpty(user.getLabel()))
-            userPO.setLabel(Arrays.toString(user.getLabel().toArray()));
+            userPO.setLabel(JSON.toJSONString(user.getLabel()));
         // TODO 部分属性暂时默认值
         userPO.setPassword(new BCryptPasswordEncoder(6).encode("123456"));//密码
         Random random = new Random();
         int s = random.nextInt(6) % (6 - 1 + 1) + 1;
         userPO.setAvatar("assets/tmp/img/" + s + ".png");//头像
-        userPO.setLabel("admin,super");
-        userPO.setDeptId(1L);
         Boolean success = userService.save(userPO);
         return successResponse(success);
     }

@@ -46,7 +46,7 @@ public abstract class BaseUserDetailService implements UserDetailsService {
         return new BaseUserDetail(baseUser, user);
     }
 
-    protected abstract UserVO getUser(String var1);
+    protected abstract UserVO getUser(String username);
 
 
     private List<GrantedAuthority> convertToAuthorities(List<String> roles) {

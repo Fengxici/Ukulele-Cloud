@@ -136,3 +136,7 @@ ukulele:
         parameterType: header
         required: false
         model-ref: String
+
+wx:
+  appid: wx73e9c5f1cf804064
+  appsecret: c98a936f28dacb8d64a3c2799c1bee39

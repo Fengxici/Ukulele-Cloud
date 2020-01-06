@@ -16,11 +16,14 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import timing.ukulele.service.auth.filter.PhoneLoginAuthenticationFilter;
 import timing.ukulele.service.auth.filter.QrLoginAuthenticationFilter;
+import timing.ukulele.service.auth.filter.ThirdPartyLoginAuthenticationFilter;
 import timing.ukulele.service.auth.handler.TimingLoginAuthSuccessHandler;
 import timing.ukulele.service.auth.provider.PhoneAuthenticationProvider;
 import timing.ukulele.service.auth.provider.QrAuthenticationProvider;
+import timing.ukulele.service.auth.provider.ThirdPartyAuthenticationProvider;
 import timing.ukulele.service.auth.service.PhoneUserDetailService;
 import timing.ukulele.service.auth.service.QrUserDetailService;
+import timing.ukulele.service.auth.service.ThirdPartyUserDetailService;
 import timing.ukulele.service.auth.service.UsernameUserDetailService;
 
 @Configuration
@@ -30,12 +33,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UsernameUserDetailService usernameUserDetailService;
     private final PhoneUserDetailService phoneUserDetailService;
     private final QrUserDetailService qrUserDetailService;
-
+    private final ThirdPartyUserDetailService thirdPartyUserDetailService;
     @Autowired
-    public WebSecurityConfig(UsernameUserDetailService usernameUserDetailService, PhoneUserDetailService phoneUserDetailService, QrUserDetailService qrUserDetailService) {
+    public WebSecurityConfig(UsernameUserDetailService usernameUserDetailService, PhoneUserDetailService phoneUserDetailService, QrUserDetailService qrUserDetailService, ThirdPartyUserDetailService thirdPartyUserDetailService) {
         this.usernameUserDetailService = usernameUserDetailService;
         this.phoneUserDetailService = phoneUserDetailService;
         this.qrUserDetailService = qrUserDetailService;
+        this.thirdPartyUserDetailService = thirdPartyUserDetailService;
     }
 
     @Override
@@ -53,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(phoneAuthenticationProvider());
         auth.authenticationProvider(qrAuthenticationProvider());
+        auth.authenticationProvider(thirdPartyAuthenticationProvider());
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
@@ -125,6 +130,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return provider;
     }
 
+    @Bean
+    public ThirdPartyAuthenticationProvider thirdPartyAuthenticationProvider(){
+        ThirdPartyAuthenticationProvider provider = new ThirdPartyAuthenticationProvider();
+        provider.setUserDetailsService(thirdPartyUserDetailService);
+        provider.setHideUserNotFoundExceptions(false);
+        return provider;
+    }
 
     /**
      * 手机验证码登陆过滤器
@@ -141,6 +153,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public QrLoginAuthenticationFilter getQrLoginAuthenticationFilter() {
         QrLoginAuthenticationFilter filter = new QrLoginAuthenticationFilter();
         return (QrLoginAuthenticationFilter) getFilter(filter);
+    }
+
+    @Bean
+    public ThirdPartyLoginAuthenticationFilter getThirdPartyLoginAuthenticationFilter(){
+        ThirdPartyLoginAuthenticationFilter filter = new ThirdPartyLoginAuthenticationFilter();
+        return (ThirdPartyLoginAuthenticationFilter)getFilter(filter);
     }
 
     private AbstractAuthenticationProcessingFilter getFilter(AbstractAuthenticationProcessingFilter filter) {

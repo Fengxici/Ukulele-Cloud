@@ -1,6 +1,7 @@
 package timing.ukulele.service.user.service;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -44,6 +45,16 @@ public class SysUserService extends BaseService<SysUser> {
      */
     public SysUser findUserByMobile(String mobile) {
         return sysUserMapper.selectUserVoByMobile(mobile);
+    }
+
+    public SysUser selectUserByParam(String param) {
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>(new SysUser());
+        queryWrapper.eq(SysUser::getPhone, param).or().eq(SysUser::getUsername, param);
+        List<SysUser> list = list(queryWrapper);
+        if (CollectionUtils.isEmpty(list))
+            return null;
+        list.get(0).setPassword(null);//脱敏
+        return list.get(0);
     }
 
     public IPage<UserVO> getPage(SysUser user, int current, int size) {

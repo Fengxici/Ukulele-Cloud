@@ -31,7 +31,7 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
     protected boolean hideUserNotFoundExceptions = true;
     private UserDetailsChecker preAuthenticationChecks = new TimingAbstractUserDetailsAuthenticationProvider.DefaultPreAuthenticationChecks();
     private UserDetailsChecker postAuthenticationChecks = new TimingAbstractUserDetailsAuthenticationProvider.DefaultPostAuthenticationChecks();
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+//    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
 
     protected abstract void additionalAuthenticationChecks(UserDetails var1, Authentication var2) throws AuthenticationException;
@@ -142,9 +142,9 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
         this.postAuthenticationChecks = postAuthenticationChecks;
     }
 
-    public void setAuthoritiesMapper(GrantedAuthoritiesMapper authoritiesMapper) {
-        this.authoritiesMapper = authoritiesMapper;
-    }
+//    public void setAuthoritiesMapper(GrantedAuthoritiesMapper authoritiesMapper) {
+//        this.authoritiesMapper = authoritiesMapper;
+//    }
 
     private class DefaultPostAuthenticationChecks implements UserDetailsChecker {
         private DefaultPostAuthenticationChecks() {
