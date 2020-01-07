@@ -19,7 +19,7 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import timing.ukulele.service.auth.service.UsernameUserDetailService;
+import timing.ukulele.service.auth.service.TimingUserDetailService;
 import timing.ukulele.service.auth.token.JwtAccessToken;
 
 import javax.sql.DataSource;
@@ -27,14 +27,14 @@ import javax.sql.DataSource;
 @Configuration
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    private final UsernameUserDetailService userDetailsService;
+    private final TimingUserDetailService userDetailsService;
 
     private final AuthenticationManager authenticationManager;
 
     private final DataSource dataSource;
 
     @Autowired
-    public AuthorizationServerConfig(UsernameUserDetailService userDetailsService, AuthenticationManager authenticationManager, @Qualifier("dataSource") DataSource dataSource) {
+    public AuthorizationServerConfig(TimingUserDetailService userDetailsService, AuthenticationManager authenticationManager, @Qualifier("dataSource") DataSource dataSource) {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.dataSource = dataSource;

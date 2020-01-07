@@ -10,14 +10,13 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.cache.NullUserCache;
 import org.springframework.util.Assert;
+import timing.ukulele.service.auth.token.TimingAuthenticationToken;
 
 /**
  * 自定义 AuthenticationProvider， 以使用自定义的 TimingAuthenticationToken
@@ -34,7 +33,7 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
 //    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
 
-    protected abstract void additionalAuthenticationChecks(UserDetails var1, Authentication var2) throws AuthenticationException;
+    protected abstract void additionalAuthenticationChecks(UserDetails userDetails, TimingAuthenticationToken authentication) throws AuthenticationException;
 
     public final void afterPropertiesSet() throws Exception {
         Assert.notNull(this.userCache, "A user cache must be set");
@@ -50,7 +49,7 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
             cacheWasUsed = false;
 
             try {
-                user = this.retrieveUser(username, authentication);
+                user = this.retrieveUser(username, (TimingAuthenticationToken)authentication);
             } catch (UsernameNotFoundException var6) {
                 this.logger.debug("User \'" + username + "\' not found");
                 if(this.hideUserNotFoundExceptions) {
@@ -65,16 +64,16 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
 
         try {
             this.preAuthenticationChecks.check(user);
-            this.additionalAuthenticationChecks(user, authentication);
+            this.additionalAuthenticationChecks(user, (TimingAuthenticationToken)authentication);
         } catch (AuthenticationException var7) {
             if(!cacheWasUsed) {
                 throw var7;
             }
 
             cacheWasUsed = false;
-            user = this.retrieveUser(username, authentication);
+            user = this.retrieveUser(username, (TimingAuthenticationToken)authentication);
             this.preAuthenticationChecks.check(user);
-            this.additionalAuthenticationChecks(user, authentication);
+            this.additionalAuthenticationChecks(user, (TimingAuthenticationToken)authentication);
         }
 
         this.postAuthenticationChecks.check(user);
@@ -87,10 +86,10 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
             principalToReturn = user.getUsername();
         }
 
-        return this.createSuccessAuthentication(principalToReturn, authentication, user);
+        return this.createSuccessAuthentication(principalToReturn, (TimingAuthenticationToken)authentication, user);
     }
 
-    protected abstract Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user);
+    protected abstract Authentication createSuccessAuthentication(Object principal, TimingAuthenticationToken authentication, UserDetails userDetails);
 
     protected void doAfterPropertiesSet() throws Exception {
     }
@@ -107,7 +106,7 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
         return this.hideUserNotFoundExceptions;
     }
 
-    protected abstract UserDetails retrieveUser(String var1, Authentication var2) throws AuthenticationException;
+    protected abstract UserDetails retrieveUser(String principal, TimingAuthenticationToken authenticationToken) throws AuthenticationException;
 
     public void setForcePrincipalAsString(boolean forcePrincipalAsString) {
         this.forcePrincipalAsString = forcePrincipalAsString;

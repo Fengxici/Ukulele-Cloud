@@ -13,17 +13,20 @@ public class TimingAuthenticationToken extends AbstractAuthenticationToken {
     private static final long serialVersionUID = 110L;
     protected final Object principal;
     protected Object credentials;
+    private String type;
+    private String extension;
 
     /**
      * This constructor can be safely used by any code that wishes to create a
      * <code>UsernamePasswordAuthenticationToken</code>, as the {@link
      * #isAuthenticated()} will return <code>false</code>.
-     *
      */
-    public TimingAuthenticationToken(Object principal, Object credentials) {
+    public TimingAuthenticationToken(Object principal, Object credentials, String type, String extension) {
         super(null);
         this.principal = principal;
         this.credentials = credentials;
+        this.type = type;
+        this.extension = extension;
         this.setAuthenticated(false);
     }
 
@@ -36,10 +39,12 @@ public class TimingAuthenticationToken extends AbstractAuthenticationToken {
      * @param credentials
      * @param authorities
      */
-    public TimingAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
+    public TimingAuthenticationToken(Object principal, Object credentials, String type, String extension, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;
+        this.type = type;
+        this.extension = extension;
         super.setAuthenticated(true);
     }
 
@@ -54,9 +59,24 @@ public class TimingAuthenticationToken extends AbstractAuthenticationToken {
         return this.principal;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
 
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-        if(isAuthenticated) {
+        if (isAuthenticated) {
             throw new IllegalArgumentException("Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
         } else {
             super.setAuthenticated(false);

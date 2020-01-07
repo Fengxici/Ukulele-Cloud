@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -13,33 +13,22 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import timing.ukulele.service.auth.filter.PhoneLoginAuthenticationFilter;
-import timing.ukulele.service.auth.filter.QrLoginAuthenticationFilter;
-import timing.ukulele.service.auth.filter.ThirdPartyLoginAuthenticationFilter;
+import timing.ukulele.service.auth.filter.TimingLoginAuthenticationFilter;
 import timing.ukulele.service.auth.handler.TimingLoginAuthSuccessHandler;
-import timing.ukulele.service.auth.provider.PhoneAuthenticationProvider;
-import timing.ukulele.service.auth.provider.QrAuthenticationProvider;
-import timing.ukulele.service.auth.provider.ThirdPartyAuthenticationProvider;
-import timing.ukulele.service.auth.service.PhoneUserDetailService;
-import timing.ukulele.service.auth.service.QrUserDetailService;
-import timing.ukulele.service.auth.service.ThirdPartyUserDetailService;
-import timing.ukulele.service.auth.service.UsernameUserDetailService;
+import timing.ukulele.service.auth.provider.TimingAuthenticationProvider;
+import timing.ukulele.service.auth.service.TimingUserDetailService;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UsernameUserDetailService usernameUserDetailService;
-    private final PhoneUserDetailService phoneUserDetailService;
-    private final QrUserDetailService qrUserDetailService;
-    private final ThirdPartyUserDetailService thirdPartyUserDetailService;
+    private final TimingUserDetailService timingUserDetailService;
+
     @Autowired
-    public WebSecurityConfig(UsernameUserDetailService usernameUserDetailService, PhoneUserDetailService phoneUserDetailService, QrUserDetailService qrUserDetailService, ThirdPartyUserDetailService thirdPartyUserDetailService) {
-        this.usernameUserDetailService = usernameUserDetailService;
-        this.phoneUserDetailService = phoneUserDetailService;
-        this.qrUserDetailService = qrUserDetailService;
-        this.thirdPartyUserDetailService = thirdPartyUserDetailService;
+    public WebSecurityConfig(TimingUserDetailService timingUserDetailService) {
+        this.timingUserDetailService = timingUserDetailService;
     }
 
     @Override
@@ -48,27 +37,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    /**
-     * 用户验证
-     *
-     * @param auth
-     */
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(phoneAuthenticationProvider());
-        auth.authenticationProvider(qrAuthenticationProvider());
-        auth.authenticationProvider(thirdPartyAuthenticationProvider());
-        auth.authenticationProvider(daoAuthenticationProvider());
-    }
+//    /**
+//     * 用户验证
+//     *
+//     * @param auth
+//     */
+//    @Override
+//    public void configure(AuthenticationManagerBuilder auth) {
+//        auth.authenticationProvider(timingAuthenticationProvider());
+////        auth.authenticationProvider(daoAuthenticationProvider());
+//    }
 
     //    与configure(AuthenticationManagerBuilder auth) 二选一
-//    @Override
-//    protected AuthenticationManager authenticationManager() {
-//        ProviderManager authenticationManager = new ProviderManager(Arrays.asList(phoneAuthenticationProvider(), daoAuthenticationProvider(), qrAuthenticationProvider()));
-//        //不擦除认证密码，擦除会导致TokenBasedRememberMeServices因为找不到Credentials再调用UserDetailsService而抛出UsernameNotFoundException
-//        authenticationManager.setEraseCredentialsAfterAuthentication(false);
-//        return authenticationManager;
-//    }
+    @Override
+    @Bean
+    protected AuthenticationManager authenticationManager() {
+        ProviderManager authenticationManager = new ProviderManager(Arrays.asList(timingAuthenticationProvider()));
+        //不擦除认证密码，擦除会导致TokenBasedRememberMeServices因为找不到Credentials再调用UserDetailsService而抛出UsernameNotFoundException
+        authenticationManager.setEraseCredentialsAfterAuthentication(false);
+        return authenticationManager;
+    }
 
     @Override
     public void configure(WebSecurity web) {
@@ -79,8 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(getPhoneLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(getQrLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(getTimingLoginAuthenticationFilter(), TimingLoginAuthenticationFilter.class)
                 // 配置登陆页/login并允许访问
                 .formLogin().loginPage("/login").permitAll()
                 // 登出页
@@ -91,74 +78,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();
     }
 
-
     @Bean
     public BCryptPasswordEncoder myEncoder() {
         return new BCryptPasswordEncoder(6);
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    public TimingAuthenticationProvider timingAuthenticationProvider() {
+        TimingAuthenticationProvider provider = new TimingAuthenticationProvider();
         // 设置userDetailsService
-        provider.setUserDetailsService(usernameUserDetailService);
+        provider.setUserDetailsService(timingUserDetailService);
         // 禁止隐藏用户未找到异常
         provider.setHideUserNotFoundExceptions(false);
-        // 使用BCrypt进行密码的hash
         provider.setPasswordEncoder(myEncoder());
         return provider;
     }
 
-
     @Bean
-    public PhoneAuthenticationProvider phoneAuthenticationProvider() {
-        PhoneAuthenticationProvider provider = new PhoneAuthenticationProvider();
-        // 设置userDetailsService
-        provider.setUserDetailsService(phoneUserDetailService);
-        // 禁止隐藏用户未找到异常
-        provider.setHideUserNotFoundExceptions(false);
-        return provider;
-    }
-
-    @Bean
-    public QrAuthenticationProvider qrAuthenticationProvider() {
-        QrAuthenticationProvider provider = new QrAuthenticationProvider();
-        // 设置userDetailsService
-        provider.setUserDetailsService(qrUserDetailService);
-        // 禁止隐藏用户未找到异常
-        provider.setHideUserNotFoundExceptions(false);
-        return provider;
-    }
-
-    @Bean
-    public ThirdPartyAuthenticationProvider thirdPartyAuthenticationProvider(){
-        ThirdPartyAuthenticationProvider provider = new ThirdPartyAuthenticationProvider();
-        provider.setUserDetailsService(thirdPartyUserDetailService);
-        provider.setHideUserNotFoundExceptions(false);
-        return provider;
-    }
-
-    /**
-     * 手机验证码登陆过滤器
-     *
-     * @return
-     */
-    @Bean
-    public PhoneLoginAuthenticationFilter getPhoneLoginAuthenticationFilter() {
-        PhoneLoginAuthenticationFilter filter = new PhoneLoginAuthenticationFilter();
-        return (PhoneLoginAuthenticationFilter) getFilter(filter);
-    }
-
-    @Bean
-    public QrLoginAuthenticationFilter getQrLoginAuthenticationFilter() {
-        QrLoginAuthenticationFilter filter = new QrLoginAuthenticationFilter();
-        return (QrLoginAuthenticationFilter) getFilter(filter);
-    }
-
-    @Bean
-    public ThirdPartyLoginAuthenticationFilter getThirdPartyLoginAuthenticationFilter(){
-        ThirdPartyLoginAuthenticationFilter filter = new ThirdPartyLoginAuthenticationFilter();
-        return (ThirdPartyLoginAuthenticationFilter)getFilter(filter);
+    public TimingLoginAuthenticationFilter getTimingLoginAuthenticationFilter() {
+        TimingLoginAuthenticationFilter filter = new TimingLoginAuthenticationFilter();
+        return (TimingLoginAuthenticationFilter) getFilter(filter);
     }
 
     private AbstractAuthenticationProcessingFilter getFilter(AbstractAuthenticationProcessingFilter filter) {

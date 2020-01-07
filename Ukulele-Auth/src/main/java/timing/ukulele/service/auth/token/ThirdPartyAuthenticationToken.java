@@ -9,12 +9,12 @@ import java.util.Collection;
  */
 public class ThirdPartyAuthenticationToken extends TimingAuthenticationToken {
 
-    public ThirdPartyAuthenticationToken(Object principal, Object credentials) {
-        super(principal, credentials);
+    public ThirdPartyAuthenticationToken(Object principal, Object credentials, String type, String extension) {
+        super(principal, credentials, type, extension);
     }
 
-    public ThirdPartyAuthenticationToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
-        super(principal, credentials, authorities);
+    public ThirdPartyAuthenticationToken(Object principal, Object credentials, String type, String extension, Collection<? extends GrantedAuthority> authorities) {
+        super(principal, credentials, type, extension, authorities);
     }
 
 }
