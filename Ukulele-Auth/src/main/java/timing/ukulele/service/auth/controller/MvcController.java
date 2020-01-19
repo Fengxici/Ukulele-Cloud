@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import timing.ukulele.data.auth.persistent.OAuthClientDetailsModel;
 import timing.ukulele.service.auth.service.OauthClientDetailsService;
+import timing.ukulele.web.controller.BaseController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +20,8 @@ import java.util.Map;
 
 @Controller
 @SessionAttributes({"authorizationRequest"})
-public class MvcController {
 
+public class MvcController extends BaseController {
     private final OauthClientDetailsService clientService;
 
     @Autowired

@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,8 +12,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import timing.ukulele.redisson.cache.CacheManager;
 import timing.ukulele.service.auth.filter.TimingLoginAuthenticationFilter;
 import timing.ukulele.service.auth.handler.TimingLoginAuthSuccessHandler;
+import timing.ukulele.service.auth.provider.QRCodeAuthenticationProvider;
+import timing.ukulele.service.auth.provider.SmsCodeAuthenticationProvider;
+import timing.ukulele.service.auth.provider.ThirdOpenAuthenticationProvider;
 import timing.ukulele.service.auth.provider.TimingAuthenticationProvider;
 import timing.ukulele.service.auth.service.TimingUserDetailService;
 
@@ -25,10 +29,12 @@ import java.util.Arrays;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TimingUserDetailService timingUserDetailService;
+    private final CacheManager cacheManager;
 
     @Autowired
-    public WebSecurityConfig(TimingUserDetailService timingUserDetailService) {
+    public WebSecurityConfig(TimingUserDetailService timingUserDetailService, CacheManager cacheManager) {
         this.timingUserDetailService = timingUserDetailService;
+        this.cacheManager = cacheManager;
     }
 
     @Override
@@ -52,7 +58,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Bean
     protected AuthenticationManager authenticationManager() {
-        ProviderManager authenticationManager = new ProviderManager(Arrays.asList(timingAuthenticationProvider()));
+        ProviderManager authenticationManager = new ProviderManager(Arrays.asList(timingAuthenticationProvider(),
+                smsCodeAuthenticationProvider(),
+                qrCodeAuthenticationProvider(),
+                thirdOpenAuthenticationProvider()));
         //不擦除认证密码，擦除会导致TokenBasedRememberMeServices因为找不到Credentials再调用UserDetailsService而抛出UsernameNotFoundException
         authenticationManager.setEraseCredentialsAfterAuthentication(false);
         return authenticationManager;
@@ -61,13 +70,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/actuator/**", "/css/**", "/js/**", "/favicon.ico", "/webjars/**", "/images/**", "/static/**",
-                "/hystrix.stream/**", "/jolokia", "/configprops", "/activiti", "/druid/**", "/oauth/deleteToken", "/backReferer");
+                "/hystrix.stream/**", "/jolokia", "/configprops", "/activiti", "/druid/**", "/oauth/deleteToken", "/backReferer", "/common/**");
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(getTimingLoginAuthenticationFilter(), TimingLoginAuthenticationFilter.class)
+                .addFilterAt(getTimingLoginAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 // 配置登陆页/login并允许访问
                 .formLogin().loginPage("/login").permitAll()
                 // 登出页
@@ -79,10 +88,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public BCryptPasswordEncoder myEncoder() {
+    public BCryptPasswordEncoder globalEncoder() {
         return new BCryptPasswordEncoder(6);
     }
 
+    /**
+     * 用户名密码
+     *
+     * @return
+     */
     @Bean
     public TimingAuthenticationProvider timingAuthenticationProvider() {
         TimingAuthenticationProvider provider = new TimingAuthenticationProvider();
@@ -90,7 +104,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(timingUserDetailService);
         // 禁止隐藏用户未找到异常
         provider.setHideUserNotFoundExceptions(false);
-        provider.setPasswordEncoder(myEncoder());
+        provider.setPasswordEncoder(globalEncoder());
+        return provider;
+    }
+
+    /**
+     * 手机验证码
+     *
+     * @return
+     */
+    @Bean
+    public SmsCodeAuthenticationProvider smsCodeAuthenticationProvider() {
+        SmsCodeAuthenticationProvider provider = new SmsCodeAuthenticationProvider(cacheManager, timingUserDetailService);
+        return provider;
+    }
+
+    /**
+     * 二维码
+     *
+     * @return
+     */
+    @Bean
+    public QRCodeAuthenticationProvider qrCodeAuthenticationProvider() {
+        QRCodeAuthenticationProvider provider = new QRCodeAuthenticationProvider(timingUserDetailService, cacheManager);
+        return provider;
+    }
+
+    /**
+     * 第三方开放平台
+     *
+     * @return
+     */
+    @Bean
+    public ThirdOpenAuthenticationProvider thirdOpenAuthenticationProvider() {
+        ThirdOpenAuthenticationProvider provider = new ThirdOpenAuthenticationProvider(timingUserDetailService);
         return provider;
     }
 

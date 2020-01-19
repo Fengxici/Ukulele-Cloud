@@ -1,15 +1,18 @@
 package timing.ukulele.service.auth.provider;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import timing.ukulele.service.auth.Constant;
+import timing.ukulele.service.auth.service.TimingUserDetailService;
+import timing.ukulele.service.auth.token.QRCodeAuthenticationToken;
+import timing.ukulele.service.auth.token.SmsCodeAuthenticationToken;
+import timing.ukulele.service.auth.token.ThirdOpenAuthenticationToken;
 import timing.ukulele.service.auth.token.TimingAuthenticationToken;
 
 public class TimingAuthenticationProvider extends TimingAbstractUserDetailsAuthenticationProvider {
@@ -17,34 +20,22 @@ public class TimingAuthenticationProvider extends TimingAbstractUserDetailsAuthe
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    protected void additionalAuthenticationChecks(UserDetails userDetails, TimingAuthenticationToken authentication) throws AuthenticationException {
+    protected void additionalAuthenticationChecks(UserDetails userDetails, Authentication authentication) throws AuthenticationException {
         if (authentication.getCredentials() == null) {
             this.logger.debug("Authentication failed: no credentials provided");
             throw new BadCredentialsException(this.messages.getMessage("TimingAuthenticationProvider.badCredentials", "Bad credentials"));
         } else {
-            String type = authentication.getType();
-            if (StringUtils.isEmpty(type)) {
-                this.logger.debug("Authentication failed: verifyCode does not match stored value");
-                throw new BadCredentialsException(this.messages.getMessage("PhoneAuthenticationProvider.badCredentials", "Bad type"));
-            }
             String presentedPassword = authentication.getCredentials().toString();
-            // 验证开始
-            if (Constant.SPRING_SECURITY_RESTFUL_TYPE_PHONE.equals(type)) {
-                // 手机验证码验证，调用公共服务查询后台验证码缓存： key 为authentication.getPrincipal()的value， 并判断其与验证码是否匹配,
-                // 此处写死为 1000 TODO
-                if (!"1000".equals(presentedPassword)) {
-                    this.logger.debug("Authentication failed: verifyCode does not match stored value");
-                    throw new BadCredentialsException(this.messages.getMessage("MyAbstractUserDetailsAuthenticationProvider.badCredentials", "Bad verifyCode"));
-                }
-            } else if (Constant.SPRING_SECURITY_RESTFUL_TYPE_QR.equals(type)) {
-                // 二维码只需要根据 qrCode 查询到用户即可，所以此处无需验证 TODO
-            } else if (Constant.SPRING_SECURITY_RESTFUL_TYPE_THIRD.equals(type)) {
-                //
-                logger.info(authentication);
-            } else {
-                logger.info(authentication);
-                // 用户名密码验证
-                if (!this.passwordEncoder.matches(userDetails.getPassword(), presentedPassword)) {
+            if (authentication instanceof TimingAuthenticationToken) {//用户名密码
+
+            } else if (authentication instanceof SmsCodeAuthenticationToken) {//手机验证码
+
+            } else if (authentication instanceof ThirdOpenAuthenticationToken) {//第三方开放平台
+
+            } else if (authentication instanceof QRCodeAuthenticationToken) {//二维码
+
+            } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+                if (!this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
                     this.logger.debug("Authentication failed: password does not match stored value");
                     throw new BadCredentialsException(this.messages.getMessage("MyAbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
                 }
@@ -53,28 +44,72 @@ public class TimingAuthenticationProvider extends TimingAbstractUserDetailsAuthe
     }
 
     @Override
-    protected Authentication createSuccessAuthentication(Object principal, TimingAuthenticationToken authentication, UserDetails user) {
-//        TimingAuthenticationToken result = new PhoneAuthenticationToken(principal, authentication.getCredentials(), "phone", user.getAuthorities());
-        authentication.setDetails(authentication.getDetails());
-        return authentication;
+    protected Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user) {
+//        if (authentication instanceof UsernamePasswordAuthenticationToken) {
+//            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, authentication.getCredentials(), user.getAuthorities());
+//            token.setDetails(authentication.getDetails());
+//            return token;
+//        } else {
+//            ((TimingAuthenticationToken) authentication).setDetails(authentication.getDetails());
+//            TimingAuthenticationToken token = new TimingAuthenticationToken(principal, authentication.getCredentials(), user.getAuthorities());
+//            token.setDetails(authentication.getDetails());
+//            return token;
+//        }
+        if (authentication instanceof TimingAuthenticationToken) {//用户名密码
+            TimingAuthenticationToken timingToken = (TimingAuthenticationToken) authentication;
+            timingToken.setDetails(authentication.getDetails());
+            TimingAuthenticationToken token = new TimingAuthenticationToken(principal, timingToken.getCredentials(), user.getAuthorities());
+            token.setDetails(authentication.getDetails());
+            return token;
+        } else if (authentication instanceof SmsCodeAuthenticationToken) {//手机验证码
+            SmsCodeAuthenticationToken smsToken = (SmsCodeAuthenticationToken) authentication;
+            smsToken.setDetails(authentication.getDetails());
+            SmsCodeAuthenticationToken token = new SmsCodeAuthenticationToken(smsToken.getPrincipal(), smsToken.getCode(), user.getAuthorities());
+            token.setDetails(authentication.getDetails());
+            return token;
+        } else if (authentication instanceof ThirdOpenAuthenticationToken) {//第三方开放平台
+            ThirdOpenAuthenticationToken thirdToken = (ThirdOpenAuthenticationToken) authentication;
+            thirdToken.setDetails(authentication.getDetails());
+            ThirdOpenAuthenticationToken token = new ThirdOpenAuthenticationToken(thirdToken.getPrincipal(), thirdToken.getType(), user.getAuthorities());
+            token.setDetails(authentication.getDetails());
+            return token;
+        } else if (authentication instanceof QRCodeAuthenticationToken) {//二维码
+            QRCodeAuthenticationToken qrToken = (QRCodeAuthenticationToken) authentication;
+            qrToken.setDetails(authentication.getDetails());
+            QRCodeAuthenticationToken token = new QRCodeAuthenticationToken(qrToken.getPrincipal(), qrToken.getCode(), qrToken.getConnectId(), user.getAuthorities());
+            token.setDetails(authentication.getDetails());
+            return token;
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {//用户名密码
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, authentication.getCredentials(), user.getAuthorities());
+            token.setDetails(authentication.getDetails());
+            return token;
+        }
+        return null;
     }
 
     @Override
-    protected UserDetails retrieveUser(String principal, TimingAuthenticationToken authentication) throws AuthenticationException {
-        UserDetails loadedUser;
+    protected UserDetails retrieveUser(String principal, Authentication authentication) throws AuthenticationException {
+        UserDetails loadedUser = null;
+        TimingUserDetailService userDetailService;
         try {
-            String username = principal;
-            if (StringUtils.isNotEmpty(authentication.getType()))
-                username = "#=#" + authentication.getType();
-            if (authentication.getExtension() != null)
-                username = "#=#" + authentication.getExtension();
-            loadedUser = this.getUserDetailsService().loadUserByUsername(username);
+            userDetailService = (TimingUserDetailService) getUserDetailsService();
+            if (authentication instanceof TimingAuthenticationToken) {//用户名密码
+                loadedUser = this.getUserDetailsService().loadUserByUsername(principal);
+            } else if (authentication instanceof SmsCodeAuthenticationToken) {//手机验证码
+                loadedUser = userDetailService.loadUserByPhone(principal);
+            } else if (authentication instanceof ThirdOpenAuthenticationToken) {//第三方开放平台
+                ThirdOpenAuthenticationToken thirdToken = (ThirdOpenAuthenticationToken) authentication;
+                loadedUser = userDetailService.loadUserByThirdOpenCode(principal, thirdToken.getType());
+            } else if (authentication instanceof QRCodeAuthenticationToken) {//二维码
+                loadedUser = this.getUserDetailsService().loadUserByUsername(principal);
+            } else if (authentication instanceof UsernamePasswordAuthenticationToken) {//用户名密码
+                loadedUser = this.getUserDetailsService().loadUserByUsername(principal);
+            }
         } catch (UsernameNotFoundException var6) {
             throw var6;
         } catch (Exception var7) {
             throw new InternalAuthenticationServiceException(var7.getMessage(), var7);
         }
-
         if (loadedUser == null) {
             throw new InternalAuthenticationServiceException("UserDetailsService returned null, which is an interface contract violation");
         } else {
@@ -84,10 +119,14 @@ public class TimingAuthenticationProvider extends TimingAbstractUserDetailsAuthe
 
     @Override
     public boolean supports(Class<?> authentication) {
-//        return TimingAuthenticationProvider.class.isAssignableFrom(authentication);
-        return true;
+//        return TimingAuthenticationToken.class.isAssignableFrom(authentication)
+//                || UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication)
+//                || QRCodeAuthenticationToken.class.isAssignableFrom(authentication)
+//                || SmsCodeAuthenticationToken.class.isAssignableFrom(authentication)
+//                || ThirdOpenAuthenticationToken.class.isAssignableFrom(authentication);
+        return TimingAuthenticationToken.class.isAssignableFrom(authentication)
+                || UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
-
 
     public UserDetailsService getUserDetailsService() {
         return userDetailsService;
@@ -95,10 +134,6 @@ public class TimingAuthenticationProvider extends TimingAbstractUserDetailsAuthe
 
     public void setUserDetailsService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-    }
-
-    public BCryptPasswordEncoder getPasswordEncoder() {
-        return passwordEncoder;
     }
 
     public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {

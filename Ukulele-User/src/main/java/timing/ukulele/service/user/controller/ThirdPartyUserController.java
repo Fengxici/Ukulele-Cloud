@@ -26,12 +26,12 @@ import timing.ukulele.web.controller.BaseController;
 import java.io.IOException;
 import java.util.List;
 
-@RestController("/thirdparty")
+@RestController
 public class ThirdPartyUserController extends BaseController implements IThirdPartyUserFacade {
 
-    @Value("{wx.appid}")
+    @Value("${wx.appid}")
     private String wxAppid;
-    @Value("{wx.appsecret}")
+    @Value("${wx.appsecret}")
     private String wxSecret;
 
     @Autowired
@@ -39,7 +39,7 @@ public class ThirdPartyUserController extends BaseController implements IThirdPa
     @Autowired
     SysThirdpartyUserService thirdpartyUserService;
 
-    private String wxAppCode2Session = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_code";
+    private String wxAppCode2Session = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
 
     @GetMapping("/wx/app/login")
     public ResponseData<String> wxAppLogin(@RequestParam("code") String code) {
@@ -68,15 +68,28 @@ public class ThirdPartyUserController extends BaseController implements IThirdPa
         return errorResponse("获取用户微信标识失败");
     }
 
-    @Override
-    public ResponseData<ThirdPartyUserVO> getUserByUserName(String platId, Long userId, Integer plat) {
+    //    @Override
+    public ResponseData<ThirdPartyUserVO> getThirdUserByAll(String platId, Long userId, Integer plat) {
         LambdaQueryWrapper<SysThirdpartyUser> queryWrapper = new LambdaQueryWrapper<>(new SysThirdpartyUser());
-        queryWrapper.eq(SysThirdpartyUser::getPlatSource, plat).eq(SysThirdpartyUser::getPlatId, plat).eq(SysThirdpartyUser::getUserId, userId);
+        queryWrapper.eq(SysThirdpartyUser::getPlatSource, plat).eq(SysThirdpartyUser::getPlatId, platId).eq(SysThirdpartyUser::getUserId, userId).eq(SysThirdpartyUser::getDeleted, Boolean.FALSE);
+        ThirdPartyUserVO vo = getVO(queryWrapper);
+        return successResponse(vo);
+    }
+
+    @Override
+    public ResponseData<ThirdPartyUserVO> getUserByThirdInfo(String platId, Integer plat) {
+        LambdaQueryWrapper<SysThirdpartyUser> queryWrapper = new LambdaQueryWrapper<>(new SysThirdpartyUser());
+        queryWrapper.eq(SysThirdpartyUser::getPlatSource, plat).eq(SysThirdpartyUser::getPlatId, platId).eq(SysThirdpartyUser::getDeleted, Boolean.FALSE);
+        ThirdPartyUserVO vo = getVO(queryWrapper);
+        return successResponse(vo);
+    }
+
+    private ThirdPartyUserVO getVO(LambdaQueryWrapper<SysThirdpartyUser> queryWrapper) {
         List<SysThirdpartyUser> list = thirdpartyUserService.list(queryWrapper);
         if (CollectionUtils.isEmpty(list))
-            return successResponse();
+            return null;
         ThirdPartyUserVO vo = new ThirdPartyUserVO();
         BeanUtils.copyProperties(list.get(0), vo);
-        return successResponse(vo);
+        return vo;
     }
 }

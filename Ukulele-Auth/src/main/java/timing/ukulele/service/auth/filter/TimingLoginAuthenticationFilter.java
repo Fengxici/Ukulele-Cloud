@@ -7,9 +7,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import timing.ukulele.service.auth.token.PhoneAuthenticationToken;
-import timing.ukulele.service.auth.token.QrAuthenticationToken;
-import timing.ukulele.service.auth.token.ThirdPartyAuthenticationToken;
+import org.springframework.util.StringUtils;
+import timing.ukulele.service.auth.token.QRCodeAuthenticationToken;
+import timing.ukulele.service.auth.token.SmsCodeAuthenticationToken;
+import timing.ukulele.service.auth.token.ThirdOpenAuthenticationToken;
 import timing.ukulele.service.auth.token.TimingAuthenticationToken;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,35 +30,37 @@ public class TimingLoginAuthenticationFilter extends UsernamePasswordAuthenticat
             throw new AuthenticationServiceException(
                     "Authentication method not supported: " + request.getMethod());
         }
-        String type = obtainParameter(request, SPRING_SECURITY_RESTFUL_TYPE_KEY);
-        AbstractAuthenticationToken authRequest;
+        String type = obtainParameter(request, SPRING_SECURITY_TYPE_KEY);
+        AbstractAuthenticationToken authRequest = null;
         String principal;
         String credentials;
 
         // 手机验证码登陆
-        if(SPRING_SECURITY_RESTFUL_TYPE_PHONE.equals(type)){
-            principal = obtainParameter(request, SPRING_SECURITY_RESTFUL_PHONE_KEY);
-            credentials = obtainParameter(request, SPRING_SECURITY_RESTFUL_VERIFY_CODE_KEY);
+        if (SPRING_SECURITY_TYPE_PHONE.equals(type)) {
+            principal = obtainParameter(request, SPRING_SECURITY_PHONE_KEY);
+            credentials = obtainParameter(request, SPRING_SECURITY_SMS_CODE_KEY);
             principal = principal.trim();
-            authRequest = new PhoneAuthenticationToken(principal, credentials,SPRING_SECURITY_RESTFUL_TYPE_PHONE,null);
+            authRequest = new SmsCodeAuthenticationToken(principal, credentials);
         }
         // 二维码扫码登陆
-        else if(SPRING_SECURITY_RESTFUL_TYPE_QR.equals(type)){
-            principal = obtainParameter(request, SPRING_SECURITY_RESTFUL_QR_CODE_KEY);
-            authRequest = new QrAuthenticationToken(principal, null,SPRING_SECURITY_RESTFUL_TYPE_QR,null);
+        else if (SPRING_SECURITY_TYPE_QR.equals(type)) {
+            principal = obtainParameter(request, SPRING_SECURITY_CONNECT_USERNAME_KEY);
+            String code = obtainParameter(request, SPRING_SECURITY_QR_CODE_KEY);
+            String connectId = obtainParameter(request, SPRING_SECURITY_CONNECT_ID_KEY);
+            authRequest = new QRCodeAuthenticationToken(principal, code, connectId);
         }
         // 第三方
-        else if(SPRING_SECURITY_RESTFUL_TYPE_THIRD.equals(type)){
-            principal =obtainParameter(request,SPRING_SECURITY_RESTFUL_USER_ID_KEY);
-            credentials= obtainParameter(request,SPRING_SECURITY_RESTFUL_PLAT_ID_KEY);
-            String plat = obtainParameter(request,SPRING_SECURITY_RESTFUL_PLAT_KEY);
-//            authRequest = new ThirdPartyAuthenticationToken(principal,credentials,SPRING_SECURITY_RESTFUL_TYPE_THIRD,plat);
-            authRequest = new TimingAuthenticationToken(principal,credentials,SPRING_SECURITY_RESTFUL_TYPE_THIRD,plat);
+        else if (SPRING_SECURITY_TYPE_THIRD.equals(type)) {
+            principal = obtainParameter(request, SPRING_SECURITY_PLAT_CODE_KEY);
+//            credentials = obtainParameter(request, SPRING_SECURITY_PLAT_CODE_KEY);
+            String plat = obtainParameter(request, SPRING_SECURITY_PLAT_TYPE_KEY);
+            if (!StringUtils.isEmpty(plat))
+                authRequest = new ThirdOpenAuthenticationToken(principal, Integer.valueOf(plat));
         }
         // 账号密码登陆
         else {
-            principal = obtainParameter(request, SPRING_SECURITY_RESTFUL_USERNAME_KEY);
-            credentials = obtainParameter(request, SPRING_SECURITY_RESTFUL_PASSWORD_KEY);
+            principal = obtainParameter(request, SPRING_SECURITY_USERNAME_KEY);
+            credentials = obtainParameter(request, SPRING_SECURITY_PASSWORD_KEY);
             principal = principal.trim();
             authRequest = new UsernamePasswordAuthenticationToken(principal, credentials);
         }
@@ -74,7 +77,7 @@ public class TimingLoginAuthenticationFilter extends UsernamePasswordAuthenticat
     }
 
     private String obtainParameter(HttpServletRequest request, String parameter) {
-        String result =  request.getParameter(parameter);
+        String result = request.getParameter(parameter);
         return result == null ? "" : result;
     }
 }

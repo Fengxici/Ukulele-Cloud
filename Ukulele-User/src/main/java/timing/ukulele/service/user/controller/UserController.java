@@ -7,15 +7,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import timing.ukulele.common.constant.AbilityConstant;
 import timing.ukulele.common.constant.RoleConstant;
 import timing.ukulele.common.data.ResponseData;
 import timing.ukulele.data.user.view.UserVO;
 import timing.ukulele.facade.user.IUserFacade;
+import timing.ukulele.service.user.persistent.SysThirdpartyUser;
 import timing.ukulele.service.user.persistent.SysUser;
+import timing.ukulele.service.user.service.SysThirdpartyUserService;
 import timing.ukulele.service.user.service.SysUserService;
 import timing.ukulele.web.annotation.RequiredPermission;
 import timing.ukulele.web.controller.BaseController;
@@ -28,10 +28,12 @@ import java.util.*;
 public class UserController extends BaseController implements IUserFacade {
     private final String router = "/system/user";
     private final SysUserService userService;
+    private final SysThirdpartyUserService thirdpartyUserService;
 
     @Autowired
-    public UserController(SysUserService userService) {
+    public UserController(SysUserService userService, SysThirdpartyUserService thirdpartyUserService) {
         this.userService = userService;
+        this.thirdpartyUserService = thirdpartyUserService;
     }
 
     /**
@@ -73,10 +75,10 @@ public class UserController extends BaseController implements IUserFacade {
     @Override
     public ResponseData<UserVO> getUserByPhoneOrName(String param) {
         SysUser sysUser = userService.selectUserByParam(param);
-        if(null==sysUser)
+        if (null == sysUser)
             return successResponse();
         UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(sysUser,userVO);
+        BeanUtils.copyProperties(sysUser, userVO);
         return successResponse(userVO);
     }
 
@@ -115,11 +117,52 @@ public class UserController extends BaseController implements IUserFacade {
     }
 
     @Override
+    public ResponseData<UserVO> userInfo(Long id) {
+        if (id == null || id <= 0)
+            return paraErrorResponse();
+        SysUser user = userService.getById(id);
+        UserVO vo = new UserVO();
+        if (user != null) {
+            BeanUtils.copyProperties(user, vo);
+            if (StringUtils.isNotEmpty(user.getLabel()))
+                vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
+        }
+        return successResponse(vo);
+    }
+
+    @Override
     @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> userDel(Long id) {
         if (id == null || id <= 0)
             return paraErrorResponse();
         Boolean success = userService.removeById(id);
+        return successResponse(success);
+    }
+
+    @PostMapping("/register")
+    public ResponseData<Boolean> register(@RequestBody UserVO user) {
+        if (user == null || user.getId() != null)
+            return paraErrorResponse();
+        if (userService.findUserByUsername(user.getUsername()) != null) {
+            return paraErrorResponse(false);
+        }
+        SysUser userPO = new SysUser();
+        BeanUtils.copyProperties(user, userPO);
+        userPO.setPassword(new BCryptPasswordEncoder(6).encode(user.getPassword()));//密码
+        Random random = new Random();
+        int s = random.nextInt(6) % (6 - 1 + 1) + 1;
+        userPO.setAvatar("assets/tmp/img/" + s + ".png");//头像
+        userPO.setLabel("[\"admin\"]");
+        Boolean success = userService.save(userPO);
+        if (StringUtils.isNotEmpty(user.getPlatId()) && null != user.getPlat()) {
+            SysThirdpartyUser thirdpartyUser = new SysThirdpartyUser();
+            thirdpartyUser.setDeleted(Boolean.FALSE);
+            thirdpartyUser.setCreateTime(new Date());
+            thirdpartyUser.setPlatId(user.getPlatId());
+            thirdpartyUser.setPlatSource(user.getPlat());
+            thirdpartyUser.setUserId(userPO.getId());
+            thirdpartyUserService.save(thirdpartyUser);
+        }
         return successResponse(success);
     }
 

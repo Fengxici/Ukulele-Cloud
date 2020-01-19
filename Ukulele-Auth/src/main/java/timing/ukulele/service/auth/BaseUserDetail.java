@@ -16,10 +16,13 @@ public class BaseUserDetail implements UserDetails, CredentialsContainer {
 
     private final UserVO baseUser;
     private final User user;
+    //    登录类型 1小程序
+    private final Integer type;
 
-    public BaseUserDetail(UserVO baseUser, User user) {
+    public BaseUserDetail(UserVO baseUser, User user,Integer type) {
         this.baseUser = baseUser;
         this.user = user;
+        this.type = type;
     }
 
     @Override
@@ -64,5 +67,9 @@ public class BaseUserDetail implements UserDetails, CredentialsContainer {
 
     public UserVO getBaseUser() {
         return baseUser;
+    }
+
+    public Integer getType() {
+        return type;
     }
 }

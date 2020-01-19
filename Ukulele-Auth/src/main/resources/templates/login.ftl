@@ -103,7 +103,7 @@
                 <div class="field item" style="height: 80px">
                     <div class="ui right action left icon input">
                         <i class="lock icon"></i>
-                        <input type="text" id="verifyCode" name="verifyCode" placeholder="验证码" value="1000">
+                        <input type="text" id="code" name="code" placeholder="验证码" value="1000">
                         <button id="send_btn" type="button" class="ui basic active button" onclick="send_yzm()">
                             点击获取验证码
                         </button>
@@ -185,20 +185,20 @@
                         }
                     ]
                 },
-                verifyCode: {
-                    identifier: 'verifyCode',
+                code: {
+                    identifier: 'code',
                     rules: [
                         {
                             type: 'empty',
                             prompt: '请输入验证码'
                         },
                         {
-                            type: 'minLength[4]',
-                            prompt: '请输入4位验证码'
+                            type: 'minLength[6]',
+                            prompt: '请输入6位验证码'
                         },
                         {
-                            type: 'maxLength[4]',
-                            prompt: '请输入4位验证码'
+                            type: 'maxLength[6]',
+                            prompt: '请输入6位验证码'
                         }
                     ]
                 }
@@ -211,7 +211,7 @@
         }
     })
     $("#submit1").click(function () {
-        if ($("#phone").val() && $("#verifyCode").val()) {
+        if ($("#phone").val() && $("#code").val()) {
             $("#form1").submit();
         }
     })
@@ -256,10 +256,17 @@
     // 发送验证码
     function send_yzm() {
         if ($('#form1').form('is valid', 'phone')) {
-            // 发送验证码
-            $("#send_btn").attr('class', 'ui disabled  button')
-            //$("#send_btn").text('已发送')
-            buttonCountdown($('#send_btn'), 1000 * 60, "m:s");
+            $.get("/auth/common/sms_code?mobile="+$("#phone").val(),function(result,status){
+                if ('success' == status) {
+                    console.log(result);
+                    // 发送验证码
+                    $("#send_btn").attr('class', 'ui disabled  button')
+                    //$("#send_btn").text('已发送')
+                    buttonCountdown($('#send_btn'), 1000 * 60, "m:s");
+                } else {
+                    alert("请求失败 status=" + status);
+                }
+            });
         } else {
             $('.warning')
                 .transition({

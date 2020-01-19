@@ -95,8 +95,8 @@ spring:
           merge-sql: true
           log-slow-sql: true
           slow-sql-millis: 10000
-#        init-connection-sqls:
-#        connection-properties:
+  #        init-connection-sqls:
+  #        connection-properties:
   main:
     allow-bean-definition-overriding: true
   zipkin:
@@ -125,6 +125,26 @@ logging:
     com.baomidou: debug
 
 ukulele:
+  redis:
+    database: 0
+    password:
+    timeout: 30
+    mode: single #sentinel/cluster/single
+    #    连接池
+    pool:
+      max-idle: 16
+      min-idle: 8
+      max-active: 8
+      max-wait: 3000
+      conn-timeout: 3000
+      so-timeout: 3000
+      size: 10
+    #    单机
+    single:
+      address: redis://127.0.0.1:6379
+    lock:
+      wait-time: 60
+      lease-time: 60
   swagger:
     enabled: true
     title: ukulele-auth
@@ -143,3 +163,10 @@ ukulele:
         parameter-type: header
         required: false
         mode-ref: String
+
+wx:
+  appid: wx73e9c5f1cf804064
+  appsecret: c98a936f28dacb8d64a3c2799c1bee39
+
+host:
+  baseUrl: http://localhost:9090/auth/oauth/token

@@ -51,6 +51,14 @@
             <groupId>timing.ukulele</groupId>
             <artifactId>ukulele-eureka</artifactId>
         </dependency>
+        <dependency>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>ukulele-redisson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>timing.ukulele</groupId>
+            <artifactId>ukulele-http</artifactId>
+        </dependency>
         <!--第三方依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -94,6 +102,10 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
         </dependency>
     </dependencies>
 

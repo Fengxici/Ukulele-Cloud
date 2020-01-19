@@ -88,6 +88,8 @@ ukulele:
   oauth2:
     url-permit-all:
       - /api/portal-service/ant-menu/user
+      - /api/user-service/thirdparty/wx/app/login
+      - /api/user-service/user/register
   rest-template:
     read-timeout: 60000
     connect-timeout: 60000
