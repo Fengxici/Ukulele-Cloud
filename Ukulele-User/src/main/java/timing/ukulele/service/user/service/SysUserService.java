@@ -23,7 +23,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class SysUserService extends BaseService<SysUser> {
+public class SysUserService extends BaseService<SysUserMapper, SysUser> {
     private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
     private final SysUserMapper sysUserMapper;

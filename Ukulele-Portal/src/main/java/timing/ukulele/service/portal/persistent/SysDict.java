@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import timing.ukulele.persistence.model.BaseIdWorkerModel;
 import timing.ukulele.persistence.model.BaseModel;
 
 /**
@@ -14,7 +15,7 @@ import timing.ukulele.persistence.model.BaseModel;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("sys_dict")
-public class SysDict extends BaseModel {
+public class SysDict extends BaseIdWorkerModel {
 
     /**
      * 数据值

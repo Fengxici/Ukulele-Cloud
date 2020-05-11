@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class SysRoleService extends BaseService<SysRole> {
+public class SysRoleService extends BaseService<SysRoleMapper, SysRole> {
     private final AntMenuService menuService;
     private final AntRoleMenuMapper roleMenuMapper;
 
@@ -46,7 +46,7 @@ public class SysRoleService extends BaseService<SysRole> {
     public Boolean insertRole(RoleVO roleDto) {
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
-        this.baseMapper.insert(sysRole);
+        this.getBaseMapper().insert(sysRole);
         return true;
     }
 
@@ -61,7 +61,7 @@ public class SysRoleService extends BaseService<SysRole> {
         //更新角色信息
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
-        this.baseMapper.updateById(sysRole);
+        this.getBaseMapper().updateById(sysRole);
 
         return true;
     }
@@ -73,20 +73,20 @@ public class SysRoleService extends BaseService<SysRole> {
      * @return 角色列表
      */
     public List<SysRole> selectListByDeptId(Long deptId) {
-        return ((SysRoleMapper) this.baseMapper).selectListByDeptId(deptId);
+        return this.getBaseMapper().selectListByDeptId(deptId);
     }
 
     public List<SysRole> getRoleByUserId(Long id) {
-        return ((SysRoleMapper) this.baseMapper).getRoleByUserId(id);
+        return this.getBaseMapper().getRoleByUserId(id);
     }
 
 
     public Boolean deleteUserRole(Long userId, Long roleId) {
-        return ((SysRoleMapper) this.baseMapper).deleteUserRole(userId, roleId) >= 0;
+        return this.getBaseMapper().deleteUserRole(userId, roleId) >= 0;
     }
 
     public Boolean addUserRole(Long userId, Long roleId) {
-        return ((SysRoleMapper) this.baseMapper).addUserRole(userId, roleId) > 0;
+        return this.getBaseMapper().addUserRole(userId, roleId) > 0;
     }
 
     public Map<String, Map<String, RolePermission>> rolePermission(List<String> roleCode) {

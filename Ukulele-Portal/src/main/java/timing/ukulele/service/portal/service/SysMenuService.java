@@ -8,10 +8,10 @@ import timing.ukulele.service.portal.persistent.SysMenu;
 import java.util.List;
 
 @Service
-public class SysMenuService extends BaseService<SysMenu> {
+public class SysMenuService extends BaseService<SysMenuMapper, SysMenu> {
 
     public List<SysMenu> findMenuByRoleName(String role) {
-        return ((SysMenuMapper) this.baseMapper).findMenuByRoleName(role);
+        return this.getBaseMapper().findMenuByRoleName(role);
     }
 
     public Boolean deleteMenu(Long id) {
@@ -30,14 +30,14 @@ public class SysMenuService extends BaseService<SysMenu> {
     }
 
     public Boolean deleteRoleMenu(Long roleId, Long menuId) {
-        return ((SysMenuMapper) this.baseMapper).deleteRoleMenu(roleId, menuId) >= 0;
+        return this.getBaseMapper().deleteRoleMenu(roleId, menuId) >= 0;
     }
 
     public Boolean addRoleMenu(Long roleId, Long menuId) {
-        return ((SysMenuMapper) this.baseMapper).addRoleMenu(roleId, menuId) > 0;
+        return this.getBaseMapper().addRoleMenu(roleId, menuId) > 0;
     }
 
     public List<SysMenu> getMenuByUserId(Long userId) {
-        return ((SysMenuMapper) this.baseMapper).getMenuByUserId(userId);
+        return this.getBaseMapper().getMenuByUserId(userId);
     }
 }

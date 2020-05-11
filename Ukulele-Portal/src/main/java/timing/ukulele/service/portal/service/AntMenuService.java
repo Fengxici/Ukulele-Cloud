@@ -22,11 +22,12 @@ import timing.ukulele.service.portal.persistent.AntMenu;
 import timing.ukulele.service.portal.persistent.AntRoleMenu;
 import timing.ukulele.service.portal.persistent.SysRole;
 import timing.ukulele.service.portal.persistent.MenuPermission;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class AntMenuService extends BaseService<AntMenu> {
+public class AntMenuService extends BaseService<AntMenuMapper, AntMenu> {
     private final AntRoleMenuMapper roleMenuMapper;
     private final SysRoleMapper roleMapper;
 
@@ -35,13 +36,13 @@ public class AntMenuService extends BaseService<AntMenu> {
         this.roleMenuMapper = roleMenuMapper;
         this.roleMapper = roleMapper;
     }
-    
+
     public List<MenuPermission> findRoleMenuPermission(String role) {
-        return ((AntMenuMapper) this.baseMapper).findRoleMenuAbility(role);
+        return getBaseMapper().findRoleMenuAbility(role);
     }
-    
+
     public List<AntMenu> findMenuByRoleName(String role) {
-        return ((AntMenuMapper) this.baseMapper).findMenuByRoleName(role);
+        return getBaseMapper().findMenuByRoleName(role);
     }
 
     public Boolean deleteRoleMenu(Long roleId, Long menuId) {
@@ -60,8 +61,7 @@ public class AntMenuService extends BaseService<AntMenu> {
         Set<Long> parentSet = new HashSet<>();
         if (!CollectionUtils.isEmpty(menuList)) {
             menuList.forEach(menu -> {
-                if (!parentSet.contains(menu.getParentId()))
-                    parentSet.add(menu.getParentId());
+                parentSet.add(menu.getParentId());
             });
         }
         List<RoleMenuTree> menuTreeList = new ArrayList<>();
@@ -116,7 +116,7 @@ public class AntMenuService extends BaseService<AntMenu> {
     }
 
     public List<AntMenu> getMenuByUserId(Long userId) {
-        return ((AntMenuMapper) this.baseMapper).getMenuByUserId(userId);
+        return this.getBaseMapper().getMenuByUserId(userId);
     }
 
     public ResponseData<Boolean> removeMenu(Long id) {

@@ -8,19 +8,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import timing.ukulele.data.portal.view.AntIconVO;
 import timing.ukulele.persistence.service.BaseService;
+import timing.ukulele.service.portal.mapper.AntIconMapper;
 import timing.ukulele.service.portal.persistent.AntIcon;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AntIconService extends BaseService<AntIcon> {
+public class AntIconService extends BaseService<AntIconMapper, AntIcon> {
     public IPage<AntIconVO> getPage(AntIcon icon, int current, int size) {
         Page<AntIcon> page = new Page<>(current, size);
 
         if (icon == null)
             icon = new AntIcon();
-        IPage<AntIcon> iPage = this.baseMapper.selectPage(page, new QueryWrapper<>(icon));
+        IPage<AntIcon> iPage = this.getBaseMapper().selectPage(page, new QueryWrapper<>(icon));
         Page<AntIconVO> voPage = new Page<>(current, size);
         if (iPage != null && !CollectionUtils.isEmpty(iPage.getRecords())) {
             List<AntIconVO> voList = new ArrayList<>(iPage.getRecords().size());

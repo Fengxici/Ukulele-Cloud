@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import timing.ukulele.persistence.model.BaseModel;
+import timing.ukulele.persistence.model.BaseIdWorkerModel;
 
 /**
  * <p>
@@ -14,7 +14,7 @@ import timing.ukulele.persistence.model.BaseModel;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("sys_menu")
-public class SysMenu extends BaseModel {
+public class SysMenu extends BaseIdWorkerModel {
 
     /**
      * 菜单名称

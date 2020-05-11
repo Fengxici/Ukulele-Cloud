@@ -38,18 +38,18 @@ zuul:
     connect-timeout-millis: 10000
     socket-timeout-millis: 60000
   routes:
-    portal-service:
-      path: /api/portal-service/**
-      serviceId: portal-service
-    user-service:
-      path: /api/user-service/**
-      serviceId: user-service
-    syslog-service:
-      path: /api/syslog-service/**
-      serviceId: syslog-service
-    auth-service:
-      path: /api/auth-service/**
-      serviceId: auth-service
+#    portal-service:
+#      path: /api/portal-service/**
+#      serviceId: portal-service
+#    user-service:
+#      path: /api/user-service/**
+#      serviceId: user-service
+#    syslog-service:
+#      path: /api/syslog-service/**
+#      serviceId: syslog-service
+#    auth-service:
+#      path: /api/auth-service/**
+#      serviceId: auth-service
     supply-service:
       path: /api/supply-service/**
       serviceId: yqg-service
@@ -60,10 +60,10 @@ zuul:
 proxy:
   auth:
     routes:
-      portal-service: oauth2
-      user-service: oauth2
-      syslog-service: oauth2
-      auth-service: oauth2
+#      portal-service: oauth2
+#      user-service: oauth2
+#      syslog-service: oauth2
+#      auth-service: oauth2
       supply-service: oauth2
 
 security:

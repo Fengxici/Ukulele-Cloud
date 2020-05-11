@@ -4,12 +4,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import timing.ukulele.persistence.model.BaseModel;
+import timing.ukulele.persistence.model.BaseIdWorkerModel;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("ant_menu")
-public class AntMenu extends BaseModel {
+public class AntMenu extends BaseIdWorkerModel {
     private Long parentId;
     @TableField("key_")
     private String key;
