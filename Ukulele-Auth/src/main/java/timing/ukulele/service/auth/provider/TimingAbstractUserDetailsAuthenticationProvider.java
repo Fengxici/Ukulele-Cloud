@@ -22,6 +22,7 @@ import timing.ukulele.service.auth.token.TimingAuthenticationToken;
 
 /**
  * 自定义 AuthenticationProvider， 以使用自定义的 TimingAuthenticationToken
+ * @author fengxici
  */
 public abstract class TimingAbstractUserDetailsAuthenticationProvider implements AuthenticationProvider, InitializingBean, MessageSourceAware {
 
@@ -32,29 +33,31 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
     protected boolean hideUserNotFoundExceptions = true;
     private UserDetailsChecker preAuthenticationChecks = new TimingAbstractUserDetailsAuthenticationProvider.DefaultPreAuthenticationChecks();
     private UserDetailsChecker postAuthenticationChecks = new TimingAbstractUserDetailsAuthenticationProvider.DefaultPostAuthenticationChecks();
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
+//    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
 
     protected abstract void additionalAuthenticationChecks(UserDetails userDetails, Authentication authentication) throws AuthenticationException;
 
+    @Override
     public final void afterPropertiesSet() throws Exception {
         Assert.notNull(this.userCache, "A user cache must be set");
         Assert.notNull(this.messages, "A message source must be set");
         this.doAfterPropertiesSet();
     }
 
+    @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getPrincipal() == null?"NONE_PROVIDED":authentication.getName();
+        String username = authentication.getPrincipal() == null ? "NONE_PROVIDED" : authentication.getName();
         boolean cacheWasUsed = true;
         UserDetails user = this.userCache.getUserFromCache(username);
-        if(user == null) {
+        if (user == null) {
             cacheWasUsed = false;
 
             try {
                 user = this.retrieveUser(username, authentication);
             } catch (UsernameNotFoundException var6) {
                 this.logger.debug("User \'" + username + "\' not found");
-                if(this.hideUserNotFoundExceptions) {
+                if (this.hideUserNotFoundExceptions) {
                     throw new BadCredentialsException(this.messages.getMessage("MyAbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
                 }
 
@@ -68,7 +71,7 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
             this.preAuthenticationChecks.check(user);
             this.additionalAuthenticationChecks(user, authentication);
         } catch (AuthenticationException var7) {
-            if(!cacheWasUsed) {
+            if (!cacheWasUsed) {
                 throw var7;
             }
 
@@ -79,12 +82,12 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
         }
 
         this.postAuthenticationChecks.check(user);
-        if(!cacheWasUsed) {
+        if (!cacheWasUsed) {
             this.userCache.putUserInCache(user);
         }
 
         Object principalToReturn = user;
-        if(this.forcePrincipalAsString) {
+        if (this.forcePrincipalAsString) {
             principalToReturn = user.getUsername();
         }
 
@@ -118,6 +121,7 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
         this.hideUserNotFoundExceptions = hideUserNotFoundExceptions;
     }
 
+    @Override
     public void setMessageSource(MessageSource messageSource) {
         this.messages = new MessageSourceAccessor(messageSource);
     }
@@ -143,16 +147,17 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
         this.postAuthenticationChecks = postAuthenticationChecks;
     }
 
-    public void setAuthoritiesMapper(GrantedAuthoritiesMapper authoritiesMapper) {
-        this.authoritiesMapper = authoritiesMapper;
-    }
+//    public void setAuthoritiesMapper(GrantedAuthoritiesMapper authoritiesMapper) {
+//        this.authoritiesMapper = authoritiesMapper;
+//    }
 
     private class DefaultPostAuthenticationChecks implements UserDetailsChecker {
         private DefaultPostAuthenticationChecks() {
         }
 
+        @Override
         public void check(UserDetails user) {
-            if(!user.isCredentialsNonExpired()) {
+            if (!user.isCredentialsNonExpired()) {
                 TimingAbstractUserDetailsAuthenticationProvider.this.logger.debug("User account credentials have expired");
                 throw new CredentialsExpiredException(TimingAbstractUserDetailsAuthenticationProvider.this.messages.getMessage("MyAbstractUserDetailsAuthenticationProvider.credentialsExpired", "User credentials have expired"));
             }
@@ -163,14 +168,15 @@ public abstract class TimingAbstractUserDetailsAuthenticationProvider implements
         private DefaultPreAuthenticationChecks() {
         }
 
+        @Override
         public void check(UserDetails user) {
-            if(!user.isAccountNonLocked()) {
+            if (!user.isAccountNonLocked()) {
                 TimingAbstractUserDetailsAuthenticationProvider.this.logger.debug("User account is locked");
                 throw new LockedException(TimingAbstractUserDetailsAuthenticationProvider.this.messages.getMessage("MyAbstractUserDetailsAuthenticationProvider.locked", "User account is locked"));
-            } else if(!user.isEnabled()) {
+            } else if (!user.isEnabled()) {
                 TimingAbstractUserDetailsAuthenticationProvider.this.logger.debug("User account is disabled");
                 throw new DisabledException(TimingAbstractUserDetailsAuthenticationProvider.this.messages.getMessage("MyAbstractUserDetailsAuthenticationProvider.disabled", "User is disabled"));
-            } else if(!user.isAccountNonExpired()) {
+            } else if (!user.isAccountNonExpired()) {
                 TimingAbstractUserDetailsAuthenticationProvider.this.logger.debug("User account is expired");
                 throw new AccountExpiredException(TimingAbstractUserDetailsAuthenticationProvider.this.messages.getMessage("MyAbstractUserDetailsAuthenticationProvider.expired", "User account has expired"));
             }

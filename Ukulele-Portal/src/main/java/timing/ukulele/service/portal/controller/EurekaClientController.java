@@ -21,6 +21,9 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * @author fengxici
+ */
 @RestController
 @RequestMapping("eureka")
 public class EurekaClientController extends BaseController {
@@ -47,7 +50,7 @@ public class EurekaClientController extends BaseController {
                 }
             }
         }
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>(8);
         map.put("appCount", appCount);
         map.put("nodeCount", nodeCount);
         map.put("enableNodeCount", enableNodeCount);
@@ -82,8 +85,9 @@ public class EurekaClientController extends BaseController {
             Response response = OkHttpManager.INSTANCE.build(null).getClient().newCall(request).execute();
             if (response.isSuccessful()) {
                 String responseBody = response.body().string();
-                if (StringUtils.isNotEmpty(responseBody))
+                if (StringUtils.isNotEmpty(responseBody)) {
                     System.out.println(responseBody);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -7,6 +7,9 @@ import timing.ukulele.persistence.mapper.BaseMapper;
 import timing.ukulele.service.portal.persistent.AntMenu;
 import timing.ukulele.service.portal.persistent.MenuPermission;
 import java.util.List;
+/**
+ * @author fengxici
+ */
 @Mapper
 @Repository
 public interface AntMenuMapper extends BaseMapper<AntMenu> {

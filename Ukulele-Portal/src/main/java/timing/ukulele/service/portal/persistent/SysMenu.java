@@ -10,6 +10,7 @@ import timing.ukulele.persistence.model.BaseIdWorkerModel;
  * <p>
  * 菜单权限表
  * </p>
+ * @author fengxici
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

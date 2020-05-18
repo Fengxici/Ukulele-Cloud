@@ -19,6 +19,7 @@ import java.util.List;
  * <p>
  * 日志表 服务实现类
  * </p>
+ * @author fengxici
  */
 @Service
 public class SysLogService extends ServiceImpl<SysLogMapper, SysLog> {

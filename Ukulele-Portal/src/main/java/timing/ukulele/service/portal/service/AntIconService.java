@@ -14,13 +14,17 @@ import timing.ukulele.service.portal.persistent.AntIcon;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author fengxici
+ */
 @Service
 public class AntIconService extends BaseService<AntIconMapper, AntIcon> {
     public IPage<AntIconVO> getPage(AntIcon icon, int current, int size) {
         Page<AntIcon> page = new Page<>(current, size);
 
-        if (icon == null)
+        if (icon == null) {
             icon = new AntIcon();
+        }
         IPage<AntIcon> iPage = this.getBaseMapper().selectPage(page, new QueryWrapper<>(icon));
         Page<AntIconVO> voPage = new Page<>(current, size);
         if (iPage != null && !CollectionUtils.isEmpty(iPage.getRecords())) {

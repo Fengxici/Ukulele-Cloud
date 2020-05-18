@@ -7,6 +7,9 @@ import timing.ukulele.service.portal.persistent.AntRoleMenu;
 
 import java.util.List;
 
+/**
+ * @author fengxici
+ */
 @Mapper
 @Repository
 public interface AntRoleMenuMapper {

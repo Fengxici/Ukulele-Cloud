@@ -25,6 +25,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author fengxici
+ */
 @RestController
 public final class RoleController extends BaseController implements IRoleFacade {
     private final String router = "/system/role";
@@ -38,11 +41,13 @@ public final class RoleController extends BaseController implements IRoleFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<RoleVO> role(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         SysRole po = this.roleService.getById(id);
-        if (po == null)
+        if (po == null) {
             return successResponse();
+        }
         RoleVO vo = new RoleVO();
         BeanUtils.copyProperties(po, vo);
         return successResponse(vo);
@@ -51,8 +56,9 @@ public final class RoleController extends BaseController implements IRoleFacade 
     @Override
     public ResponseData<List<RoleVO>> getRoleByParam(Map<String, Object> map) {
         Collection<SysRole> poList = this.roleService.listByMap(map);
-        if (CollectionUtils.isEmpty(poList))
+        if (CollectionUtils.isEmpty(poList)) {
             return successResponse();
+        }
         List<RoleVO> voList = new ArrayList<>(poList.size());
         poList.forEach(po -> {
             RoleVO vo = new RoleVO();
@@ -65,8 +71,9 @@ public final class RoleController extends BaseController implements IRoleFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> role(RoleVO role) {
-        if (role == null || role.getId() != null)
+        if (role == null || role.getId() != null) {
             return paraErrorResponse();
+        }
         SysRole roleData = new SysRole();
         BeanUtils.copyProperties(role, roleData);
         roleData.setRoleCode(roleData.getRoleCode().toUpperCase());
@@ -76,8 +83,9 @@ public final class RoleController extends BaseController implements IRoleFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> roleUpdate(RoleVO role) {
-        if (role == null || role.getId() == null)
+        if (role == null || role.getId() == null) {
             return paraErrorResponse();
+        }
         SysRole roleData = new SysRole();
         BeanUtils.copyProperties(role, roleData);
         roleData.setRoleCode(roleData.getRoleCode().toUpperCase());
@@ -87,18 +95,21 @@ public final class RoleController extends BaseController implements IRoleFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.QUERY, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> roleDel(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         return successResponse(this.roleService.removeById(id));
     }
 
     @Override
     public ResponseData<List<RoleVO>> getRoleByUserId(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         List<SysRole> poList = this.roleService.getRoleByUserId(id);
-        if (CollectionUtils.isEmpty(poList))
+        if (CollectionUtils.isEmpty(poList)) {
             return successResponse();
+        }
         List<RoleVO> voList = new ArrayList<>(poList.size());
         poList.forEach(po -> {
             RoleVO vo = new RoleVO();
@@ -111,16 +122,18 @@ public final class RoleController extends BaseController implements IRoleFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> deleteUserRole(Long userId, Long roleId) {
-        if (userId == null || userId <= 0)
+        if (userId == null || userId <= 0) {
             return paraErrorResponse();
+        }
         return successResponse(this.roleService.deleteUserRole(userId, roleId));
     }
 
     @Override
     @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> addUserRole(Long userId, Long roleId) {
-        if (userId == null || userId <= 0 || roleId == null || roleId <= 0)
+        if (userId == null || userId <= 0 || roleId == null || roleId <= 0) {
             return paraErrorResponse();
+        }
         return successResponse(this.roleService.addUserRole(userId, roleId));
     }
 
@@ -129,8 +142,12 @@ public final class RoleController extends BaseController implements IRoleFacade 
     public ResponseData<IPage<RoleVO>> getPage(@PathVariable(name = "current") int current,
                                                @PathVariable(name = "size") int size, HttpServletRequest request) {
         RoleVO roleVO = Request2ModelUtil.covert(RoleVO.class, request);
-        if (size == 0) size = 10;
-        if (current == 0) current = 1;
+        if (size == 0) {
+            size = 10;
+        }
+        if (current == 0) {
+            current = 1;
+        }
         SysRole role = new SysRole();
         BeanUtils.copyProperties(roleVO, role);
         return successResponse(this.roleService.getPage(role, current, size));

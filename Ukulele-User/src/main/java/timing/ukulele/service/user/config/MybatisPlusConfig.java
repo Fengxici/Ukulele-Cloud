@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * @author fengxici
+ */
 @EnableTransactionManagement
 @Configuration
 @MapperScan("timing.ukulele.service.user.mapper")

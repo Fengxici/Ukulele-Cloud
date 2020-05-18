@@ -1,6 +1,5 @@
 package timing.ukulele.gateway.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import timing.ukulele.gateway.kaptcha.Kaptcha;
 
@@ -14,8 +13,11 @@ import timing.ukulele.gateway.kaptcha.Kaptcha;
 @RequestMapping("/kaptcha")
 public class KaptchaController {
 
-    @Autowired
-    private Kaptcha kaptcha;
+    private final Kaptcha kaptcha;
+
+    public KaptchaController(Kaptcha kaptcha) {
+        this.kaptcha = kaptcha;
+    }
 
     @GetMapping("/render")
     public void render() {

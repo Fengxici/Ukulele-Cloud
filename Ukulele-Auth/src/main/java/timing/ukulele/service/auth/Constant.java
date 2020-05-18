@@ -1,5 +1,8 @@
 package timing.ukulele.service.auth;
 
+/**
+ * @author fengxici
+ */
 public interface Constant {
 
     String USER_INFO = "user_info";
@@ -8,7 +11,9 @@ public interface Constant {
     String SPRING_SECURITY_TYPE_QR = "qr";
     String SPRING_SECURITY_TYPE_THIRD = "third";
 
-    // 登陆类型：user:用户密码登陆；phone:手机验证码登陆；qr:二维码扫码登陆；third:第三方平台
+    /**
+     * 登陆类型：user:用户密码登陆；phone:手机验证码登陆；qr:二维码扫码登陆；third:第三方平台
+     */
     String SPRING_SECURITY_TYPE_KEY = "type";
 
     String SPRING_SECURITY_USERNAME_KEY = "username";

@@ -9,6 +9,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author fengxici
+ */
 @Data
 @TableName("sys_thirdparty_user")
 public class SysThirdpartyUser implements Serializable {

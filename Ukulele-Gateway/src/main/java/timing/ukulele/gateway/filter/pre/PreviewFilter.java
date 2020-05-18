@@ -21,6 +21,8 @@ import java.nio.charset.Charset;
 
 /**
  * 演示环境控制
+ *
+ * @author fengxici
  */
 @Slf4j
 @RefreshScope
@@ -42,17 +44,14 @@ public class PreviewFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
-        if (StringUtils.equalsIgnoreCase(request.getMethod(), HttpMethod.GET.name()) ||
-                StringUtils.containsIgnoreCase(request.getRequestURI(), TOKEN)) {
-            return false;
-        }
-        return true;
+        return !StringUtils.equalsIgnoreCase(request.getMethod(), HttpMethod.GET.name()) &&
+                !StringUtils.containsIgnoreCase(request.getRequestURI(), TOKEN);
     }
 
     @Override
     public Object run() {
         final RequestContext ctx = RequestContext.getCurrentContext();
-        final ResponseVO result = ResponseVO.failure(DefaultError.SHOW_AUTH_CONTROL);
+        final ResponseVO<Object> result = ResponseVO.failure(DefaultError.SHOW_AUTH_CONTROL);
         final HttpServletResponse response = ctx.getResponse();
         response.setCharacterEncoding(Charset.defaultCharset().name());
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);

@@ -24,6 +24,8 @@ import java.util.List;
  * <p>
  * 日志
  * </p>
+ *
+ * @author fengxici
  */
 @RestController
 @RequestMapping({"/log"})
@@ -39,20 +41,23 @@ public final class LogController extends BaseController {
     @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = router)
     @PostMapping
     public ResponseData<Boolean> add(LogVO sysLog) {
-        if (sysLog == null || sysLog.getId() != null)
+        if (sysLog == null || sysLog.getId() != null) {
             return paraErrorResponse();
+        }
         SysLog logPO = new SysLog();
         BeanUtils.copyProperties(sysLog, logPO);
-        if (sysLogService.save(logPO))
+        if (sysLogService.save(logPO)) {
             return successResponse(Boolean.TRUE);
+        }
         return failResponse();
     }
 
     @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = router)
     @DeleteMapping({"/{id}"})
     public ResponseData<Boolean> delete(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         return successResponse(sysLogService.removeById(id));
     }
 
@@ -60,10 +65,10 @@ public final class LogController extends BaseController {
     @GetMapping({"/getByParam"})
     public ResponseData<List<LogVO>> getByParam(HttpServletRequest request) {
         SysLog log = Request2ModelUtil.covert(SysLog.class, request);
-
         List<SysLog> list = sysLogService.list(new QueryWrapper<>(log));
-        if (CollectionUtils.isEmpty(list))
+        if (CollectionUtils.isEmpty(list)) {
             return successResponse();
+        }
         List<LogVO> voList = new ArrayList<>(list.size());
         list.forEach(po -> {
             LogVO vo = new LogVO();
@@ -78,8 +83,12 @@ public final class LogController extends BaseController {
     public ResponseData<IPage<LogVO>> getPage(@PathVariable(name = "current") int current,
                                               @PathVariable(name = "size") int size, HttpServletRequest request) {
         SysLog log = Request2ModelUtil.covert(SysLog.class, request);
-        if (size == 0) size = 10;
-        if (current == 0) current = 1;
+        if (size == 0) {
+            size = 10;
+        }
+        if (current == 0) {
+            current = 1;
+        }
         IPage<LogVO> page = this.sysLogService.getPage(log, current, size);
         return successResponse(page);
     }

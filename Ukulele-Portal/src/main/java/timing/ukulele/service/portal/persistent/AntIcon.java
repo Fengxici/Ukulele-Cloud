@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import timing.ukulele.persistence.model.BaseIdWorkerModel;
 
+/**
+ * @author fengxici
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("ant_icon")

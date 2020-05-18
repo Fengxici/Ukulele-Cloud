@@ -10,6 +10,7 @@ import timing.ukulele.persistence.model.BaseIdWorkerModel;
  * <p>
  * 部门管理
  * </p>
+ * @author fengxici
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

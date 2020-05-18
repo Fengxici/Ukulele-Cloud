@@ -1,6 +1,5 @@
 package timing.ukulele.service.auth.redis;
 
-import net.sf.jsqlparser.expression.UserVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +11,16 @@ import timing.ukulele.data.portal.view.RoleVO;
 
 /**
  * Redis配置类
+ * @author fengxici
  */
 @Configuration
 public class RedisAuthConfiguration {
 
-    @Autowired
-    private JedisConnectionFactory con;
+    private final JedisConnectionFactory con;
+
+    public RedisAuthConfiguration(JedisConnectionFactory con) {
+        this.con = con;
+    }
 
     @Bean
     public RedisTemplate<String, RoleVO> baseRoleTemplate() {

@@ -13,6 +13,7 @@ import java.util.Map;
 
 /**
  * 自定义JwtAccessToken转换器
+ * @author fengxici
  */
 public class JwtAccessToken extends JwtAccessTokenConverter {
 

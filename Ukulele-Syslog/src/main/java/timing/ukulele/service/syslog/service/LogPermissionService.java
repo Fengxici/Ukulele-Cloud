@@ -1,4 +1,4 @@
-package timing.ukulele.service.user.service;
+package timing.ukulele.service.syslog.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,32 +22,37 @@ import java.util.Set;
  * •@date: 2019/9/29
  */
 @Service
-public class PermissionServiceImpl implements PermissionService {
+public class LogPermissionService implements PermissionService {
     private final IRoleFacade roleService;
 
     @Autowired
-    public PermissionServiceImpl(IRoleFacade roleService) {
+    public LogPermissionService(IRoleFacade roleService) {
         this.roleService = roleService;
     }
 
     @Override
     public Set<String> abilitySet(String router, List<String> acl) {
-        if (StringUtils.isEmpty(router) || CollectionUtils.isEmpty(acl))
+        if (StringUtils.isEmpty(router) || CollectionUtils.isEmpty(acl)) {
             return null;
+        }
         Set<String> abilitySet = new HashSet<>();
         ResponseData<Map<String, Map<String, RolePermission>>> responseData = roleService.rolePermission(acl);
-        if (responseData == null || responseData.getData() == null)
+        if (responseData == null || responseData.getData() == null) {
             return null;
+        }
         Map<String, Map<String, RolePermission>> roleMenuPermission = responseData.getData();
         for (String item : acl) {
             Map<String, RolePermission> rolePermission = roleMenuPermission.get(item);
-            if (CollectionUtils.isEmpty(rolePermission))
+            if (CollectionUtils.isEmpty(rolePermission)) {
                 continue;
+            }
             RolePermission permission = rolePermission.get(router);
-            if (null == permission)
+            if (null == permission) {
                 continue;
-            if (CollectionUtils.isEmpty(permission.getAbility()))
+            }
+            if (CollectionUtils.isEmpty(permission.getAbility())) {
                 continue;
+            }
             abilitySet.addAll(permission.getAbility());
         }
         return abilitySet;

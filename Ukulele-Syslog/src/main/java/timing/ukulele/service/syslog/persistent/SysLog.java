@@ -13,6 +13,7 @@ import java.util.Date;
  * <p>
  * 日志表
  * </p>
+ * @author fengxici
  */
 @Data
 @TableName("sys_log")

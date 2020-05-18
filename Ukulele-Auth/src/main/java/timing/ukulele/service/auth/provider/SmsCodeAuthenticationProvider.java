@@ -11,6 +11,9 @@ import timing.ukulele.redisson.cache.CacheManager;
 import timing.ukulele.service.auth.service.TimingUserDetailService;
 import timing.ukulele.service.auth.token.SmsCodeAuthenticationToken;
 
+/**
+ * @author fengxici
+ */
 public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
 
     private final CacheManager cacheManager;

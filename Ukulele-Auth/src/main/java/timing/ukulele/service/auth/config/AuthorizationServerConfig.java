@@ -34,6 +34,9 @@ import java.util.Collections;
 import java.util.List;
 
 
+/**
+ * @author fengxici
+ */
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -130,7 +133,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 
     /**
-     * 跨域, 开发环境使用 vue-cli 代理，正式用nginx
+     * 跨域, 开发环境使用代理，正式用nginx
      */
     @Bean
     public FilterRegistrationBean corsFilter() {

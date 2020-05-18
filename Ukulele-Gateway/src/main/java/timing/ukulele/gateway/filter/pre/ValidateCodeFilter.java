@@ -24,6 +24,8 @@ import java.nio.charset.Charset;
  * 验证码验证
  * <p>
  * security.validate.code 默认 为false，开启需要设置为true
+ *
+ * @author fengxici
  */
 @Slf4j
 @RefreshScope
@@ -40,8 +42,11 @@ public class ValidateCodeFilter extends ZuulFilter {
      */
     String DEFAULT_CODE_KEY = "DEFAULT_CODE_KEY";
 
-    @Autowired
-    CacheManager cacheManager;
+    private final CacheManager cacheManager;
+
+    public ValidateCodeFilter(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
 
     @Override
     public String filterType() {
@@ -79,7 +84,7 @@ public class ValidateCodeFilter extends ZuulFilter {
             checkCode(RequestContext.getCurrentContext().getRequest());
         } catch (Exception e) {
             final RequestContext ctx = RequestContext.getCurrentContext();
-            final ResponseVO result = ResponseVO.failure(e.getMessage());
+            final ResponseVO<Object> result = ResponseVO.failure(e.getMessage());
             final HttpServletResponse response = ctx.getResponse();
             response.setCharacterEncoding(Charset.defaultCharset().name());
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);

@@ -11,6 +11,7 @@ import timing.ukulele.persistence.model.BaseModel;
  * <p>
  * 字典表
  * </p>
+ * @author fengxici
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

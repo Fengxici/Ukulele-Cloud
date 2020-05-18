@@ -15,6 +15,9 @@ import timing.ukulele.service.auth.token.SmsCodeAuthenticationToken;
 import timing.ukulele.service.auth.token.ThirdOpenAuthenticationToken;
 import timing.ukulele.service.auth.token.TimingAuthenticationToken;
 
+/**
+ * @author fengxici
+ */
 public class TimingAuthenticationProvider extends TimingAbstractUserDetailsAuthenticationProvider {
     private UserDetailsService userDetailsService;
     private BCryptPasswordEncoder passwordEncoder;
@@ -26,13 +29,17 @@ public class TimingAuthenticationProvider extends TimingAbstractUserDetailsAuthe
             throw new BadCredentialsException(this.messages.getMessage("TimingAuthenticationProvider.badCredentials", "Bad credentials"));
         } else {
             String presentedPassword = authentication.getCredentials().toString();
-            if (authentication instanceof TimingAuthenticationToken) {//用户名密码
+            if (authentication instanceof TimingAuthenticationToken) {
+                //用户名密码
 
-            } else if (authentication instanceof SmsCodeAuthenticationToken) {//手机验证码
+            } else if (authentication instanceof SmsCodeAuthenticationToken) {
+                //手机验证码
 
-            } else if (authentication instanceof ThirdOpenAuthenticationToken) {//第三方开放平台
+            } else if (authentication instanceof ThirdOpenAuthenticationToken) {
+                //第三方开放平台
 
-            } else if (authentication instanceof QRCodeAuthenticationToken) {//二维码
+            } else if (authentication instanceof QRCodeAuthenticationToken) {
+                //二维码
 
             } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
                 if (!this.passwordEncoder.matches(presentedPassword, userDetails.getPassword())) {
@@ -55,31 +62,36 @@ public class TimingAuthenticationProvider extends TimingAbstractUserDetailsAuthe
 //            token.setDetails(authentication.getDetails());
 //            return token;
 //        }
-        if (authentication instanceof TimingAuthenticationToken) {//用户名密码
+        if (authentication instanceof TimingAuthenticationToken) {
+            //用户名密码
             TimingAuthenticationToken timingToken = (TimingAuthenticationToken) authentication;
             timingToken.setDetails(authentication.getDetails());
             TimingAuthenticationToken token = new TimingAuthenticationToken(principal, timingToken.getCredentials(), user.getAuthorities());
             token.setDetails(authentication.getDetails());
             return token;
-        } else if (authentication instanceof SmsCodeAuthenticationToken) {//手机验证码
+        } else if (authentication instanceof SmsCodeAuthenticationToken) {
+            //手机验证码
             SmsCodeAuthenticationToken smsToken = (SmsCodeAuthenticationToken) authentication;
             smsToken.setDetails(authentication.getDetails());
             SmsCodeAuthenticationToken token = new SmsCodeAuthenticationToken(smsToken.getPrincipal(), smsToken.getCode(), user.getAuthorities());
             token.setDetails(authentication.getDetails());
             return token;
-        } else if (authentication instanceof ThirdOpenAuthenticationToken) {//第三方开放平台
+        } else if (authentication instanceof ThirdOpenAuthenticationToken) {
+            //第三方开放平台
             ThirdOpenAuthenticationToken thirdToken = (ThirdOpenAuthenticationToken) authentication;
             thirdToken.setDetails(authentication.getDetails());
             ThirdOpenAuthenticationToken token = new ThirdOpenAuthenticationToken(thirdToken.getPrincipal(), thirdToken.getType(), user.getAuthorities());
             token.setDetails(authentication.getDetails());
             return token;
-        } else if (authentication instanceof QRCodeAuthenticationToken) {//二维码
+        } else if (authentication instanceof QRCodeAuthenticationToken) {
+            //二维码
             QRCodeAuthenticationToken qrToken = (QRCodeAuthenticationToken) authentication;
             qrToken.setDetails(authentication.getDetails());
             QRCodeAuthenticationToken token = new QRCodeAuthenticationToken(qrToken.getPrincipal(), qrToken.getCode(), qrToken.getConnectId(), user.getAuthorities());
             token.setDetails(authentication.getDetails());
             return token;
-        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {//用户名密码
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            //用户名密码
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, authentication.getCredentials(), user.getAuthorities());
             token.setDetails(authentication.getDetails());
             return token;
@@ -93,16 +105,21 @@ public class TimingAuthenticationProvider extends TimingAbstractUserDetailsAuthe
         TimingUserDetailService userDetailService;
         try {
             userDetailService = (TimingUserDetailService) getUserDetailsService();
-            if (authentication instanceof TimingAuthenticationToken) {//用户名密码
+            if (authentication instanceof TimingAuthenticationToken) {
+                //用户名密码
                 loadedUser = this.getUserDetailsService().loadUserByUsername(principal);
-            } else if (authentication instanceof SmsCodeAuthenticationToken) {//手机验证码
+            } else if (authentication instanceof SmsCodeAuthenticationToken) {
+                //手机验证码
                 loadedUser = userDetailService.loadUserByPhone(principal);
-            } else if (authentication instanceof ThirdOpenAuthenticationToken) {//第三方开放平台
+            } else if (authentication instanceof ThirdOpenAuthenticationToken) {
+                //第三方开放平台
                 ThirdOpenAuthenticationToken thirdToken = (ThirdOpenAuthenticationToken) authentication;
                 loadedUser = userDetailService.loadUserByThirdOpenCode(principal, thirdToken.getType());
-            } else if (authentication instanceof QRCodeAuthenticationToken) {//二维码
+            } else if (authentication instanceof QRCodeAuthenticationToken) {
+                //二维码
                 loadedUser = this.getUserDetailsService().loadUserByUsername(principal);
-            } else if (authentication instanceof UsernamePasswordAuthenticationToken) {//用户名密码
+            } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+                //用户名密码
                 loadedUser = this.getUserDetailsService().loadUserByUsername(principal);
             }
         } catch (UsernameNotFoundException var6) {

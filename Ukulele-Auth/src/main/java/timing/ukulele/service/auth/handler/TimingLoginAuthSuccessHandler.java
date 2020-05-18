@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * 登陆成功处理，移动端登陆成功后还需做绑定操作
+ * @author fengxici
  */
 public class TimingLoginAuthSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     private RequestCache requestCache = new HttpSessionRequestCache();

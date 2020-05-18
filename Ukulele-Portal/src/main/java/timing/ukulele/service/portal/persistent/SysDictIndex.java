@@ -8,6 +8,7 @@ import timing.ukulele.persistence.model.BaseIdWorkerModel;
 
 /**
  * 字典索引表
+ * @author fengxici
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

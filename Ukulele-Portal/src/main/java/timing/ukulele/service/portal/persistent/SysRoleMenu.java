@@ -6,6 +6,7 @@ import lombok.Data;
  * <p>
  * 角色菜单表
  * </p>
+ * @author fengxici
  */
 @Data
 public class SysRoleMenu {

@@ -8,6 +8,7 @@ import timing.ukulele.service.syslog.persistent.SysLog;
  * <p>
  * 日志表 Mapper 接口
  * </p>
+ * @author fengxici
  */
 @Mapper
 public interface SysLogMapper extends BaseMapper<SysLog> {

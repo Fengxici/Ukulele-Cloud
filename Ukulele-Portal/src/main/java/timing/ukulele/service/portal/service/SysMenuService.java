@@ -7,6 +7,9 @@ import timing.ukulele.service.portal.persistent.SysMenu;
 
 import java.util.List;
 
+/**
+ * @author fengxici
+ */
 @Service
 public class SysMenuService extends BaseService<SysMenuMapper, SysMenu> {
 

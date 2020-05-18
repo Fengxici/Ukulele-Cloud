@@ -34,6 +34,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author fengxici
+ */
 @Service
 @Slf4j
 public class TimingUserDetailService implements UserDetailsService {
@@ -128,10 +131,11 @@ public class TimingUserDetailService implements UserDetailsService {
      */
     private UserDetails getUserDetails(UserVO baseUser, Integer type) {
         List<String> roles;
-        if (!StringUtils.isEmpty(baseUser.getLabel()))
+        if (!StringUtils.isEmpty(baseUser.getLabel())) {
             roles = baseUser.getLabel();
-        else
+        } else {
             roles = new ArrayList<>(0);
+        }
 
         // 获取用户权限列表
         List<GrantedAuthority> authorities = convertToAuthorities(roles);
@@ -191,8 +195,9 @@ public class TimingUserDetailService implements UserDetailsService {
      * @return
      */
     private String code2OpenId(String code) {
-        if (org.apache.commons.lang.StringUtils.isEmpty(code))
+        if (org.apache.commons.lang.StringUtils.isEmpty(code)) {
             return null;
+        }
         String code2SessionUrl = String.format(wxAppCode2Session, wxAppid, wxSecret, code);
         Request request = new Request.Builder()
                 .url(code2SessionUrl).get()
@@ -204,8 +209,9 @@ public class TimingUserDetailService implements UserDetailsService {
                     String responseBody = response.body().string();
                     WxAppSessionResponse model = JSON.parseObject(responseBody, new TypeReference<WxAppSessionResponse>() {
                     });
-                    if (model != null && model.getOpenid() != null && model.getOpenid().length() > 0)
+                    if (model != null && model.getOpenid() != null && model.getOpenid().length() > 0) {
                         return model.getOpenid();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

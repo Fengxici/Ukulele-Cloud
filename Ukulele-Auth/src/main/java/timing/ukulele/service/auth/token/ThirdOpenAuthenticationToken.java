@@ -7,6 +7,7 @@ import java.util.Collection;
 
 /**
  * 第三方开放平台登录
+ * @author fengxici
  */
 public class ThirdOpenAuthenticationToken extends AbstractAuthenticationToken {
 

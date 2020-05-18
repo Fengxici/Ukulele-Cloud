@@ -8,6 +8,7 @@ import org.springframework.data.redis.serializer.SerializationException;
 
 /**
  * RedisSerializer编码解码类
+ * @author fengxici
  */
 public class RedisObjectSerializer implements RedisSerializer {
 
@@ -18,8 +19,9 @@ public class RedisObjectSerializer implements RedisSerializer {
 
     @Override
     public byte[] serialize(Object o) throws SerializationException {
-        if(o == null)
+        if(o == null) {
             return EMPTY_ARRAY;
+        }
         try {
             return serializer.convert(o);
         }catch (Exception e){
@@ -30,8 +32,9 @@ public class RedisObjectSerializer implements RedisSerializer {
 
     @Override
     public Object deserialize(byte[] bytes) throws SerializationException {
-        if(isEmpty(bytes))
+        if(isEmpty(bytes)) {
             return null;
+        }
         try {
             return deserializer.convert(bytes);
         }catch (Exception e){

@@ -8,6 +8,9 @@ import timing.ukulele.persistence.service.BaseService;
 import timing.ukulele.service.portal.mapper.SysDictIndexMapper;
 import timing.ukulele.service.portal.persistent.SysDictIndex;
 
+/**
+ * @author fengxici
+ */
 @Service
 public class SysDictIndexService extends BaseService<SysDictIndexMapper, SysDictIndex> {
     public IPage<SysDictIndex> getPage(SysDictIndex dictIndex, int current, int size) {

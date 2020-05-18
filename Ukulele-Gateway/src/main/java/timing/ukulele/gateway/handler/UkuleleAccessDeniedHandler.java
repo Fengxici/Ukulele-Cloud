@@ -19,6 +19,8 @@ import java.io.PrintWriter;
 
 /**
  * 授权拒绝处理器，覆盖默认的OAuth2AccessDeniedHandler
+ *
+ * @author fengxici
  */
 @Slf4j
 @Component
@@ -44,7 +46,7 @@ public final class UkuleleAccessDeniedHandler extends OAuth2AccessDeniedHandler 
         log.info("授权失败，禁止访问 {}", request.getRequestURI());
         response.setCharacterEncoding("UTF-8");
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-        ResponseVO result = ResponseVO.failure(DefaultError.ACCESS_DENIED);
+        ResponseVO<Object> result = ResponseVO.failure(DefaultError.ACCESS_DENIED);
         response.setStatus(HttpStatus.SC_FORBIDDEN);
         PrintWriter printWriter = response.getWriter();
         printWriter.append(objectMapper.writeValueAsString(result));

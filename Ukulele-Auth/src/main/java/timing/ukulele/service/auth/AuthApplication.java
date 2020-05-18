@@ -8,10 +8,12 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * @author fengxici
+ */
 @SpringBootApplication
 @EnableFeignClients(basePackages = {"timing.ukulele.facade.user", "timing.ukulele.facade.portal"})
 @EnableCircuitBreaker
-
 public class AuthApplication {
     @Bean
     @LoadBalanced

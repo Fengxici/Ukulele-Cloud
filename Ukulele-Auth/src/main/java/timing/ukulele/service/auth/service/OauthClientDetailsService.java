@@ -1,9 +1,6 @@
 package timing.ukulele.service.auth.service;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.segments.MergeSegments;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -12,6 +9,9 @@ import timing.ukulele.service.auth.mapper.OauthClientDetailsMapper;
 
 import java.util.List;
 
+/**
+ * @author fengxici
+ */
 @Service
 public class OauthClientDetailsService extends ServiceImpl<OauthClientDetailsMapper, OAuthClientDetailsModel> {
     /**
@@ -32,8 +32,9 @@ public class OauthClientDetailsService extends ServiceImpl<OauthClientDetailsMap
     public OAuthClientDetailsModel queryOneByParam(final OAuthClientDetailsModel record) {
         QueryWrapper<OAuthClientDetailsModel> queryWrapper = new QueryWrapper<>(record);
         List<OAuthClientDetailsModel> list = list(queryWrapper);
-        if (CollectionUtils.isEmpty(list))
+        if (CollectionUtils.isEmpty(list)) {
             return null;
+        }
         return list.get(0);
     }
 

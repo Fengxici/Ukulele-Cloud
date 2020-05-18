@@ -7,11 +7,14 @@ import java.util.Collection;
 
 /**
  * 短信验证码
+ *
+ * @author fengxici
  */
 public class SmsCodeAuthenticationToken extends AbstractAuthenticationToken {
 
     private final Object principal;
-    private final String code;//验证码
+    /***验证码*/
+    private final String code;
 
     public SmsCodeAuthenticationToken(String mobile, String code) {
         super(null);

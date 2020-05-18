@@ -24,6 +24,9 @@ import timing.ukulele.web.util.Request2ModelUtil;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+/**
+ * @author fengxici
+ */
 @RestController
 public class UserController extends BaseController implements IUserFacade {
     private final String router = "/system/user";
@@ -44,13 +47,15 @@ public class UserController extends BaseController implements IUserFacade {
      */
     @Override
     public ResponseData<UserVO> getUserByUserName(String username) {
-        if (StringUtils.isEmpty(username))
+        if (StringUtils.isEmpty(username)) {
             return paraErrorResponse();
+        }
         SysUser user = userService.findUserByUsername(username);
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(user, vo);
-        if (StringUtils.isNotEmpty(user.getLabel()))
+        if (StringUtils.isNotEmpty(user.getLabel())) {
             vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
+        }
         return successResponse(vo);
     }
 
@@ -62,21 +67,24 @@ public class UserController extends BaseController implements IUserFacade {
      */
     @Override
     public ResponseData<UserVO> getUserByPhone(String mobile) {
-        if (StringUtils.isEmpty(mobile))
+        if (StringUtils.isEmpty(mobile)) {
             return paraErrorResponse();
+        }
         SysUser user = userService.findUserByMobile(mobile);
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(user, vo);
-        if (StringUtils.isNotEmpty(user.getLabel()))
+        if (StringUtils.isNotEmpty(user.getLabel())) {
             vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
+        }
         return successResponse(vo);
     }
 
     @Override
     public ResponseData<UserVO> getUserByPhoneOrName(String param) {
         SysUser sysUser = userService.selectUserByParam(param);
-        if (null == sysUser)
+        if (null == sysUser) {
             return successResponse();
+        }
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(sysUser, userVO);
         return successResponse(userVO);
@@ -92,8 +100,9 @@ public class UserController extends BaseController implements IUserFacade {
                 user.setPassword(null);
                 UserVO vo = new UserVO();
                 BeanUtils.copyProperties(user, vo);
-                if (StringUtils.isNotEmpty(user.getLabel()))
+                if (StringUtils.isNotEmpty(user.getLabel())) {
                     vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
+                }
                 voList.add(vo);
             });
             return successResponse(voList);
@@ -103,29 +112,33 @@ public class UserController extends BaseController implements IUserFacade {
 
     @Override
     public ResponseData<UserVO> user(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         SysUser user = userService.getById(id);
         UserVO vo = new UserVO();
         if (user != null) {
             user.setPassword(null);
             BeanUtils.copyProperties(user, vo);
-            if (StringUtils.isNotEmpty(user.getLabel()))
+            if (StringUtils.isNotEmpty(user.getLabel())) {
                 vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
+            }
         }
         return successResponse(vo);
     }
 
     @Override
     public ResponseData<UserVO> userInfo(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         SysUser user = userService.getById(id);
         UserVO vo = new UserVO();
         if (user != null) {
             BeanUtils.copyProperties(user, vo);
-            if (StringUtils.isNotEmpty(user.getLabel()))
+            if (StringUtils.isNotEmpty(user.getLabel())) {
                 vo.setLabel(JSON.parseArray(user.getLabel(), String.class));
+            }
         }
         return successResponse(vo);
     }
@@ -133,25 +146,29 @@ public class UserController extends BaseController implements IUserFacade {
     @Override
     @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> userDel(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         Boolean success = userService.removeById(id);
         return successResponse(success);
     }
 
     @PostMapping("/register")
     public ResponseData<Boolean> register(@RequestBody UserVO user) {
-        if (user == null || user.getId() != null)
+        if (user == null || user.getId() != null) {
             return paraErrorResponse();
+        }
         if (userService.findUserByUsername(user.getUsername()) != null) {
             return paraErrorResponse(false);
         }
         SysUser userPO = new SysUser();
         BeanUtils.copyProperties(user, userPO);
-        userPO.setPassword(new BCryptPasswordEncoder(6).encode(user.getPassword()));//密码
+        //密码
+        userPO.setPassword(new BCryptPasswordEncoder(6).encode(user.getPassword()));
         Random random = new Random();
         int s = random.nextInt(6) % (6 - 1 + 1) + 1;
-        userPO.setAvatar("assets/tmp/img/" + s + ".png");//头像
+        //头像
+        userPO.setAvatar("assets/tmp/img/" + s + ".png");
         userPO.setLabel("[\"admin\"]");
         Boolean success = userService.save(userPO);
         if (StringUtils.isNotEmpty(user.getPlatId()) && null != user.getPlat()) {
@@ -169,32 +186,38 @@ public class UserController extends BaseController implements IUserFacade {
     @Override
     @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> user(UserVO user) {
-        if (user == null || user.getId() != null)
+        if (user == null || user.getId() != null) {
             return paraErrorResponse();
+        }
         SysUser userPO = new SysUser();
         BeanUtils.copyProperties(user, userPO);
-        if (!CollectionUtils.isEmpty(user.getLabel()))
+        if (!CollectionUtils.isEmpty(user.getLabel())) {
             userPO.setLabel(JSON.toJSONString(user.getLabel()));
+        }
         // TODO 部分属性暂时默认值
-        userPO.setPassword(new BCryptPasswordEncoder(6).encode("123456"));//密码
+        //密码
+        userPO.setPassword(new BCryptPasswordEncoder(6).encode("123456"));
         Random random = new Random();
         int s = random.nextInt(6) % (6 - 1 + 1) + 1;
-        userPO.setAvatar("assets/tmp/img/" + s + ".png");//头像
+        //头像
+        userPO.setAvatar("assets/tmp/img/" + s + ".png");
         Boolean success = userService.save(userPO);
         return successResponse(success);
     }
 
     @Override
     public ResponseData<Boolean> userUpdate(UserVO user) {
-        if (user == null || user.getId() == null)
+        if (user == null || user.getId() == null) {
             return paraErrorResponse();
+        }
         user.setAvatar(null);
         user.setCreateTime(null);
         user.setUpdateTime(null);
         SysUser po = new SysUser();
         BeanUtils.copyProperties(user, po);
-        if (!CollectionUtils.isEmpty(user.getLabel()))
+        if (!CollectionUtils.isEmpty(user.getLabel())) {
             po.setLabel(JSON.toJSONString(user.getLabel()));
+        }
         Boolean success = userService.updateById(po);
         return successResponse(success);
     }
@@ -204,8 +227,12 @@ public class UserController extends BaseController implements IUserFacade {
     public ResponseData<IPage<UserVO>> getPage(@PathVariable(name = "current") int current,
                                                @PathVariable(name = "size") int size, HttpServletRequest request) {
         SysUser user = Request2ModelUtil.covert(SysUser.class, request);
-        if (size == 0) size = 10;
-        if (current == 0) current = 1;
+        if (size == 0) {
+            size = 10;
+        }
+        if (current == 0) {
+            current = 1;
+        }
         IPage<UserVO> page = this.userService.getPage(user, current, size);
         return successResponse(page);
     }

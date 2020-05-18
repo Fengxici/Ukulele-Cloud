@@ -14,11 +14,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.MultipartConfigElement;
 
+/**
+ * @author fengxici
+ */
 @EnableZuulProxy
 @SpringBootApplication
 @EnableResourceServer
 @EnableOAuth2Sso
-@EnableFeignClients(basePackages = {"timing.ukulele.facade.syslog", "timing.ukulele.facade.portal"})
+@EnableFeignClients(basePackages = {"timing.ukulele.facade.portal"})
 @EnableSwagger2
 public class GatewayApplication {
     public static void main(String[] args) {
@@ -29,7 +32,8 @@ public class GatewayApplication {
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         //单个文件最大
-        factory.setMaxFileSize(DataSize.ofGigabytes(10)); //KB,MB
+        //KB,MB
+        factory.setMaxFileSize(DataSize.ofGigabytes(10));
         /// 设置总上传数据总大小
         factory.setMaxFileSize(DataSize.ofGigabytes(100));
         return factory.createMultipartConfig();

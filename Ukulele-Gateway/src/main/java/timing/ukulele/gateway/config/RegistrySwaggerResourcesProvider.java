@@ -12,6 +12,8 @@ import java.util.List;
 
 /**
  * routeLocator 聚合swagger
+ *
+ * @author fengxici
  */
 @Component
 @Primary

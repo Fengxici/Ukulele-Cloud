@@ -7,6 +7,7 @@ import java.util.Collection;
 
 /**
  * 扫码登陆
+ * @author fengxici
  */
 public class QRCodeAuthenticationToken extends AbstractAuthenticationToken {
 

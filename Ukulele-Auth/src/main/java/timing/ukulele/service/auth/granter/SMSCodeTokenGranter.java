@@ -18,6 +18,9 @@ import java.util.Map;
 
 import static timing.ukulele.service.auth.Constant.*;
 
+/**
+ * @author fengxici
+ */
 public class SMSCodeTokenGranter extends AbstractTokenGranter {
 
     private static final String GRANT_TYPE = "sms_code";
@@ -35,18 +38,21 @@ public class SMSCodeTokenGranter extends AbstractTokenGranter {
                                                            TokenRequest tokenRequest) {
 
         Map<String, String> parameters = new LinkedHashMap<>(tokenRequest.getRequestParameters());
-        String userMobileNo = parameters.get(SPRING_SECURITY_PHONE_KEY);  //客户端提交的用户名
+        //客户端提交的用户名
+        String userMobileNo = parameters.get(SPRING_SECURITY_PHONE_KEY);
         if (!RegexUtil.checkMobileNumber(userMobileNo)) {
             throw new InvalidGrantException("手机号码格式错误");
         }
-        String code = parameters.get(SPRING_SECURITY_SMS_CODE_KEY);  //客户端提交的验证码
+        //客户端提交的验证码
+        String code = parameters.get(SPRING_SECURITY_SMS_CODE_KEY);
         if (StringUtils.isEmpty(code) || code.length() != SPRING_SECURITY_SMS_CODE_LENGTH) {
             throw new InvalidGrantException("验证码错误");
         }
         Authentication userAuth = new SmsCodeAuthenticationToken(userMobileNo, code);
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
         try {
-            userAuth = authenticationManager.authenticate(userAuth);//调用上面的provide 验证
+            //调用上面的provide 验证
+            userAuth = authenticationManager.authenticate(userAuth);
         } catch (AccountStatusException | BadCredentialsException ase) {
             throw new InvalidGrantException(ase.getMessage());
         }
