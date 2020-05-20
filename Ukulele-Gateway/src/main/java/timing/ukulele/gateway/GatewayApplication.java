@@ -1,14 +1,12 @@
 package timing.ukulele.gateway;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.util.unit.DataSize;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -19,7 +17,7 @@ import javax.servlet.MultipartConfigElement;
  */
 @EnableZuulProxy
 @SpringBootApplication
-@EnableResourceServer
+//@EnableResourceServer
 @EnableOAuth2Sso
 @EnableFeignClients(basePackages = {"timing.ukulele.facade.portal"})
 @EnableSwagger2

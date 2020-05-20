@@ -29,6 +29,7 @@ import java.util.Objects;
 
 /**
  * 资源服务器配置
+ *
  * @author fengxici
  */
 @Configuration
@@ -36,19 +37,21 @@ import java.util.Objects;
 @EnableConfigurationProperties(UkuleleOauth2Properties.class)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
+
+    private OAuth2WebSecurityExpressionHandler expressionHandler;
+    private final UkuleleAccessDeniedHandler accessDeniedHandler;
+    private final ResourceServerProperties resource;
     private final UkuleleOauth2Properties oauth2Properties;
 
-    private final OAuth2WebSecurityExpressionHandler expressionHandler;
-
-    private final UkuleleAccessDeniedHandler accessDeniedHandler;
-
-    private final ResourceServerProperties resource;
-
-    public ResourceServerConfiguration(UkuleleOauth2Properties oauth2Properties, OAuth2WebSecurityExpressionHandler expressionHandler, UkuleleAccessDeniedHandler accessDeniedHandler, ResourceServerProperties resource) {
+    public ResourceServerConfiguration(UkuleleOauth2Properties oauth2Properties, UkuleleAccessDeniedHandler accessDeniedHandler, ResourceServerProperties resource) {
         this.oauth2Properties = oauth2Properties;
-        this.expressionHandler = expressionHandler;
         this.accessDeniedHandler = accessDeniedHandler;
         this.resource = resource;
+    }
+
+    @Autowired
+    public void setExpressionHandler(OAuth2WebSecurityExpressionHandler expressionHandler) {
+        this.expressionHandler = expressionHandler;
     }
 
     @Bean

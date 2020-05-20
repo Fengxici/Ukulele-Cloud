@@ -218,7 +218,7 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     private Set<AntMenu> getUserAntMenu(String roles) {
-        Set<AntMenu> all = new HashSet<>();
+        Set<AntMenu> all = new LinkedHashSet<>();
         Arrays.stream(roles.split(",")).forEach(role -> all.addAll(this.antMenuService.findMenuByRoleName(role)));
         return all;
     }
