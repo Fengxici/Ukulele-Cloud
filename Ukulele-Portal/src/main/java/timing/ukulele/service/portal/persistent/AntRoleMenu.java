@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * @author fengxici
+ */
 @Data
 public class AntRoleMenu implements Serializable {
     private Long roleId;

@@ -12,7 +12,7 @@ import timing.ukulele.service.auth.token.QRCodeAuthenticationToken;
 import timing.ukulele.service.auth.token.ThirdOpenAuthenticationToken;
 
 /**
- * TODO
+ * @author fengxici
  */
 public class QRCodeAuthenticationProvider implements AuthenticationProvider {
     private final TimingUserDetailService userDetailService;
@@ -28,8 +28,9 @@ public class QRCodeAuthenticationProvider implements AuthenticationProvider {
         //这个authentication就是ThirdOpenAuthenticationToken
         QRCodeAuthenticationToken authenticationToken = (QRCodeAuthenticationToken) authentication;
         Object code = cacheManager.get(PrefixConstant.QR_CONNECT_ID + authenticationToken.getConnectId());
-        if (null == code)
+        if (null == code) {
             throw new InvalidGrantException("链接过期");
+        }
         String codeStr = (String) code;
         if (!codeStr.equals(authenticationToken.getCode())) {
             throw new InvalidGrantException("链接不正确");

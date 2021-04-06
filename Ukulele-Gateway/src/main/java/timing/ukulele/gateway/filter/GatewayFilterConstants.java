@@ -3,6 +3,9 @@ package timing.ukulele.gateway.filter;
 import com.netflix.zuul.ZuulFilter;
 import timing.ukulele.gateway.filter.pre.PreRequestLogFilter;
 
+/**
+ * @author fengxici
+ */
 public interface GatewayFilterConstants {
 
     /**

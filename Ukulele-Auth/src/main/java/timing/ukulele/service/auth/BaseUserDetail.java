@@ -11,15 +11,16 @@ import java.util.Collection;
 /**
  * 包装org.springframework.security.core.userdetails.User类
  * 新增 baseUser 用于生成 jwt 的用户信息
+ * @author fengxici
  */
 public class BaseUserDetail implements UserDetails, CredentialsContainer {
 
     private final UserVO baseUser;
     private final User user;
-    //    登录类型 1小程序
+    /*** 登录类型 1小程序*/
     private final Integer type;
 
-    public BaseUserDetail(UserVO baseUser, User user,Integer type) {
+    public BaseUserDetail(UserVO baseUser, User user, Integer type) {
         this.baseUser = baseUser;
         this.user = user;
         this.type = type;

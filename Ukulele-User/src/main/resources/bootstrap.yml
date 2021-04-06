@@ -26,63 +26,47 @@ spring:
     allow-bean-definition-overriding: true
   # 数据源配置
   datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/ukulele_user?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       stat-view-servlet:
         login-username: druid
         login-password: druid
         enabled: true
         url-pattern: /druid/*
-    dynamic:
-      datasource:
-        master:
-          username: root
-          password: root
-          url: jdbc:mysql://127.0.0.1:3306/ukulele_user?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
-          driver-class-name: com.mysql.cj.jdbc.Driver
-        slave_1:
-          username: root
-          password: root
-          url: jdbc:mysql://127.0.0.1:3306/ukulele_user?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&allowMultiQueries=true&serverTimezone=PRC&useSSL=false
-          driver-class-name: com.mysql.cj.jdbc.Driver
-      druid:
-        max-active: 20
-        initial-size: 1
-        max-wait: 60000
-        min-idle: 1
-        time-between-eviction-runs-millis: 60000
-        stat-sql-max-size: 10
-        min-evictable-idle-time-millis: 300000
-        max-evictable-idle-time-millis: 600000
-        test-while-idle: true
-        test-on-borrow: true
-        test-on-return: true
-        validation-query: select 'x'
-        validation-query-timeout: 30
-        use-global-data-source-stat: true
-        async-init: false
-        clear-filters-enable: true
-        reset-stat-enable: true
-        not-full-timeout-retry-count: 3
-        max-wait-thread-count: 10
-        fail-fast: true
-        phy-timeout-millis: 30000
-        keep-alive: true
-        pool-prepared-statements: true
-        init-variants: true
-        init-global-variants: true
-        use-unfair-lock: true
-        kill-when-socket-read-timeout: true
-        max-pool-prepared-statement-per-connection-size: 10
-        share-prepared-statements: true
-        connection-error-retry-attempts: 3
-        break-after-acquire-failure: true
-        filters: stat,wall,sql # 注意这个值和druid原生不一致，默认启动了stat,wall
-        stat:
-          merge-sql: true
-          log-slow-sql: true
-          slow-sql-millis: 10000
-#       init-connection-sqls:
-#       connection-properties:
+      max-active: 20
+      initial-size: 1
+      max-wait: 60000
+      min-idle: 1
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      max-evictable-idle-time-millis: 600000
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: true
+      validation-query: select 'x'
+      validation-query-timeout: 30
+      use-global-data-source-stat: true
+      async-init: false
+      clear-filters-enable: true
+      reset-stat-enable: true
+      not-full-timeout-retry-count: 3
+      max-wait-thread-count: 10
+      fail-fast: true
+      phy-timeout-millis: 30000
+      keep-alive: true
+      pool-prepared-statements: true
+      init-variants: true
+      init-global-variants: true
+      use-unfair-lock: true
+      kill-when-socket-read-timeout: true
+      max-pool-prepared-statement-per-connection-size: 10
+      share-prepared-statements: true
+      connection-error-retry-attempts: 3
+      break-after-acquire-failure: true
+      filters: stat,wall,sql # 注意这个值和druid原生不一致，默认启动了stat,wall
   redis:
     database: 0
     host: localhost

@@ -24,6 +24,9 @@ import timing.ukulele.service.auth.service.TimingUserDetailService;
 
 import java.util.Arrays;
 
+/**
+ * @author fengxici
+ */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {

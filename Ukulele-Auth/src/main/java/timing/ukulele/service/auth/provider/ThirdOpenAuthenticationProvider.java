@@ -7,6 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import timing.ukulele.service.auth.service.TimingUserDetailService;
 import timing.ukulele.service.auth.token.ThirdOpenAuthenticationToken;
 
+/**
+ * @author fengxici
+ */
 public class ThirdOpenAuthenticationProvider implements AuthenticationProvider {
     private final TimingUserDetailService userDetailService;
 

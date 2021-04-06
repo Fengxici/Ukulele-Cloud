@@ -22,6 +22,7 @@ import static timing.ukulele.service.auth.Constant.SPRING_SECURITY_SMS_CODE_LENG
 
 /**
  * 常规接口，不需要登录的
+ * @author fengxici
  */
 @RestController
 @Slf4j
@@ -44,8 +45,9 @@ public class CommonController extends BaseController {
      */
     @GetMapping("/sms_code")
     public ResponseData<String> getSmsCode(@RequestParam("mobile") String mobile) {
-        if (StringUtils.isEmpty(mobile) || !RegexUtil.checkMobileNumber(mobile))
+        if (StringUtils.isEmpty(mobile) || !RegexUtil.checkMobileNumber(mobile)) {
             return paraErrorResponse("手机号不能为空，且必须是正确的11位格式");
+        }
         Object phone = cacheManager.get(SMS_PHONE_SENDED + mobile);
         if (null == phone) {
             cacheManager.set(SMS_PHONE_SENDED + mobile, 1, 3 * 60);

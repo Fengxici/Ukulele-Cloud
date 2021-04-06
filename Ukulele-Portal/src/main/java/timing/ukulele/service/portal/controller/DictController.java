@@ -27,6 +27,9 @@ import timing.ukulele.web.util.Request2ModelUtil;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+/**
+ * @author fengxici
+ */
 @RestController
 public final class DictController extends BaseController implements IDictFacade {
     private final String router = "/system/dict";
@@ -41,11 +44,13 @@ public final class DictController extends BaseController implements IDictFacade 
 
     @Override
     public ResponseData<DictVO> dict(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         SysDict dict = this.dictService.getById(id);
-        if (dict == null)
+        if (dict == null) {
             return successResponse();
+        }
         DictVO vo = new DictVO();
         BeanUtils.copyProperties(dict, vo);
         return successResponse(vo);
@@ -53,14 +58,17 @@ public final class DictController extends BaseController implements IDictFacade 
 
     @Override
     public ResponseData<List<DictVO>> findDictByIndex(String key) {
-        if (StringUtils.isEmpty(key))
+        if (StringUtils.isEmpty(key)) {
             return paraErrorResponse();
+        }
         SysDictIndex index = dictIndexService.getOne(new QueryWrapper<SysDictIndex>().eq("key_", key));
-        if (index == null)
+        if (index == null) {
             return successResponse();
+        }
         List<SysDict> list = this.dictService.list(new QueryWrapper<SysDict>().eq("index_id", index.getId()));
-        if (CollectionUtils.isEmpty(list))
+        if (CollectionUtils.isEmpty(list)) {
             return successResponse();
+        }
         List<DictVO> voList = new ArrayList<>(list.size());
         list.forEach(po -> {
             DictVO vo = new DictVO();
@@ -73,8 +81,9 @@ public final class DictController extends BaseController implements IDictFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> dict(DictVO sysDict) {
-        if (sysDict == null || sysDict.getId() != null)
+        if (sysDict == null || sysDict.getId() != null) {
             return paraErrorResponse();
+        }
         SysDict dict = new SysDict();
         BeanUtils.copyProperties(sysDict, dict);
         return successResponse(this.dictService.save(dict));
@@ -83,16 +92,18 @@ public final class DictController extends BaseController implements IDictFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> deleteDict(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
-        Map<String, Object> map = new HashMap<>();
+        }
+        Map<String, Object> map = new HashMap<>(2);
         map.put("index_id", id);
         Collection<SysDict> dicts = this.dictService.listByMap(map);
         if (dicts != null) {
             List<Long> ids = new ArrayList<>();
             dicts.forEach(dept -> ids.add(dept.getId()));
-            if (ids.size() > 0)
+            if (ids.size() > 0) {
                 this.dictService.removeByIds(ids);
+            }
         }
         return successResponse(this.dictService.removeById(id));
     }
@@ -100,8 +111,9 @@ public final class DictController extends BaseController implements IDictFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> editDict(DictVO sysDict) {
-        if (sysDict == null || sysDict.getId() == null)
+        if (sysDict == null || sysDict.getId() == null) {
             return paraErrorResponse();
+        }
         SysDict dict = new SysDict();
         BeanUtils.copyProperties(sysDict, dict);
         return successResponse(this.dictService.saveOrUpdate(dict));
@@ -109,11 +121,13 @@ public final class DictController extends BaseController implements IDictFacade 
 
     @Override
     public ResponseData<DictIndexVO> dictIndex(Long id) {
-        if (id == null || id < 0)
+        if (id == null || id < 0) {
             return paraErrorResponse();
+        }
         SysDictIndex dictIndex = this.dictIndexService.getById(id);
-        if (dictIndex == null)
+        if (dictIndex == null) {
             return this.successResponse();
+        }
         DictIndexVO vo = new DictIndexVO();
         BeanUtils.copyProperties(dictIndex, vo);
         return successResponse(vo);
@@ -122,8 +136,9 @@ public final class DictController extends BaseController implements IDictFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> dictIndex(DictIndexVO dictIndex) {
-        if (dictIndex == null || dictIndex.getId() != null)
+        if (dictIndex == null || dictIndex.getId() != null) {
             return paraErrorResponse();
+        }
         SysDictIndex po = new SysDictIndex();
         BeanUtils.copyProperties(dictIndex, po);
         return successResponse(this.dictIndexService.save(po));
@@ -132,8 +147,9 @@ public final class DictController extends BaseController implements IDictFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> editDictIndex(DictIndexVO dictIndex) {
-        if (dictIndex == null || dictIndex.getId() == null)
+        if (dictIndex == null || dictIndex.getId() == null) {
             return paraErrorResponse();
+        }
         SysDictIndex po = new SysDictIndex();
         BeanUtils.copyProperties(dictIndex, po);
         return successResponse(this.dictIndexService.updateById(po));
@@ -142,8 +158,9 @@ public final class DictController extends BaseController implements IDictFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> deleteDictIndex(Long id) {
-        if (id == null || id < 0)
+        if (id == null || id < 0) {
             return paraErrorResponse();
+        }
         return successResponse(this.dictIndexService.removeById(id));
     }
 
@@ -152,11 +169,16 @@ public final class DictController extends BaseController implements IDictFacade 
             @PathVariable("current") int current,
             @PathVariable("size") int size,
             HttpServletRequest request) {
-        if (current <= 0) current = 1;
-        if (size <= 0) size = 10;
+        if (current <= 0) {
+            current = 1;
+        }
+        if (size <= 0) {
+            size = 10;
+        }
         DictIndexVO dictIndexVO = Request2ModelUtil.covert(DictIndexVO.class, request);
-        if (dictIndexVO == null)
+        if (dictIndexVO == null) {
             return paraErrorResponse();
+        }
         IPage<DictIndexVO> resultPage = new Page<>(current, size);
         SysDictIndex dictIndex = new SysDictIndex();
         BeanUtils.copyProperties(dictIndexVO, dictIndex);

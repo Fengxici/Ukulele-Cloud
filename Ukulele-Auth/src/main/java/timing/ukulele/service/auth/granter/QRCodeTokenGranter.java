@@ -18,6 +18,9 @@ import java.util.Map;
 
 import static timing.ukulele.service.auth.Constant.*;
 
+/**
+ * @author fengxici
+ */
 public class QRCodeTokenGranter extends AbstractTokenGranter {
 
     private static final String GRANT_TYPE = "qr_code";
@@ -35,16 +38,20 @@ public class QRCodeTokenGranter extends AbstractTokenGranter {
                                                            TokenRequest tokenRequest) {
 
         Map<String, String> parameters = new LinkedHashMap<>(tokenRequest.getRequestParameters());
-        String connectId = parameters.get(SPRING_SECURITY_CONNECT_ID_KEY);  //客户端提交的连接标识
-        String username = parameters.get(SPRING_SECURITY_CONNECT_USERNAME_KEY);//客户端提交的用户名
-        String code = parameters.get(SPRING_SECURITY_QR_CODE_KEY);  //客户端提交的验证码
+        //客户端提交的连接标识
+        String connectId = parameters.get(SPRING_SECURITY_CONNECT_ID_KEY);
+        //客户端提交的用户名
+        String username = parameters.get(SPRING_SECURITY_CONNECT_USERNAME_KEY);
+        //客户端提交的验证码
+        String code = parameters.get(SPRING_SECURITY_QR_CODE_KEY);
         if (StringUtils.isEmpty(code) || StringUtils.isEmpty(connectId) || StringUtils.isEmpty(username)) {
             throw new InvalidGrantException("参数有误");
         }
         Authentication userAuth = new QRCodeAuthenticationToken(username, code, connectId);
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
         try {
-            userAuth = authenticationManager.authenticate(userAuth);//调用上面的provide 验证
+            //调用上面的provide 验证
+            userAuth = authenticationManager.authenticate(userAuth);
         } catch (AccountStatusException | BadCredentialsException ase) {
             throw new InvalidGrantException(ase.getMessage());
         }

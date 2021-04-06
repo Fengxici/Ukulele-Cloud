@@ -25,26 +25,34 @@ import timing.ukulele.gateway.handler.UkuleleAccessDeniedHandler;
 
 import java.util.Base64;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 资源服务器配置
+ *
+ * @author fengxici
  */
 @Configuration
 @EnableResourceServer
 @EnableConfigurationProperties(UkuleleOauth2Properties.class)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
-    @Autowired
-    private UkuleleOauth2Properties oauth2Properties;
 
-    @Autowired
     private OAuth2WebSecurityExpressionHandler expressionHandler;
+    private final UkuleleAccessDeniedHandler accessDeniedHandler;
+    private final ResourceServerProperties resource;
+    private final UkuleleOauth2Properties oauth2Properties;
+
+    public ResourceServerConfiguration(UkuleleOauth2Properties oauth2Properties, UkuleleAccessDeniedHandler accessDeniedHandler, ResourceServerProperties resource) {
+        this.oauth2Properties = oauth2Properties;
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.resource = resource;
+    }
 
     @Autowired
-    private UkuleleAccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private ResourceServerProperties resource;
+    public void setExpressionHandler(OAuth2WebSecurityExpressionHandler expressionHandler) {
+        this.expressionHandler = expressionHandler;
+    }
 
     @Bean
     public TokenStore tokenStore(JwtAccessTokenConverter jwtAccessTokenConverter) {
@@ -74,8 +82,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         }
         final HttpEntity<Void> request = new HttpEntity<>(headers);
         final String url = this.resource.getJwt().getKeyUri();
-        return (String) keyUriRestTemplate
-                .exchange(url, HttpMethod.GET, request, Map.class).getBody()
+        return (String) Objects.requireNonNull(keyUriRestTemplate
+                .exchange(url, HttpMethod.GET, request, Map.class).getBody())
                 .get("value");
     }
 

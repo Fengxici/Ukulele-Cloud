@@ -9,6 +9,8 @@ import timing.ukulele.service.user.persistent.SysUser;
  * <p>
  * 用户表 Mapper 接口
  * </p>
+ *
+ * @author fengxici
  */
 @Mapper
 @Repository

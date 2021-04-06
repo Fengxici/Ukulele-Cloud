@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import timing.ukulele.data.syslog.view.LogVO;
+import timing.ukulele.service.syslog.mapper.SysLogMapper;
 import timing.ukulele.service.syslog.persistent.SysLog;
 
 import java.util.ArrayList;
@@ -18,12 +19,13 @@ import java.util.List;
  * <p>
  * 日志表 服务实现类
  * </p>
+ * @author fengxici
  */
 @Service
-public class SysLogService extends ServiceImpl<BaseMapper<SysLog>, SysLog> {
+public class SysLogService extends ServiceImpl<SysLogMapper, SysLog> {
     public IPage<LogVO> getPage(SysLog log, int current, int pageSize) {
         Page<SysLog> page = new Page<>(current, pageSize);
-        IPage<SysLog> iPage = this.baseMapper.selectPage(page, new QueryWrapper<>(log).orderByDesc("create_time"));
+        IPage<SysLog> iPage = this.getBaseMapper().selectPage(page, new QueryWrapper<>(log).orderByDesc("create_time"));
         IPage<LogVO> voPage = new Page<>(current, pageSize);
         if (iPage != null && !CollectionUtils.isEmpty(iPage.getRecords())) {
             List<LogVO> voList = new ArrayList<>(iPage.getRecords().size());

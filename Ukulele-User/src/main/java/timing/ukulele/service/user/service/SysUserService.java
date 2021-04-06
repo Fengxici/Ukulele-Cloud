@@ -21,9 +21,12 @@ import timing.ukulele.service.user.persistent.SysUser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author fengxici
+ */
 @Slf4j
 @Service
-public class SysUserService extends BaseService<SysUser> {
+public class SysUserService extends BaseService<SysUserMapper, SysUser> {
     private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
     private final SysUserMapper sysUserMapper;
@@ -51,9 +54,11 @@ public class SysUserService extends BaseService<SysUser> {
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>(new SysUser());
         queryWrapper.eq(SysUser::getPhone, param).or().eq(SysUser::getUsername, param);
         List<SysUser> list = list(queryWrapper);
-        if (CollectionUtils.isEmpty(list))
+        if (CollectionUtils.isEmpty(list)) {
             return null;
-        list.get(0).setPassword(null);//脱敏
+        }
+        //脱敏
+        list.get(0).setPassword(null);
         return list.get(0);
     }
 
@@ -67,8 +72,9 @@ public class SysUserService extends BaseService<SysUser> {
                 UserVO vo = new UserVO();
                 po.setPassword(null);
                 BeanUtils.copyProperties(po, vo);
-                if (StringUtils.isNotEmpty(po.getLabel()))
+                if (StringUtils.isNotEmpty(po.getLabel())) {
                     vo.setLabel(JSON.parseArray(po.getLabel(), String.class));
+                }
                 voList.add(vo);
             });
             voPage.setRecords(voList);

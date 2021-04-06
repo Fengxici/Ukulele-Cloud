@@ -5,7 +5,6 @@ import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -23,6 +22,7 @@ import static timing.ukulele.gateway.filter.GatewayHeaderConstants.USER_HEADER;
 
 /**
  * 请求日志记录
+ * @author fengxici
  */
 @Component
 @Slf4j
@@ -87,8 +87,9 @@ public class PreRequestLogFilter extends ZuulFilter {
             // 记录操作日志
             log.setType(LogType.Operation.name());
             log.setTitle(LogType.Operation.name());
-            if (HttpMethod.GET.matches(request.getMethod()))
+            if (HttpMethod.GET.matches(request.getMethod())) {
                 log.setParams(queryParam(request));
+            }
             log.setCreateBy(ctx.getZuulRequestHeaders().get(USER_HEADER));
             rabbitTemplate.convertAndSend(LogExchange.SYS_LOG_EXCHANGE, LogExchange.SYS_LOG_ROUTING_KEY, log);
         }

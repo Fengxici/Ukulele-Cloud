@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author fengxici
+ */
 @Controller
 @SessionAttributes({"authorizationRequest"})
 
@@ -42,8 +45,9 @@ public class MvcController extends BaseController {
             String referer = request.getHeader("referer");
             if (referer != null) {
                 int index = referer.indexOf("?");
-                if (index != -1)
+                if (index != -1) {
                     referer = referer.substring(0, index);
+                }
                 response.sendRedirect(referer);
             }
         } catch (IOException e) {

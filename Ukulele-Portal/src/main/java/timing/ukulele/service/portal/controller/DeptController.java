@@ -21,6 +21,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author fengxici
+ */
 @RestController
 public final class DeptController extends BaseController implements IDeptFacade {
     private final String router = "/system/dept";
@@ -33,11 +36,13 @@ public final class DeptController extends BaseController implements IDeptFacade 
 
     @Override
     public ResponseData<SysDeptVO> get(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         SysDept dept = this.deptService.getById(id);
-        if (dept == null)
+        if (dept == null) {
             return successResponse();
+        }
         SysDeptVO vo = new SysDeptVO();
         BeanUtils.copyProperties(dept, vo);
         return successResponse(vo);
@@ -45,11 +50,13 @@ public final class DeptController extends BaseController implements IDeptFacade 
 
     @Override
     public ResponseData<List<SysDeptVO>> getDeptByParam(Map<String, Object> map) {
-        if (map == null)
+        if (map == null) {
             return paraErrorResponse();
+        }
         List<SysDept> list = new ArrayList<>(this.deptService.listByMap(map));
-        if (CollectionUtils.isEmpty(list))
+        if (CollectionUtils.isEmpty(list)) {
             return successResponse();
+        }
         List<SysDeptVO> voList = new ArrayList<>(list.size());
         list.forEach(po -> {
             SysDeptVO vo = new SysDeptVO();
@@ -69,8 +76,9 @@ public final class DeptController extends BaseController implements IDeptFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> add(SysDeptVO sysDept) {
-        if (sysDept == null || sysDept.getId() != null)
+        if (sysDept == null || sysDept.getId() != null) {
             return paraErrorResponse();
+        }
         SysDept po = new SysDept();
         BeanUtils.copyProperties(sysDept, po);
         return successResponse(this.deptService.save(po));
@@ -79,16 +87,18 @@ public final class DeptController extends BaseController implements IDeptFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> delete(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         return this.deptService.removeDept(id);
     }
 
     @Override
     @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER, RoleConstant.ADMIN}, router = router)
     public ResponseData<Boolean> edit(SysDeptVO sysDept) {
-        if (sysDept == null || sysDept.getId() == null)
+        if (sysDept == null || sysDept.getId() == null) {
             return paraErrorResponse();
+        }
         SysDept po = new SysDept();
         BeanUtils.copyProperties(sysDept, po);
         return successResponse(this.deptService.updateById(po));
@@ -96,12 +106,13 @@ public final class DeptController extends BaseController implements IDeptFacade 
 
     private List<DeptTree> createMenuTree(Collection<SysDept> menuList) {
         List<DeptTree> menuTreeList = new ArrayList<>();
-        if (!CollectionUtils.isEmpty(menuList))
+        if (!CollectionUtils.isEmpty(menuList)) {
             menuList.forEach(dept -> {
                 DeptTree node = new DeptTree();
                 BeanUtils.copyProperties(dept, node);
                 menuTreeList.add(node);
             });
+        }
         return TreeUtil.buildByRecursive(menuTreeList, 0L);
     }
 }

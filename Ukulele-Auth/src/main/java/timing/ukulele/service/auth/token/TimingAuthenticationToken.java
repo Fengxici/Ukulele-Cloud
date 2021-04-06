@@ -7,6 +7,8 @@ import java.util.Collection;
 
 /**
  * 自定义AbstractAuthenticationToken
+ *
+ * @author fengxici
  */
 public class TimingAuthenticationToken extends AbstractAuthenticationToken {
 
@@ -53,6 +55,7 @@ public class TimingAuthenticationToken extends AbstractAuthenticationToken {
         return this.principal;
     }
 
+    @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
         if (isAuthenticated) {
             throw new IllegalArgumentException("Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
@@ -61,6 +64,7 @@ public class TimingAuthenticationToken extends AbstractAuthenticationToken {
         }
     }
 
+    @Override
     public void eraseCredentials() {
         super.eraseCredentials();
         this.credentials = null;

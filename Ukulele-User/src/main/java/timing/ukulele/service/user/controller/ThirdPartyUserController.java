@@ -25,7 +25,11 @@ import timing.ukulele.web.controller.BaseController;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * @author fengxici
+ */
 @RestController
 public class ThirdPartyUserController extends BaseController implements IThirdPartyUserFacade {
 
@@ -34,17 +38,21 @@ public class ThirdPartyUserController extends BaseController implements IThirdPa
     @Value("${wx.appsecret}")
     private String wxSecret;
 
-    @Autowired
-    SysUserService userService;
-    @Autowired
-    SysThirdpartyUserService thirdpartyUserService;
+    private final SysUserService userService;
+    private final SysThirdpartyUserService thirdpartyUserService;
 
     private String wxAppCode2Session = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
 
+    public ThirdPartyUserController(SysUserService userService, SysThirdpartyUserService thirdpartyUserService) {
+        this.userService = userService;
+        this.thirdpartyUserService = thirdpartyUserService;
+    }
+
     @GetMapping("/wx/app/login")
     public ResponseData<String> wxAppLogin(@RequestParam("code") String code) {
-        if (StringUtils.isEmpty(code))
+        if (StringUtils.isEmpty(code)) {
             return paraErrorResponse();
+        }
         String code2SessionUrl = String.format(wxAppCode2Session, wxAppid, wxSecret, code);
         Request request = new Request.Builder()
                 .url(code2SessionUrl).get()
@@ -53,11 +61,12 @@ public class ThirdPartyUserController extends BaseController implements IThirdPa
             Response response = OkHttpManager.INSTANCE.build(null).getClient().newCall(request).execute();
             if (response.isSuccessful()) {
                 try {
-                    String responseBody = response.body().string();
+                    String responseBody = Objects.requireNonNull(response.body()).string();
                     WxAppSessionResponse model = JSON.parseObject(responseBody, new TypeReference<WxAppSessionResponse>() {
                     });
-                    if (model != null && model.getOpenid() != null && model.getOpenid().length() > 0)
+                    if (model != null && model.getOpenid() != null && model.getOpenid().length() > 0) {
                         return successResponse(model.getOpenid());
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -68,7 +77,6 @@ public class ThirdPartyUserController extends BaseController implements IThirdPa
         return errorResponse("获取用户微信标识失败");
     }
 
-    //    @Override
     public ResponseData<ThirdPartyUserVO> getThirdUserByAll(String platId, Long userId, Integer plat) {
         LambdaQueryWrapper<SysThirdpartyUser> queryWrapper = new LambdaQueryWrapper<>(new SysThirdpartyUser());
         queryWrapper.eq(SysThirdpartyUser::getPlatSource, plat).eq(SysThirdpartyUser::getPlatId, platId).eq(SysThirdpartyUser::getUserId, userId).eq(SysThirdpartyUser::getDeleted, Boolean.FALSE);
@@ -86,8 +94,9 @@ public class ThirdPartyUserController extends BaseController implements IThirdPa
 
     private ThirdPartyUserVO getVO(LambdaQueryWrapper<SysThirdpartyUser> queryWrapper) {
         List<SysThirdpartyUser> list = thirdpartyUserService.list(queryWrapper);
-        if (CollectionUtils.isEmpty(list))
+        if (CollectionUtils.isEmpty(list)) {
             return null;
+        }
         ThirdPartyUserVO vo = new ThirdPartyUserVO();
         BeanUtils.copyProperties(list.get(0), vo);
         return vo;

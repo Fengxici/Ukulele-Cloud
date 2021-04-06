@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * ukulele oauth2 配置类
+ * @author fengxici
  */
 @ConfigurationProperties("ukulele.oauth2")
 @Data

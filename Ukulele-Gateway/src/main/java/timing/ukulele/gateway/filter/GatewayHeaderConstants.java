@@ -1,6 +1,9 @@
 package timing.ukulele.gateway.filter;
 
 
+/**
+ * @author fengxici
+ */
 public interface GatewayHeaderConstants {
     /**
      * 用户信息头

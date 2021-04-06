@@ -19,6 +19,9 @@ import java.util.Map;
 import static timing.ukulele.service.auth.Constant.SPRING_SECURITY_PLAT_CODE_KEY;
 import static timing.ukulele.service.auth.Constant.SPRING_SECURITY_PLAT_TYPE_KEY;
 
+/**
+ * @author fengxici
+ */
 public class ThirdOpenTokenGranter extends AbstractTokenGranter {
 
     private static final String GRANT_TYPE = "third_open";
@@ -37,8 +40,10 @@ public class ThirdOpenTokenGranter extends AbstractTokenGranter {
                                                            TokenRequest tokenRequest) {
 
         Map<String, String> parameters = new LinkedHashMap<>(tokenRequest.getRequestParameters());
-        String code = parameters.get(SPRING_SECURITY_PLAT_CODE_KEY);  //客户端提交的验证码
-        String type = parameters.get(SPRING_SECURITY_PLAT_TYPE_KEY);//第三方平台类型
+        //客户端提交的验证码
+        String code = parameters.get(SPRING_SECURITY_PLAT_CODE_KEY);
+        //第三方平台类型
+        String type = parameters.get(SPRING_SECURITY_PLAT_TYPE_KEY);
         if (StringUtils.isEmpty(code) ) {
             throw new InvalidGrantException("授权码错误");
         }
@@ -49,7 +54,8 @@ public class ThirdOpenTokenGranter extends AbstractTokenGranter {
         Authentication userAuth = new ThirdOpenAuthenticationToken(code, Integer.valueOf(type));
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
         try {
-            userAuth = authenticationManager.authenticate(userAuth);//调用上面的provide 验证
+            //调用上面的provide 验证
+            userAuth = authenticationManager.authenticate(userAuth);
         } catch (AccountStatusException | BadCredentialsException ase) {
 //covers expired, locked, disabled cases (mentioned in section 5.2, draft 31)
             throw new InvalidGrantException(ase.getMessage());

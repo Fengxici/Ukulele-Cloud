@@ -10,6 +10,9 @@ import timing.ukulele.data.syslog.view.LogVO;
 import timing.ukulele.service.syslog.persistent.SysLog;
 import timing.ukulele.service.syslog.service.SysLogService;
 
+/**
+ * @author fengxici
+ */
 @Component
 public class LogMessageReceiver {
 

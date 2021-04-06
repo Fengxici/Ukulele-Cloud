@@ -6,6 +6,7 @@ import lombok.Data;
  * <p>
  * 用户角色表
  * </p>
+ * @author fengxici
  */
 @Data
 public class SysUserRole {

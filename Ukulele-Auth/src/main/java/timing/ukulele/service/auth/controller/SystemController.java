@@ -24,6 +24,9 @@ import java.util.Map;
 
 import static timing.ukulele.service.auth.Constant.SPRING_SECURITY_SMS_CODE_LENGTH;
 
+/**
+ * @author fengxici
+ */
 @Slf4j
 @RestController
 public final class SystemController extends BaseController implements IClientFacade {
@@ -115,8 +118,9 @@ public final class SystemController extends BaseController implements IClientFac
         String code = RandomStringUtils.randomNumeric(SPRING_SECURITY_SMS_CODE_LENGTH);
         cacheManager.set(PrefixConstant.QR_CONNECT_ID + connectId, code, 3 * 60);
         ResponseData<UserVO> userResponse = userService.getUserByUserName(username);
-        if (null == userResponse || null == userResponse.getData())
+        if (null == userResponse || null == userResponse.getData()) {
             errorResponse("没有查到该用户");
+        }
         return successResponse();
     }
 

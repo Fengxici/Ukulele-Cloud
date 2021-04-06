@@ -26,8 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author fengxici
+ */
 @Service
-public class SysRoleService extends BaseService<SysRole> {
+public class SysRoleService extends BaseService<SysRoleMapper, SysRole> {
     private final AntMenuService menuService;
     private final AntRoleMenuMapper roleMenuMapper;
 
@@ -46,7 +49,7 @@ public class SysRoleService extends BaseService<SysRole> {
     public Boolean insertRole(RoleVO roleDto) {
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
-        this.baseMapper.insert(sysRole);
+        this.getBaseMapper().insert(sysRole);
         return true;
     }
 
@@ -61,7 +64,7 @@ public class SysRoleService extends BaseService<SysRole> {
         //更新角色信息
         SysRole sysRole = new SysRole();
         BeanUtils.copyProperties(roleDto, sysRole);
-        this.baseMapper.updateById(sysRole);
+        this.getBaseMapper().updateById(sysRole);
 
         return true;
     }
@@ -73,45 +76,52 @@ public class SysRoleService extends BaseService<SysRole> {
      * @return 角色列表
      */
     public List<SysRole> selectListByDeptId(Long deptId) {
-        return ((SysRoleMapper) this.baseMapper).selectListByDeptId(deptId);
+        return this.getBaseMapper().selectListByDeptId(deptId);
     }
 
     public List<SysRole> getRoleByUserId(Long id) {
-        return ((SysRoleMapper) this.baseMapper).getRoleByUserId(id);
+        return this.getBaseMapper().getRoleByUserId(id);
     }
 
 
     public Boolean deleteUserRole(Long userId, Long roleId) {
-        return ((SysRoleMapper) this.baseMapper).deleteUserRole(userId, roleId) >= 0;
+        return this.getBaseMapper().deleteUserRole(userId, roleId) >= 0;
     }
 
     public Boolean addUserRole(Long userId, Long roleId) {
-        return ((SysRoleMapper) this.baseMapper).addUserRole(userId, roleId) > 0;
+        return this.getBaseMapper().addUserRole(userId, roleId) > 0;
     }
 
     public Map<String, Map<String, RolePermission>> rolePermission(List<String> roleCode) {
         List<AntMenu> menuList = menuService.list();
-        if (CollectionUtils.isEmpty(menuList))
+        if (CollectionUtils.isEmpty(menuList)) {
             return null;
+        }
         Map<Long, AntMenu> menuMap = menuList.stream().collect(Collectors.toMap(AntMenu::getId, a -> a, (k1, k2) -> k1));
         List<SysRole> roleList = list();
-        if (CollectionUtils.isEmpty(roleList))
+        if (CollectionUtils.isEmpty(roleList)) {
             return null;
+        }
         Map<Long, SysRole> roleMap = roleList.stream().collect(Collectors.toMap(SysRole::getId, a -> a, (k1, k2) -> k1));
         List<AntRoleMenu> roleMenuList = roleMenuMapper.selectAll();
-        if (CollectionUtils.isEmpty(roleMenuList))
+        if (CollectionUtils.isEmpty(roleMenuList)) {
             return null;
+        }
         Map<String, Map<String, RolePermission>> roleMenuPermissionMap = new HashMap<>(roleMap.size());
         roleMenuList.forEach(antRoleMenu -> {
             AntMenu menu = menuMap.get(antRoleMenu.getMenuId());
-            if (null == menu || StringUtils.isEmpty(menu.getLink()))
+            if (null == menu || StringUtils.isEmpty(menu.getLink())) {
                 return;
-            if (null == roleMap.get(antRoleMenu.getRoleId()))
+            }
+            if (null == roleMap.get(antRoleMenu.getRoleId())) {
                 return;
-            if (StringUtils.isEmpty(menu.getAcl()))
+            }
+            if (StringUtils.isEmpty(menu.getAcl())) {
                 return;
-            if (StringUtils.isEmpty(antRoleMenu.getAbility()))
+            }
+            if (StringUtils.isEmpty(antRoleMenu.getAbility())) {
                 return;
+            }
             Map<String, RolePermission> rolePermissionMap = roleMenuPermissionMap.computeIfAbsent(roleMap.get(antRoleMenu.getRoleId()).getRoleCode(), k -> new HashMap<>());
             String router = menuMap.get(antRoleMenu.getMenuId()).getLink();
             RolePermission rolePermission = new RolePermission();

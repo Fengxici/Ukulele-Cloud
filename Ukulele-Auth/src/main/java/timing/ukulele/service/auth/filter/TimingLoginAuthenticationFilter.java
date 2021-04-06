@@ -21,12 +21,13 @@ import static timing.ukulele.service.auth.Constant.*;
 /**
  * 自定义登陆filter，新增登陆方式：验证码、二维码扫码、账号密码、第三方平台
  * 此filter 为生成自定义的 TimingAuthenticationToken
+ * @author fengxici
  */
 public class TimingLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (!request.getMethod().equals("POST")) {
+        if (!"POST".equals(request.getMethod())) {
             throw new AuthenticationServiceException(
                     "Authentication method not supported: " + request.getMethod());
         }
@@ -36,35 +37,39 @@ public class TimingLoginAuthenticationFilter extends UsernamePasswordAuthenticat
         String credentials;
 
         // 手机验证码登陆
-        if (SPRING_SECURITY_TYPE_PHONE.equals(type)) {
-            principal = obtainParameter(request, SPRING_SECURITY_PHONE_KEY);
-            credentials = obtainParameter(request, SPRING_SECURITY_SMS_CODE_KEY);
-            principal = principal.trim();
-            authRequest = new SmsCodeAuthenticationToken(principal, credentials);
-        }
-        // 二维码扫码登陆
-        else if (SPRING_SECURITY_TYPE_QR.equals(type)) {
-            principal = obtainParameter(request, SPRING_SECURITY_CONNECT_USERNAME_KEY);
-            String code = obtainParameter(request, SPRING_SECURITY_QR_CODE_KEY);
-            String connectId = obtainParameter(request, SPRING_SECURITY_CONNECT_ID_KEY);
-            authRequest = new QRCodeAuthenticationToken(principal, code, connectId);
-        }
-        // 第三方
-        else if (SPRING_SECURITY_TYPE_THIRD.equals(type)) {
-            principal = obtainParameter(request, SPRING_SECURITY_PLAT_CODE_KEY);
+        switch (type) {
+            case SPRING_SECURITY_TYPE_PHONE:
+                principal = obtainParameter(request, SPRING_SECURITY_PHONE_KEY);
+                credentials = obtainParameter(request, SPRING_SECURITY_SMS_CODE_KEY);
+                principal = principal.trim();
+                authRequest = new SmsCodeAuthenticationToken(principal, credentials);
+                break;
+            // 二维码扫码登陆
+            case SPRING_SECURITY_TYPE_QR:
+                principal = obtainParameter(request, SPRING_SECURITY_CONNECT_USERNAME_KEY);
+                String code = obtainParameter(request, SPRING_SECURITY_QR_CODE_KEY);
+                String connectId = obtainParameter(request, SPRING_SECURITY_CONNECT_ID_KEY);
+                authRequest = new QRCodeAuthenticationToken(principal, code, connectId);
+                break;
+            // 第三方
+            case SPRING_SECURITY_TYPE_THIRD:
+                principal = obtainParameter(request, SPRING_SECURITY_PLAT_CODE_KEY);
 //            credentials = obtainParameter(request, SPRING_SECURITY_PLAT_CODE_KEY);
-            String plat = obtainParameter(request, SPRING_SECURITY_PLAT_TYPE_KEY);
-            if (!StringUtils.isEmpty(plat))
-                authRequest = new ThirdOpenAuthenticationToken(principal, Integer.valueOf(plat));
-        }
-        // 账号密码登陆
-        else {
-            principal = obtainParameter(request, SPRING_SECURITY_USERNAME_KEY);
-            credentials = obtainParameter(request, SPRING_SECURITY_PASSWORD_KEY);
-            principal = principal.trim();
-            authRequest = new UsernamePasswordAuthenticationToken(principal, credentials);
+                String plat = obtainParameter(request, SPRING_SECURITY_PLAT_TYPE_KEY);
+                if (!StringUtils.isEmpty(plat)) {
+                    authRequest = new ThirdOpenAuthenticationToken(principal, Integer.valueOf(plat));
+                }
+                break;
+            // 账号密码登陆
+            default:
+                principal = obtainParameter(request, SPRING_SECURITY_USERNAME_KEY);
+                credentials = obtainParameter(request, SPRING_SECURITY_PASSWORD_KEY);
+                principal = principal.trim();
+                authRequest = new UsernamePasswordAuthenticationToken(principal, credentials);
+                break;
         }
         // Allow subclasses to set the "details" property
+        assert authRequest != null;
         setDetails(request, authRequest);
         AuthenticationManager authenticationManager = this.getAuthenticationManager();
         Authentication authenticate = authenticationManager.authenticate(authRequest);

@@ -9,6 +9,7 @@ import org.springframework.web.filter.CorsFilter;
 
 /**
  * 跨域开发环境使用 vue-cli或angular cli 代理，正式用nginx
+ * @author fengxici
  */
 @Configuration
 public class CorsConfig {

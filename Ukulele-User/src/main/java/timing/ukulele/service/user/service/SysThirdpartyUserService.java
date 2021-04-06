@@ -1,22 +1,21 @@
 package timing.ukulele.service.user.service;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import timing.ukulele.service.user.mapper.SysThirdpartyUserMapper;
 import timing.ukulele.service.user.persistent.SysThirdpartyUser;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
 
-@DS("slave")
+/**
+ * @author fengxici
+ */
 @Service
-public class SysThirdpartyUserService extends ServiceImpl<SysThirdpartyUserMapper,SysThirdpartyUser> {
-    @DS("master")
+public class SysThirdpartyUserService extends ServiceImpl<SysThirdpartyUserMapper, SysThirdpartyUser> {
+
+    @Override
     public boolean save(SysThirdpartyUser entity) {
         Date now = new Date();
         entity.setCreateTime(now);
@@ -27,7 +26,7 @@ public class SysThirdpartyUserService extends ServiceImpl<SysThirdpartyUserMappe
         return super.save(entity);
     }
 
-    @DS("master")
+    @Override
     public boolean saveBatch(Collection<SysThirdpartyUser> entityList, int batchSize) {
         if (CollectionUtils.isEmpty(entityList)) {
             return false;
@@ -44,7 +43,7 @@ public class SysThirdpartyUserService extends ServiceImpl<SysThirdpartyUserMappe
         }
     }
 
-    @DS("master")
+    @Override
     public boolean saveOrUpdate(SysThirdpartyUser entity) {
         Date now = new Date();
         if (entity.getId() == null) {
@@ -57,7 +56,7 @@ public class SysThirdpartyUserService extends ServiceImpl<SysThirdpartyUserMappe
         return super.saveOrUpdate(entity);
     }
 
-    @DS("master")
+    @Override
     public boolean saveOrUpdateBatch(Collection<SysThirdpartyUser> entityList) {
         if (CollectionUtils.isEmpty(entityList)) {
             return false;
@@ -76,7 +75,7 @@ public class SysThirdpartyUserService extends ServiceImpl<SysThirdpartyUserMappe
         }
     }
 
-    @DS("master")
+    @Override
     public boolean saveOrUpdateBatch(Collection<SysThirdpartyUser> entityList, int batchSize) {
         if (CollectionUtils.isEmpty(entityList)) {
             return false;
@@ -95,37 +94,7 @@ public class SysThirdpartyUserService extends ServiceImpl<SysThirdpartyUserMappe
         }
     }
 
-    @DS("master")
-    public boolean removeById(Serializable id) {
-        return super.removeById(id);
-    }
-
-    @DS("master")
-    public boolean removeByMap(Map<String, Object> columnMap) {
-        return super.removeByMap(columnMap);
-    }
-
-    @DS("master")
-    public boolean remove(Wrapper<SysThirdpartyUser> wrapper) {
-        return super.remove(wrapper);
-    }
-
-    @DS("master")
-    public boolean removeByIds(Collection<? extends Serializable> idList) {
-        return super.removeByIds(idList);
-    }
-
-    @DS("master")
-    public boolean updateById(SysThirdpartyUser entity) {
-        return super.updateById(entity);
-    }
-
-    @DS("master")
-    public boolean update(SysThirdpartyUser entity, Wrapper<SysThirdpartyUser> updateWrapper) {
-        return super.update(entity, updateWrapper);
-    }
-
-    @DS("master")
+    @Override
     public boolean updateBatchById(Collection<SysThirdpartyUser> entityList, int batchSize) {
         if (CollectionUtils.isEmpty(entityList)) {
             return false;

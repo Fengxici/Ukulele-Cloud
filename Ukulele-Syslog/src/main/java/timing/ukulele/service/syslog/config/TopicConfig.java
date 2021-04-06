@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import timing.ukulele.data.syslog.LogExchange;
 
 
+/**
+ * @author fengxici
+ */
 @Configuration
 public class TopicConfig {
     @Bean

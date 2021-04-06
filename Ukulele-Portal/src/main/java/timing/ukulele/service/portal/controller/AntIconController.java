@@ -23,6 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author fengxici
+ */
 @RestController
 public class AntIconController extends BaseController implements IAntIconFacade {
     private final String router = "/config/icon";
@@ -35,8 +38,9 @@ public class AntIconController extends BaseController implements IAntIconFacade 
 
     @Override
     public ResponseData<AntIconVO> get(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         AntIcon po = this.antIconService.getById(id);
         if (po != null) {
             AntIconVO vo = new AntIconVO();
@@ -51,8 +55,9 @@ public class AntIconController extends BaseController implements IAntIconFacade 
     public ResponseData<List<AntIconVO>> getByParam(HttpServletRequest request) {
         AntIcon antIcon = Request2ModelUtil.covert(AntIcon.class, request);
         List<AntIcon> poList = this.antIconService.list(new QueryWrapper<>(antIcon));
-        if (CollectionUtils.isEmpty(poList))
+        if (CollectionUtils.isEmpty(poList)) {
             return successResponse();
+        }
         List<AntIconVO> voList = new ArrayList<>(poList.size());
         poList.forEach(po -> {
             AntIconVO vo = new AntIconVO();
@@ -65,8 +70,9 @@ public class AntIconController extends BaseController implements IAntIconFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.ADD, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> add(AntIconVO sysAntIcon) {
-        if (sysAntIcon == null || sysAntIcon.getId() != null)
+        if (sysAntIcon == null || sysAntIcon.getId() != null) {
             return paraErrorResponse();
+        }
         AntIcon icon = new AntIcon();
         BeanUtils.copyProperties(sysAntIcon, icon);
         return successResponse(this.antIconService.save(icon));
@@ -75,16 +81,18 @@ public class AntIconController extends BaseController implements IAntIconFacade 
     @Override
     @RequiredPermission(ability = AbilityConstant.DELETE, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> delete(Long id) {
-        if (id == null || id <= 0)
+        if (id == null || id <= 0) {
             return paraErrorResponse();
+        }
         return successResponse(this.antIconService.removeById(id));
     }
 
     @Override
     @RequiredPermission(ability = AbilityConstant.EDIT, acl = {RoleConstant.SUPER}, router = router)
     public ResponseData<Boolean> edit(AntIconVO sysAntIcon) {
-        if (sysAntIcon == null || sysAntIcon.getId() == null)
+        if (sysAntIcon == null || sysAntIcon.getId() == null) {
             return paraErrorResponse();
+        }
         AntIcon icon = new AntIcon();
         BeanUtils.copyProperties(sysAntIcon, icon);
         return successResponse(this.antIconService.saveOrUpdate(icon));
@@ -95,8 +103,12 @@ public class AntIconController extends BaseController implements IAntIconFacade 
     public ResponseData<IPage<AntIconVO>> getPage(@PathVariable(name = "current") int current,
                                                   @PathVariable(name = "size") int size, HttpServletRequest request) {
         AntIcon antIcon = Request2ModelUtil.covert(AntIcon.class, request);
-        if (size == 0) size = 10;
-        if (current == 0) current = 1;
+        if (size == 0) {
+            size = 10;
+        }
+        if (current == 0) {
+            current = 1;
+        }
         return successResponse(this.antIconService.getPage(antIcon, current, size));
     }
 }

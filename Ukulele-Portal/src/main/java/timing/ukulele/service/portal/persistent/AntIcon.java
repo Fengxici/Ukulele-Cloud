@@ -4,12 +4,15 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import timing.ukulele.persistence.model.BaseModel;
+import timing.ukulele.persistence.model.BaseIdWorkerModel;
 
+/**
+ * @author fengxici
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("ant_icon")
-public class AntIcon extends BaseModel {
+public class AntIcon extends BaseIdWorkerModel {
     @TableField("type_")
     private String type;
     @TableField("value_")
