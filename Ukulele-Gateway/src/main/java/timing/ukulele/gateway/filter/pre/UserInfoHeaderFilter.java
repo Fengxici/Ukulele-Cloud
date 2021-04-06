@@ -52,7 +52,6 @@ public class UserInfoHeaderFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
-//        HttpServletRequest request = ctx.getRequest();
         ctx.set("startTime", System.currentTimeMillis());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
