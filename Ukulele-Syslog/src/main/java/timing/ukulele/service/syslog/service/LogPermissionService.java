@@ -32,7 +32,7 @@ public class LogPermissionService implements PermissionService {
 
     @Override
     public Set<String> abilitySet(String router, List<String> acl) {
-        if (StringUtils.isEmpty(router) || CollectionUtils.isEmpty(acl)) {
+        if (!StringUtils.hasLength(router) || CollectionUtils.isEmpty(acl)) {
             return null;
         }
         Set<String> abilitySet = new HashSet<>();

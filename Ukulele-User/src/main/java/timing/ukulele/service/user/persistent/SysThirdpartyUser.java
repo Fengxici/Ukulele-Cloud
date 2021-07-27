@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @TableName("sys_thirdparty_user")
 public class SysThirdpartyUser implements Serializable {
-    @TableId(value = "id_", type = IdType.ID_WORKER)
+    @TableId(value = "id_", type = IdType.ASSIGN_ID)
     private Long id;
     @TableField("deleted_")
     private Boolean deleted;

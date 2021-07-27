@@ -44,7 +44,7 @@ public class QRCodeTokenGranter extends AbstractTokenGranter {
         String username = parameters.get(SPRING_SECURITY_CONNECT_USERNAME_KEY);
         //客户端提交的验证码
         String code = parameters.get(SPRING_SECURITY_QR_CODE_KEY);
-        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(connectId) || StringUtils.isEmpty(username)) {
+        if (!StringUtils.hasLength(code) || !StringUtils.hasLength(connectId) || !StringUtils.hasLength(username)) {
             throw new InvalidGrantException("参数有误");
         }
         Authentication userAuth = new QRCodeAuthenticationToken(username, code, connectId);

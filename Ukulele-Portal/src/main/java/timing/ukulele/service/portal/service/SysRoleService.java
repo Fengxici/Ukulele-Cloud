@@ -3,7 +3,6 @@ package timing.ukulele.service.portal.service;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,44 +39,44 @@ public class SysRoleService extends BaseService<SysRoleMapper, SysRole> {
         this.roleMenuMapper = roleMenuMapper;
     }
 
-    /**
-     * 添加角色
-     *
-     * @param roleDto 角色信息
-     * @return 成功、失败
-     */
-    public Boolean insertRole(RoleVO roleDto) {
-        SysRole sysRole = new SysRole();
-        BeanUtils.copyProperties(roleDto, sysRole);
-        this.getBaseMapper().insert(sysRole);
-        return true;
-    }
+//    /**
+//     * 添加角色
+//     *
+//     * @param roleDto 角色信息
+//     * @return 成功、失败
+//     */
+//    public Boolean insertRole(RoleVO roleDto) {
+//        SysRole sysRole = new SysRole();
+//        BeanUtils.copyProperties(roleDto, sysRole);
+//        this.getBaseMapper().insert(sysRole);
+//        return true;
+//    }
 
-    /**
-     * 更新角色
-     *
-     * @param roleDto 含有部门信息
-     * @return 成功、失败
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public Boolean updateRoleById(RoleVO roleDto) {
-        //更新角色信息
-        SysRole sysRole = new SysRole();
-        BeanUtils.copyProperties(roleDto, sysRole);
-        this.getBaseMapper().updateById(sysRole);
+//    /**
+//     * 更新角色
+//     *
+//     * @param roleDto 含有部门信息
+//     * @return 成功、失败
+//     */
+//    @Transactional(rollbackFor = Exception.class)
+//    public Boolean updateRoleById(RoleVO roleDto) {
+//        //更新角色信息
+//        SysRole sysRole = new SysRole();
+//        BeanUtils.copyProperties(roleDto, sysRole);
+//        this.getBaseMapper().updateById(sysRole);
+//
+//        return true;
+//    }
 
-        return true;
-    }
-
-    /**
-     * 通过部门ID查询角色列表
-     *
-     * @param deptId 部门ID
-     * @return 角色列表
-     */
-    public List<SysRole> selectListByDeptId(Long deptId) {
-        return this.getBaseMapper().selectListByDeptId(deptId);
-    }
+//    /**
+//     * 通过部门ID查询角色列表
+//     *
+//     * @param deptId 部门ID
+//     * @return 角色列表
+//     */
+//    public List<SysRole> selectListByDeptId(Long deptId) {
+//        return this.getBaseMapper().selectListByDeptId(deptId);
+//    }
 
     public List<SysRole> getRoleByUserId(Long id) {
         return this.getBaseMapper().getRoleByUserId(id);
@@ -110,16 +109,16 @@ public class SysRoleService extends BaseService<SysRoleMapper, SysRole> {
         Map<String, Map<String, RolePermission>> roleMenuPermissionMap = new HashMap<>(roleMap.size());
         roleMenuList.forEach(antRoleMenu -> {
             AntMenu menu = menuMap.get(antRoleMenu.getMenuId());
-            if (null == menu || StringUtils.isEmpty(menu.getLink())) {
+            if (null == menu || !StringUtils.hasLength(menu.getLink())) {
                 return;
             }
             if (null == roleMap.get(antRoleMenu.getRoleId())) {
                 return;
             }
-            if (StringUtils.isEmpty(menu.getAcl())) {
+            if (!StringUtils.hasLength(menu.getAcl())) {
                 return;
             }
-            if (StringUtils.isEmpty(antRoleMenu.getAbility())) {
+            if (!StringUtils.hasLength(antRoleMenu.getAbility())) {
                 return;
             }
             Map<String, RolePermission> rolePermissionMap = roleMenuPermissionMap.computeIfAbsent(roleMap.get(antRoleMenu.getRoleId()).getRoleCode(), k -> new HashMap<>());
@@ -131,9 +130,7 @@ public class SysRoleService extends BaseService<SysRoleMapper, SysRole> {
         });
         if (!CollectionUtils.isEmpty(roleCode)) {
             Map<String, Map<String, RolePermission>> selectedRoleMenuPermissionMap = new HashMap<>(roleCode.size());
-            roleCode.forEach(item -> {
-                selectedRoleMenuPermissionMap.put(item, roleMenuPermissionMap.get(item));
-            });
+            roleCode.forEach(item -> selectedRoleMenuPermissionMap.put(item, roleMenuPermissionMap.get(item)));
             return selectedRoleMenuPermissionMap;
         }
         return roleMenuPermissionMap;

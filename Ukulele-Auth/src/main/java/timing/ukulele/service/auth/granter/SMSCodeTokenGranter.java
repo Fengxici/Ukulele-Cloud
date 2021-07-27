@@ -45,7 +45,7 @@ public class SMSCodeTokenGranter extends AbstractTokenGranter {
         }
         //客户端提交的验证码
         String code = parameters.get(SPRING_SECURITY_SMS_CODE_KEY);
-        if (StringUtils.isEmpty(code) || code.length() != SPRING_SECURITY_SMS_CODE_LENGTH) {
+        if (!StringUtils.hasLength(code) || code.length() != SPRING_SECURITY_SMS_CODE_LENGTH) {
             throw new InvalidGrantException("验证码错误");
         }
         Authentication userAuth = new SmsCodeAuthenticationToken(userMobileNo, code);

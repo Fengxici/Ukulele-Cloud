@@ -88,9 +88,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     /**
      * 扩展granter type
-     *
-     * @param endpoints
-     * @return
      */
     private TokenGranter tokenGranter(final AuthorizationServerEndpointsConfigurer endpoints) {
         List<TokenGranter> granters = new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
@@ -117,8 +114,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     /**
      * 使用非对称加密算法来对Token进行签名
-     *
-     * @return
      */
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
@@ -136,7 +131,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      * 跨域, 开发环境使用代理，正式用nginx
      */
     @Bean
-    public FilterRegistrationBean corsFilter() {
+    public FilterRegistrationBean<CorsFilter> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
@@ -144,7 +139,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }

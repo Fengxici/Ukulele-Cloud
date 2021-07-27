@@ -98,6 +98,7 @@ public class PreRequestLogFilter extends ZuulFilter {
     /**
      * 获取get 参数
      */
+    @SuppressWarnings("unchecked")
     private String queryParam(HttpServletRequest request) {
         StringBuilder params = new StringBuilder();
         final Enumeration<String> names = request.getParameterNames();

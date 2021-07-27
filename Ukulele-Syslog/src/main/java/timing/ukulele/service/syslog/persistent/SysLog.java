@@ -19,7 +19,7 @@ import java.util.Date;
 @TableName("sys_log")
 public class SysLog implements Serializable {
 
-    @TableId(value = "id_", type = IdType.ID_WORKER)
+    @TableId(value = "id_", type = IdType.ASSIGN_ID)
     private Long id;
     /**
      * 日志类型

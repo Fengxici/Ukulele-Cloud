@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +45,6 @@ public class TimingUserDetailService implements UserDetailsService {
     private String wxAppid;
     @Value("${wx.appsecret}")
     private String wxSecret;
-    private final String wxAppCode2Session = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
     private final IUserFeignFacade userService;
     private final IThirdPartyUserFeignFacade thirdPartyUserService;
 
@@ -99,12 +99,12 @@ public class TimingUserDetailService implements UserDetailsService {
      * @return
      */
     public UserDetails loadUserByThirdOpenCode(String code, Integer type) {
-        if (StringUtils.isEmpty(code) || null == type) {
+        if (!StringUtils.hasLength(code) || null == type) {
             log.error("传入的第三方数据错误");
             throw new UsernameNotFoundException("传入的第三方数据错误");
         }
         String openId = code2OpenId(code);
-        if (StringUtils.isEmpty(openId)) {
+        if (!StringUtils.hasLength(openId)) {
             log.error("获取openId错误");
             throw new UsernameNotFoundException("获取openId错误");
         }
@@ -131,7 +131,7 @@ public class TimingUserDetailService implements UserDetailsService {
      */
     private UserDetails getUserDetails(UserVO baseUser, Integer type) {
         List<String> roles;
-        if (!StringUtils.isEmpty(baseUser.getLabel())) {
+        if (!CollectionUtils.isEmpty(baseUser.getLabel())) {
             roles = baseUser.getLabel();
         } else {
             roles = new ArrayList<>(0);
@@ -190,15 +190,12 @@ public class TimingUserDetailService implements UserDetailsService {
 
     /**
      * 获取微信小程序openid
-     *
-     * @param code
-     * @return
      */
     private String code2OpenId(String code) {
         if (org.apache.commons.lang.StringUtils.isEmpty(code)) {
             return null;
         }
-        String code2SessionUrl = String.format(wxAppCode2Session, wxAppid, wxSecret, code);
+        String code2SessionUrl = String.format("https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code", wxAppid, wxSecret, code);
         Request request = new Request.Builder()
                 .url(code2SessionUrl).get()
                 .build();

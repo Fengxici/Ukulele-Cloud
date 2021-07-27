@@ -1,0 +1,151 @@
+server:
+  port: 10000
+
+spring:
+  application:
+    name: gateway
+  security:
+    user:
+      name: root
+      password: root
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+  zipkin:
+#    base-url: http://127.0.0.1:7070
+    base-url: http://172.16.3.34:7070
+  sleuth:
+    sampler:
+      probability: 1.0
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    metadata-map:
+      user.name: root
+      user.password: root
+  client:
+    serviceUrl:
+      defaultZone: http://root:root@172.16.3.34:8080/eureka
+#      defaultZone: http://root:root@127.0.0.1:8080/eureka
+
+zuul:
+  host:
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
+  routes:
+    portal-service:
+      path: /api/portal-service/**
+      serviceId: portal-service
+    user-service:
+      path: /api/user-service/**
+      serviceId: user-service
+    syslog-service:
+      path: /api/syslog-service/**
+      serviceId: syslog-service
+    auth-service:
+      path: /api/auth-service/**
+      serviceId: auth-service
+    supply-service:
+      path: /api/supply-service/**
+      serviceId: yqg-service
+  #添加代理头
+  add-proxy-headers: true
+  # 需要聚合的swagger服务
+
+proxy:
+  auth:
+    routes:
+      portal-service: oauth2
+      user-service: oauth2
+      syslog-service: oauth2
+      auth-service: oauth2
+      supply-service: oauth2
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-uri: http://localhost:9090/auth/oauth/token_key
+      id: ${spring.application.name}
+      serviceId: ${spring.application.name}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  #        SpringBootActuator监控暴露所有接口
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+ukulele:
+  oauth2:
+    url-permit-all:
+      - /api/portal-service/ant-menu/user
+      - /api/user-service/thirdparty/wx/app/login
+      - /api/user-service/user/register
+  rest-template:
+    read-timeout: 60000
+    connect-timeout: 60000
+  redis:
+    database: 0
+    password:
+    timeout: 30
+    mode: single #sentinel/cluster/single
+    #    连接池
+    pool:
+      max-idle: 16
+      min-idle: 8
+      max-active: 8
+      max-wait: 3000
+      conn-timeout: 3000
+      so-timeout: 3000
+      size: 10
+    #    单机
+    single:
+      address: redis://127.0.0.1:6379
+    lock:
+      wait-time: 60
+      lease-time: 60
+  swagger:
+    enabled: true
+    contact:
+      name: 吕自聪
+      email: 910980941@qq.com
+      url: https://fengxici.github.io
+    description: ukulele框架相关服务接口
+    license: MIT
+    version: 1.0
+    title: ukulele
+    oauth-url: http://127.0.0.1:9090/auth
+    global-operation-parameters:
+      - name: Authorization
+        description: 权限
+        parameter-type: header
+        required: true
+        model-ref: String
+  kaptcha:
+    height: 50
+    width: 200
+    content:
+      length: 4
+      source: abcdefghjklmnopqrstuvwxyz23456789
+      space: 2
+    font:
+      color: black
+      name: Arial
+      size: 40
+    background-color:
+      from: lightGray
+      to: white
+    border:
+      enabled: true
+      color: black
+      thickness: 1
+  web:
+    ignore-null-field: true

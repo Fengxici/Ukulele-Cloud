@@ -183,12 +183,21 @@ public final class AntMenuController extends BaseController implements IAntMenuF
     }
 
     @Override
-    public ResponseData<List<AntMenuTree>> getUserMenu(@RequestHeader(WebConstant.X_ROLE_HEADER) String roles) {
+    public ResponseData<List<AntMenuTree>> getUserMenu(@RequestHeader(WebConstant.X_ROLE_HEADER) String roles,
+                                                       @RequestHeader(WebConstant.X_USER_HEADER) String account) {
         if (StringUtils.isEmpty(roles)) {
             return paraErrorResponse();
         }
         return successResponse(createMenuTree(getUserAntMenu(roles)));
     }
+
+//    @Override
+//    public ResponseData<List<AntMenuTree>> getUserMenu(@RequestHeader(WebConstant.X_ROLE_HEADER) String roles) {
+//        if (StringUtils.isEmpty(roles)) {
+//            return paraErrorResponse();
+//        }
+//        return successResponse(createMenuTree(getUserAntMenu(roles)));
+//    }
 
     @Override
     public ResponseData<Set<String>> userAbilities(Long userId, @RequestParam("router") String router) {

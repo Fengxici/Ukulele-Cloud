@@ -1,6 +1,5 @@
 package timing.ukulele.service.user.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -32,7 +31,7 @@ public class UserPermissionService implements PermissionService {
 
     @Override
     public Set<String> abilitySet(String router, List<String> acl) {
-        if (StringUtils.isEmpty(router) || CollectionUtils.isEmpty(acl)) {
+        if (!StringUtils.hasLength(router) || CollectionUtils.isEmpty(acl)) {
             return null;
         }
         Set<String> abilitySet = new HashSet<>();

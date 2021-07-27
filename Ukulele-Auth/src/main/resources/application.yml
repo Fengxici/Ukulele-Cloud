@@ -1,0 +1,160 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /auth
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    instance-id: ${eureka.instance.hostname}:${server.port}
+    home-page-url-path: ${server.servlet.context-path}/
+    metadata-map:
+      management:
+        context-path: ${server.servlet.context-path}/actuator
+      user.name: root
+      user.password: root
+  client:
+    serviceUrl:
+      defaultZone: http://root:root@172.16.3.34:8080/eureka
+#      defaultZone: http://root:root@127.0.0.1:8080/eureka
+
+encrypt:
+  key-store:
+    location: classpath:mytest.jks
+    secret: mypass
+    alias: mytest
+
+spring:
+  application:
+    name: auth-service
+  security:
+    user:
+      name: root
+      password: root
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+  freemarker:
+    request-context-attribute: request
+  rabbitmq:
+    host: localhost
+    port: 5672
+    # 数据源配置
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/ukulele_auth?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_TO_NULL&allowMultiQueries=true&serverTimezone=PRC&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      stat-view-servlet:
+        login-username: druid
+        login-password: druid
+        enabled: true
+        url-pattern: /druid/*
+      max-active: 20
+      initial-size: 1
+      max-wait: 60000
+      min-idle: 1
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      max-evictable-idle-time-millis: 600000
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: true
+      validation-query: select 'x'
+      validation-query-timeout: 30
+      use-global-data-source-stat: true
+      async-init: false
+      clear-filters-enable: true
+      reset-stat-enable: true
+      not-full-timeout-retry-count: 3
+      max-wait-thread-count: 10
+      fail-fast: true
+      phy-timeout-millis: 30000
+      keep-alive: true
+      pool-prepared-statements: true
+      init-variants: true
+      init-global-variants: true
+      use-unfair-lock: true
+      kill-when-socket-read-timeout: true
+      max-pool-prepared-statement-per-connection-size: 10
+      share-prepared-statements: true
+      connection-error-retry-attempts: 3
+      break-after-acquire-failure: true
+      filters: stat,wall # 注意这个值和druid原生不一致，默认启动了stat,wall
+#  main:
+#    allow-bean-definition-overriding: true
+  zipkin:
+#    base-url: http://127.0.0.1:7070
+    base-url: http://172.16.3.34:7070
+  sleuth:
+    sampler:
+      probability: 1.0
+# mybatis-plus 配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: timing.ukulele.facade.auth.model.persistent
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  #        SpringBootActuator监控暴露所有接口
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+logging:
+  level:
+    com.baomidou: debug
+
+ukulele:
+  web:
+    ignore-null-field: true
+  redis:
+    database: 0
+    password:
+    timeout: 30
+    mode: single #sentinel/cluster/single
+    #    连接池
+    pool:
+      max-idle: 16
+      min-idle: 8
+      max-active: 8
+      max-wait: 3000
+      conn-timeout: 3000
+      so-timeout: 3000
+      size: 10
+    #    单机
+    single:
+      address: redis://127.0.0.1:6379
+    lock:
+      wait-time: 60
+      lease-time: 60
+  swagger:
+    enabled: true
+    title: ukulele-auth
+    version: 1.0
+    license: MIT
+    description: 鉴权服务
+    contact:
+      name: 吕自聪
+      email: 910980941@qq.com
+      url: http://fengxici.github.io
+    base-package: timing.ukulele.service.auth.controller
+    oauth-url: http://127.0.0.1:9090/auth
+    global-operation-parameters:
+      - name: Authorization
+        description: 权限
+        parameter-type: header
+        required: false
+        mode-ref: String
+wx:
+  appid: wx73e9c5f1cf804064
+  appsecret: c98a936f28dacb8d64a3c2799c1bee39
+
+host:
+  baseUrl: http://localhost:9090/auth/oauth/token

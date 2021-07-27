@@ -56,7 +56,7 @@ public class TimingLoginAuthenticationFilter extends UsernamePasswordAuthenticat
                 principal = obtainParameter(request, SPRING_SECURITY_PLAT_CODE_KEY);
 //            credentials = obtainParameter(request, SPRING_SECURITY_PLAT_CODE_KEY);
                 String plat = obtainParameter(request, SPRING_SECURITY_PLAT_TYPE_KEY);
-                if (!StringUtils.isEmpty(plat)) {
+                if (StringUtils.hasLength(plat)) {
                     authRequest = new ThirdOpenAuthenticationToken(principal, Integer.valueOf(plat));
                 }
                 break;

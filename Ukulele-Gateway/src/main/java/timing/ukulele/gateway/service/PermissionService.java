@@ -30,6 +30,7 @@ import java.util.Map;
 @Service("permissionService")
 public class PermissionService {
 
+    @SuppressWarnings("unchecked")
     public boolean hasPermission(HttpServletRequest request, Authentication authentication) {
         Object principal = authentication.getPrincipal();
         List<SimpleGrantedAuthority> grantedAuthorityList = (List<SimpleGrantedAuthority>) authentication.getAuthorities();
