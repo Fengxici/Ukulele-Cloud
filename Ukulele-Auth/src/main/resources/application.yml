@@ -37,7 +37,6 @@ spring:
     port: 6379
   freemarker:
     request-context-attribute: request
-    suffix: ftl
   rabbitmq:
     host: localhost
     port: 5672
