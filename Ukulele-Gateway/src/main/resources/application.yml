@@ -14,8 +14,8 @@ spring:
     username: guest
     password: guest
   zipkin:
-#    base-url: http://127.0.0.1:7070
-    base-url: http://172.16.3.34:7070
+    base-url: http://127.0.0.1:7070
+#    base-url: http://172.16.3.34:7070
   sleuth:
     sampler:
       probability: 1.0
@@ -29,8 +29,8 @@ eureka:
       user.password: root
   client:
     serviceUrl:
-      defaultZone: http://root:root@172.16.3.34:8080/eureka
-#      defaultZone: http://root:root@127.0.0.1:8080/eureka
+#      defaultZone: http://root:root@172.16.3.34:8080/eureka
+      defaultZone: http://root:root@127.0.0.1:8080/eureka
 
 zuul:
   host:
@@ -49,13 +49,9 @@ zuul:
     auth-service:
       path: /api/auth-service/**
       serviceId: auth-service
-    supply-service:
-      path: /api/supply-service/**
-      serviceId: yqg-service
   #添加代理头
   add-proxy-headers: true
   # 需要聚合的swagger服务
-
 proxy:
   auth:
     routes:
@@ -63,7 +59,6 @@ proxy:
       user-service: oauth2
       syslog-service: oauth2
       auth-service: oauth2
-      supply-service: oauth2
 
 security:
   oauth2:

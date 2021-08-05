@@ -11,8 +11,8 @@ eureka:
       user.password: root
   client:
     serviceUrl:
-      defaultZone: http://root:root@172.16.3.34:8080/eureka
-#      defaultZone: http://root:root@127.0.0.1:8080/eureka
+#      defaultZone: http://root:root@172.16.3.34:8080/eureka
+      defaultZone: http://root:root@127.0.0.1:8080/eureka
 
 # mybatis-plus 配置
 mybatis-plus:
@@ -64,7 +64,7 @@ spring:
       share-prepared-statements: true
       connection-error-retry-attempts: 3
       break-after-acquire-failure: true
-      filters: stat,wall,sql # 注意这个值和druid原生不一致，默认启动了stat,wall
+      filters: stat,wall # 注意这个值和druid原生不一致，默认启动了stat,wall
   redis:
     database: 0
     host: localhost
@@ -80,8 +80,8 @@ spring:
     username: guest
     password: guest
   zipkin:
-    base-url: http://172.16.3.34:7070
-#    base-url: http://127.0.0.1:7070
+#    base-url: http://172.16.3.34:7070
+    base-url: http://127.0.0.1:7070
   sleuth:
     sampler:
       probability: 1.0

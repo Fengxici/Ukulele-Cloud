@@ -15,8 +15,8 @@ eureka:
       user.password: root
   client:
     serviceUrl:
-      defaultZone: http://root:root@172.16.3.34:8080/eureka
-#      defaultZone: http://root:root@127.0.0.1:8080/eureka
+#      defaultZone: http://root:root@172.16.3.34:8080/eureka
+      defaultZone: http://root:root@127.0.0.1:8080/eureka
 
 encrypt:
   key-store:
@@ -37,6 +37,7 @@ spring:
     port: 6379
   freemarker:
     request-context-attribute: request
+    suffix: ftl
   rabbitmq:
     host: localhost
     port: 5672
@@ -86,11 +87,12 @@ spring:
 #  main:
 #    allow-bean-definition-overriding: true
   zipkin:
-#    base-url: http://127.0.0.1:7070
-    base-url: http://172.16.3.34:7070
+    base-url: http://127.0.0.1:7070
+#    base-url: http://172.16.3.34:7070
   sleuth:
     sampler:
       probability: 1.0
+
 # mybatis-plus 配置
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
