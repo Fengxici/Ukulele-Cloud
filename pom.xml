@@ -29,7 +29,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <timing.ukulele-version>1.0-SNAPSHOT</timing.ukulele-version>
-        <mysql-connector-java-version>8.0.26</mysql-connector-java-version>
+        <mysql-connector-java-version>8.0.28</mysql-connector-java-version>
         <spring-cloud-starter-oauth2-version>2.2.5.RELEASE</spring-cloud-starter-oauth2-version>
         <fastjson-version>1.2.76</fastjson-version>
         <kaptchar-version>2.3.2</kaptchar-version>
